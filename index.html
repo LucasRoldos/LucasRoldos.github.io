@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -1037,7 +1037,7 @@
             // Extraer ID del enlace de Google Drive
             let fileId = '';
             
-            // Formato: https://drive.google.com/file/d/FILE_ID/view
+            // Formato: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
             if (driveLink.includes('/file/d/')) {
                 const match = driveLink.match(/\/file\/d\/([^\/]+)/);
                 if (match && match[1]) {
@@ -1063,6 +1063,13 @@
                 processingIndicator.innerHTML = '❌ No se pudo extraer el ID del archivo. Verifica el enlace.';
                 return;
             }
+            
+            // Limpiar el ID si contiene parámetros adicionales
+            if (fileId.includes('?') || fileId.includes('/')) {
+                fileId = fileId.split('?')[0].split('/')[0];
+            }
+            
+            console.log('ID extraído:', fileId); // Para depuración
             
             // Construir URL directa para imágenes
             const directUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
