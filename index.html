@@ -604,11 +604,11 @@
         <p class="subtitle">Libro de aventuras piratas</p>
     </header>
     
-    <nav class="main-nav">
-        <button class="nav-btn active" onclick="showView('home')">🏠 Inicio</button>
-        <button class="nav-btn" onclick="showView('gallery')">📸 Galería</button>
-        <button class="nav-btn" onclick="showView('stats')">📊 Stats</button>
-    </nav>
+<!-- Cambiar la navegación para eliminar el botón de estadísticas -->
+<nav class="main-nav">
+    <button class="nav-btn active" onclick="showView('home')">🏠 Inicio</button>
+    <button class="nav-btn" onclick="showView('gallery')">📸 Galería</button>
+</nav>
     
     <div class="container">
         <!-- Vista Home -->
@@ -669,39 +669,6 @@
                 <div class="empty-state-message">¡No hay memorias aún!</div>
                 <div class="empty-state-submessage" id="emptyStateSubmessage">Pronto se añadirán nuevas aventuras</div>
             </div>
-        </div>
-        
-        <!-- Vista Estadísticas -->
-        <div id="stats" class="view">
-            <div class="character-guide">
-                <span class="character-avatar">📊</span>
-                <span class="character-message">
-                    ¡Mira cuánto hemos viajado juntos! Estas son las estadísticas de nuestra aventura.
-                </span>
-            </div>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-icon">🏴‍☠️</div>
-                    <div class="stat-number" id="adventureLevel">Novato</div>
-                    <div class="stat-label">Nivel de Pirata</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-number" id="treasurePoints">0</div>
-                    <div class="stat-label">Puntos de Tesoro</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🌟</div>
-                    <div class="stat-number" id="epicMoments">0</div>
-                    <div class="stat-label">Momentos Épicos</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-number" id="crewSize">1</div>
-                    <div class="stat-label">Tamaño de Tripulación</div>
-                </div>
-            </div>
             
             <div class="character-guide" style="margin-top: 30px;">
                 <span class="character-avatar">🎯</span>
@@ -750,11 +717,32 @@
             <form id="memoryForm">
                 <div class="form-group">
                     <label class="form-label">📷 Foto o Video</label>
-                    <div class="file-input-wrapper">
+                    <div class="media-source-tabs" style="display: flex; margin-bottom: 10px;">
+                        <button type="button" class="tab-btn active" id="localFileTab" onclick="switchMediaSource('local')" style="flex: 1; padding: 8px; background: var(--ocean-light); color: white; border: none; border-radius: 5px 0 0 5px;">
+                            💻 Archivo Local
+                        </button>
+                        <button type="button" class="tab-btn" id="driveLinkTab" onclick="switchMediaSource('drive')" style="flex: 1; padding: 8px; background: #f1f5f9; color: #475569; border: none; border-radius: 0 5px 5px 0;">
+                            ☁️ Google Drive
+                        </button>
+                    </div>
+                    
+                    <!-- Opción de archivo local -->
+                    <div id="localFileOption" class="file-input-wrapper">
                         <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileSelect(event)">
                         <label for="fileInput" class="file-input-label">
                             Seleccionar archivo
                         </label>
+                    </div>
+                    
+                    <!-- Opción de enlace de Drive -->
+                    <div id="driveLinkOption" style="display: none;">
+                        <input type="text" class="form-input" id="driveLinkInput" placeholder="Pega el enlace de Google Drive aquí">
+                        <p style="font-size: 0.8em; color: #64748b; margin-top: 5px;">
+                            Asegúrate de que el enlace sea público o tenga permisos de visualización
+                        </p>
+                        <button type="button" class="form-btn" style="margin-top: 10px; background: #4f46e5;" onclick="processGoogleDriveLink()">
+                            🔄 Procesar enlace
+                        </button>
                     </div>
                 </div>
                 
@@ -993,7 +981,8 @@
                 reader.onload = function(e) {
                     currentMemory = {
                         file: e.target.result,
-                        type: file.type.startsWith('video') ? 'video' : 'image'
+                        type: file.type.startsWith('video') ? 'video' : 'image',
+                        isGoogleDrive: false
                     };
                 };
                 reader.readAsDataURL(file);
@@ -1001,6 +990,111 @@
                 // Actualizar label
                 document.querySelector('.file-input-label').textContent = file.name;
             }
+        }
+        
+        // Cambiar entre fuentes de medios (local o Drive)
+        function switchMediaSource(source) {
+            // Actualizar botones de tabs
+            document.getElementById('localFileTab').classList.toggle('active', source === 'local');
+            document.getElementById('driveLinkTab').classList.toggle('active', source === 'drive');
+            document.getElementById('localFileTab').style.background = source === 'local' ? 'var(--ocean-light)' : '#f1f5f9';
+            document.getElementById('driveLinkTab').style.background = source === 'drive' ? 'var(--ocean-light)' : '#f1f5f9';
+            document.getElementById('localFileTab').style.color = source === 'local' ? 'white' : '#475569';
+            document.getElementById('driveLinkTab').style.color = source === 'drive' ? 'white' : '#475569';
+            
+            // Mostrar/ocultar opciones correspondientes
+            document.getElementById('localFileOption').style.display = source === 'local' ? 'block' : 'none';
+            document.getElementById('driveLinkOption').style.display = source === 'drive' ? 'block' : 'none';
+            
+            // Resetear el currentMemory si cambiamos de fuente
+            currentMemory = null;
+            document.querySelector('.file-input-label').textContent = 'Seleccionar archivo';
+        }
+        
+        // Procesar enlace de Google Drive
+        function processGoogleDriveLink() {
+            const driveLink = document.getElementById('driveLinkInput').value.trim();
+            
+            if (!driveLink) {
+                alert('Por favor, introduce un enlace de Google Drive');
+                return;
+            }
+            
+            // Mostrar indicador de carga
+            const processingIndicator = document.createElement('div');
+            processingIndicator.innerHTML = '<div class="loading"></div> Procesando enlace...';
+            processingIndicator.style.textAlign = 'center';
+            processingIndicator.style.margin = '10px 0';
+            processingIndicator.id = 'processingIndicator';
+            
+            const existingIndicator = document.getElementById('processingIndicator');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+            
+            document.getElementById('driveLinkOption').appendChild(processingIndicator);
+            
+            // Extraer ID del enlace de Google Drive
+            let fileId = '';
+            
+            // Formato: https://drive.google.com/file/d/FILE_ID/view
+            if (driveLink.includes('/file/d/')) {
+                const match = driveLink.match(/\/file\/d\/([^\/]+)/);
+                if (match && match[1]) {
+                    fileId = match[1];
+                }
+            }
+            // Formato: https://drive.google.com/open?id=FILE_ID
+            else if (driveLink.includes('?id=')) {
+                const match = driveLink.match(/\?id=([^&]+)/);
+                if (match && match[1]) {
+                    fileId = match[1];
+                }
+            }
+            // Formato: https://docs.google.com/document/d/FILE_ID/edit
+            else if (driveLink.includes('/d/')) {
+                const match = driveLink.match(/\/d\/([^\/]+)/);
+                if (match && match[1]) {
+                    fileId = match[1];
+                }
+            }
+            
+            if (!fileId) {
+                processingIndicator.innerHTML = '❌ No se pudo extraer el ID del archivo. Verifica el enlace.';
+                return;
+            }
+            
+            // Construir URL directa para imágenes
+            const directUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+            
+            // Verificar si es una imagen o video válido
+            const img = new Image();
+            img.onload = function() {
+                // Es una imagen válida
+                currentMemory = {
+                    file: directUrl,
+                    type: 'image',
+                    isGoogleDrive: true
+                };
+                processingIndicator.innerHTML = '✅ Imagen cargada correctamente';
+            };
+            img.onerror = function() {
+                // Intentar como video
+                const video = document.createElement('video');
+                video.onloadeddata = function() {
+                    currentMemory = {
+                        file: directUrl,
+                        type: 'video',
+                        isGoogleDrive: true
+                    };
+                    processingIndicator.innerHTML = '✅ Video cargado correctamente';
+                };
+                video.onerror = function() {
+                    processingIndicator.innerHTML = '❌ No se pudo cargar el archivo. Asegúrate de que sea una imagen o video y que el enlace sea público.';
+                };
+                video.src = directUrl;
+            };
+            img.src = directUrl;
         }
         
         // Abrir modal de agregar
@@ -1019,47 +1113,58 @@
             currentMemory = null;
         }
         
-        // Abrir modal de detalle
-        function openDetailModal(memoryId) {
-            const memory = memories.find(m => m.id === memoryId);
-            if (!memory) return;
+        
+// Abrir modal de detalle (modificado)
+function openDetailModal(memoryId) {
+    const memory = memories.find(m => m.id === memoryId);
+    if (!memory) return;
+    
+    const character = characters[Math.floor(Math.random() * characters.length)];
+    
+    let mediaHtml = '';
+    if (memory.type === 'video') {
+        mediaHtml = `<video class="detail-image" controls><source src="${memory.file}" type="video/mp4"></video>`;
+    } else {
+        mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
+    }
+    
+    let deleteButton = '';
+    if (isCreatorMode) {
+        deleteButton = `
+            <button class="form-btn" style="background: linear-gradient(135deg, var(--coral) 0%, #dc2626 100%); color: white; margin-top: 20px;" onclick="deleteMemory('${memoryId}')">
+                🗑️ Eliminar Memoria
+            </button>
+        `;
+    }
+    
+    // Mostrar indicador si es de Google Drive
+    const sourceIndicator = memory.isGoogleDrive ? 
+        `<div style="text-align: center; margin-top: 5px; font-size: 0.8em; color: #64748b;">☁️ Alojado en Google Drive</div>` : '';
+    
+    const detailHtml = `
+        <div class="detail-view">
+            ${mediaHtml}
+            ${sourceIndicator}
+            <h2 class="detail-title">${memory.title}</h2>
+            <p class="detail-date">Día ${memory.dayNumber} de nuestra aventura - ${new Date(memory.date).toLocaleDateString('es-ES')}</p>
+            <div class="detail-description">${memory.description || 'Sin descripción'}</div>
             
-            const character = characters[Math.floor(Math.random() * characters.length)];
+            <div class="character-guide" style="margin-top: 20px;">
+                <span class="character-avatar">${character.avatar}</span>
+                <span class="character-message">${character.phrases[Math.floor(Math.random() * character.phrases.length)]}</span>
+            </div>
             
-            let mediaHtml = '';
-            if (memory.type === 'video') {
-                mediaHtml = `<video class="detail-image" controls><source src="${memory.file}" type="video/mp4"></video>`;
-            } else {
-                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
-            }
-            
-            let deleteButton = '';
-            if (isCreatorMode) {
-                deleteButton = `
-                    <button class="form-btn" style="background: linear-gradient(135deg, var(--coral) 0%, #dc2626 100%); color: white; margin-top: 20px;" onclick="deleteMemory('${memoryId}')">
-                        🗑️ Eliminar Memoria
-                    </button>
-                `;
-            }
-            
-            const detailHtml = `
-                <div class="detail-view">
-                    ${mediaHtml}
-                    <h2 class="detail-title">${memory.title}</h2>
-                    <p class="detail-date">Día ${memory.dayNumber} de nuestra aventura - ${new Date(memory.date).toLocaleDateString('es-ES')}</p>
-                    <div class="detail-description">${memory.description || 'Sin descripción'}</div>
-                    
-                    <div class="character-guide" style="margin-top: 20px;">
-                        <span class="character-avatar">${character.avatar}</span>
-                        <span class="character-message">${character.phrases[Math.floor(Math.random() * character.phrases.length)]}</span>
-                    </div>
-                    
-                    ${deleteButton}
-                </div>
-            `;
-            
-            document.getElementById('detailContent').innerHTML = detailHtml;
-            document.getElementById('detailModal').classList.add('active');
+            ${deleteButton}
+        </div>
+    `;
+    
+    document.getElementById('detailContent').innerHTML = detailHtml;
+    document.getElementById('detailModal').classList.add('active');
+}
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('memoryForm').reset();
+            currentMemory = null;
         }
         
         // Cerrar modal de detalle
@@ -1097,104 +1202,99 @@
             }, 3000);
         }
         
-        // Actualizar galería
+       
+        // Actualizar galería (modificado)
         function updateGallery() {
-            const container = document.getElementById('memoriesContainer');
-            const emptyState = document.getElementById('emptyState');
+    const container = document.getElementById('memoriesContainer');
+    const emptyState = document.getElementById('emptyState');
+    
+    if (memories.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+    } else {
+        emptyState.style.display = 'none';
+        container.innerHTML = memories.map(memory => {
+            let thumbnail;
             
-            if (memories.length === 0) {
-                container.innerHTML = '';
-                emptyState.style.display = 'block';
+            if (memory.type === 'video') {
+                thumbnail = `<video class="memory-thumbnail"><source src="${memory.file}" type="video/mp4"></video>`;
             } else {
-                emptyState.style.display = 'none';
-                container.innerHTML = memories.map(memory => {
-                    const thumbnail = memory.type === 'video' 
-                        ? `<video class="memory-thumbnail"><source src="${memory.file}" type="video/mp4"></video>`
-                        : `<img src="${memory.file}" alt="${memory.title}" class="memory-thumbnail">`;
-                    
-                    return `
-                        <div class="memory-card" onclick="openDetailModal('${memory.id}')">
-                            ${thumbnail}
-                            <div class="memory-title">${memory.title}</div>
-                            <div class="memory-date">Día ${memory.dayNumber}</div>
-                        </div>
-                    `;
-                }).join('');
+                thumbnail = `<img src="${memory.file}" alt="${memory.title}" class="memory-thumbnail">`;
             }
-        }
+            
+            return `
+                <div class="memory-card" onclick="openDetailModal('${memory.id}')">
+                    ${thumbnail}
+                    <div class="memory-title">${memory.title}</div>
+                    <div class="memory-date">Día ${memory.dayNumber}</div>
+                </div>
+            `;
+        }).join('');
+    }
+}
         
-        // Actualizar estadísticas
+       // Simplificar la función updateStats para mantener solo las estadísticas básicas
         function updateStats() {
-            // Calcular estadísticas
-            const totalMemories = memories.length;
-            const totalVideos = memories.filter(m => m.type === 'video').length;
-            const daysOfAdventure = memories.length > 0 
-                ? Math.ceil((new Date() - new Date(memories[0].date)) / (1000 * 60 * 60 * 24))
-                : 0;
-            
-            // Actualizar elementos del DOM
-            document.getElementById('totalMemories').textContent = totalMemories;
-            document.getElementById('totalVideos').textContent = totalVideos;
-            document.getElementById('daysOfAdventure').textContent = daysOfAdventure;
-            
-            // Calcular nivel de pirata
-            let level = 'Novato';
-            if (totalMemories >= 50) level = 'Rey Pirata';
-            else if (totalMemories >= 30) level = 'Yonko';
-            else if (totalMemories >= 20) level = 'Supernova';
-            else if (totalMemories >= 10) level = 'Capitán';
-            else if (totalMemories >= 5) level = 'Marinero';
-            
-            document.getElementById('adventureLevel').textContent = level;
-            document.getElementById('treasurePoints').textContent = totalMemories * 100;
-            document.getElementById('epicMoments').textContent = Math.floor(totalMemories / 3);
-            document.getElementById('crewSize').textContent = Math.min(9, Math.floor(totalMemories / 5) + 1);
-        }
-        
-        // Manejar envío del formulario
-        document.getElementById('memoryForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!isCreatorMode) return;
-            
-            if (!currentMemory) {
-                alert('Por favor selecciona una foto o video');
-                return;
-            }
-            
-            const title = document.getElementById('titleInput').value;
-            const date = document.getElementById('dateInput').value;
-            const description = document.getElementById('descriptionInput').value;
-            
-            // Calcular número de día
-            const dayNumber = memories.length + 1;
-            
-            // Crear nueva memoria
-            const newMemory = {
-                id: Date.now().toString(),
-                title: title,
-                date: date,
-                dayNumber: dayNumber,
-                description: description,
-                file: currentMemory.file,
-                type: currentMemory.type,
-                character: characters[Math.floor(Math.random() * characters.length)].name,
-                createdAt: new Date().toISOString()
-            };
-            
-            // Agregar a memorias
-            memories.unshift(newMemory);
-            saveMemories();
-            
-            // Actualizar UI
-            updateGallery();
-            updateStats();
-            closeAddModal();
-            
-            // Mostrar mensaje de éxito con personaje aleatorio
-            const character = characters[Math.floor(Math.random() * characters.length)];
-            showCharacterReaction(character.phrases[Math.floor(Math.random() * character.phrases.length)], character.avatar);
-        });
+
+    // Calcular estadísticas básicas
+    const totalMemories = memories.length;
+    const totalVideos = memories.filter(m => m.type === 'video').length;
+    const daysOfAdventure = memories.length > 0 
+        ? Math.ceil((new Date() - new Date(memories[0].date)) / (1000 * 60 * 60 * 24))
+        : 0;
+    
+    // Actualizar elementos del DOM
+    document.getElementById('totalMemories').textContent = totalMemories;
+    document.getElementById('totalVideos').textContent = totalVideos;
+    document.getElementById('daysOfAdventure').textContent = daysOfAdventure;
+}
+      
+
+// Manejar envío del formulario (modificado)
+document.getElementById('memoryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!isCreatorMode) return;
+    
+    if (!currentMemory) {
+        alert('Por favor selecciona una foto o video, o proporciona un enlace de Google Drive');
+        return;
+    }
+    
+    const title = document.getElementById('titleInput').value;
+    const date = document.getElementById('dateInput').value;
+    const description = document.getElementById('descriptionInput').value;
+    
+    // Calcular número de día
+    const dayNumber = memories.length + 1;
+    
+    // Crear nueva memoria
+    const newMemory = {
+        id: Date.now().toString(),
+        title: title,
+        date: date,
+        dayNumber: dayNumber,
+        description: description,
+        file: currentMemory.file,
+        type: currentMemory.type,
+        isGoogleDrive: currentMemory.isGoogleDrive || false,
+        character: characters[Math.floor(Math.random() * characters.length)].name,
+        createdAt: new Date().toISOString()
+    };
+    
+    // Agregar a memorias
+    memories.unshift(newMemory);
+    saveMemories();
+    
+    // Actualizar UI
+    updateGallery();
+    updateStats();
+    closeAddModal();
+    
+    // Mostrar mensaje de éxito con personaje aleatorio
+    const character = characters[Math.floor(Math.random() * characters.length)];
+    showCharacterReaction(character.phrases[Math.floor(Math.random() * character.phrases.length)], character.avatar);
+});
         
         // Cerrar modales al hacer clic fuera
         window.addEventListener('click', function(e) {
