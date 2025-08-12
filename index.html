@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Nuestras Memorias - Libro de Aventuras</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Kalam:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --ocean-blue: #1e40af;
+            --ocean-light: #3b82f6;
+            --gold: #fbbf24;
+            --gold-dark: #f59e0b;
+            --coral: #ef4444;
+            --sand: #fef3c7;
+            --wood: #92400e;
+            --parchment: #fef3c7;
+        }
+        
+        body {
+            font-family: 'Kalam', cursive;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animación de olas */
+        .ocean-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230099ff" fill-opacity="0.2" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,112C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+            animation: waves 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes waves {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Header principal */
+        .header {
+            background: linear-gradient(135deg, var(--wood) 0%, #7c2d12 100%);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '☠';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 30px;
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .header::after {
+            content: '⚓';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+        }
+        
+        .app-title {
+            font-family: 'Pirata One', cursive;
+            font-size: 2.5em;
+            color: var(--gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: var(--sand);
+            font-size: 0.9em;
+        }
+        
+        /* Navegación principal */
+        .main-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            margin: 10px;
+            border-radius: 15px;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: var(--wood);
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--coral) 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        /* Contenedor principal */
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Vista de pantallas */
+        .view {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Personaje guía */
+        .character-guide {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid var(--gold);
+        }
+        
+        .character-guide::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 10px solid white;
+        }
+        
+        .character-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--coral);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-right: 15px;
+            vertical-align: middle;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .character-message {
+            display: inline-block;
+            vertical-align: middle;
+            width: calc(100% - 85px);
+            color: var(--wood);
+            font-size: 1.1em;
+        }
+        
+        /* Galería de memorias */
+        .memories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .memory-card {
+            background: linear-gradient(135deg, var(--parchment) 0%, #fef3c7 100%);
+            border: 3px solid var(--wood);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .memory-card:hover {
+            transform: translateY(-5px) rotate(-2deg);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .memory-card::before {
+            content: 'WANTED';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--coral);
+            font-family: 'Pirata One', cursive;
+            font-size: 0.8em;
+            opacity: 0.5;
+        }
+        
+        .memory-thumbnail {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .memory-title {
+            font-weight: bold;
+            color: var(--wood);
+            margin-top: 10px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+        
+        .memory-date {
+            font-size: 0.7em;
+            color: var(--coral);
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        /* Botón de agregar (solo visible en modo creador) */
+        .add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, var(--gold) 0%, var(--gold-dark) 100%);
+            border: none;
+            border-radius: 50%;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
+            transition: all 0.3s;
+            z-index: 100;
+            animation: pulse 2s infinite;
+            display: none; /* Oculto por defecto, visible solo en modo creador */
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--parchment) 0%, white 100%);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 5px solid var(--gold);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--coral);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+        
+        /* Formulario */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--wood);
+            font-weight: bold;
+        }
+        
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            font-family: 'Kalam', cursive;
+            font-size: 1em;
+            background: rgba(255,255,255,0.8);
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--coral);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--ocean-blue) 0%, var(--ocean-light) 100%);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .file-input-label:hover {
+            transform: translateY(-2px);
+        }
+        
+        .form-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--wood);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .form-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
+        }
+        
+        /* Vista detalle */
+        .detail-view {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 5px solid var(--gold);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .detail-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-title {
+            font-family: 'Pirata One', cursive;
+            font-size: 2em;
+            color: var(--wood);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .detail-date {
+            color: var(--coral);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .detail-description {
+            color: var(--wood);
+            line-height: 1.6;
+            padding: 20px;
+            background: var(--parchment);
+            border-radius: 10px;
+            border: 2px dashed var(--gold);
+        }
+        
+        /* Estadísticas */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 3px solid var(--gold);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--coral);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--wood);
+            font-size: 0.9em;
+        }
+        
+        /* Botón de modo creador */
+        .creator-mode-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, var(--ocean-light) 0%, var(--ocean-blue) 100%);
+            border: none;
+            border-radius: 50%;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .creator-mode-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Modal de login */
+        #loginModal .modal-content {
+            max-width: 400px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-title {
+                font-size: 2em;
+            }
+            
+            .memories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+            
+            .add-btn, .creator-mode-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 25px;
+                bottom: 20px;
+            }
+            
+            .add-btn {
+                right: 20px;
+            }
+            
+            .creator-mode-btn {
+                left: 20px;
+            }
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: white;
+        }
+        
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-state-message {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state-submessage {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean-bg"></div>
+    
+    <header class="header">
+        <h1 class="app-title">🏴‍☠️ Nuestras Memorias</h1>
+        <p class="subtitle">Libro de aventuras piratas</p>
+    </header>
+    
+    <nav class="main-nav">
+        <button class="nav-btn active" onclick="showView('home')">🏠 Inicio</button>
+        <button class="nav-btn" onclick="showView('gallery')">📸 Galería</button>
+        <button class="nav-btn" onclick="showView('stats')">📊 Stats</button>
+    </nav>
+    
+    <div class="container">
+        <!-- Vista Home -->
+        <div id="home" class="view active">
+            <div class="character-guide">
+                <span class="character-avatar">👒</span>
+                <span class="character-message" id="welcomeMessage">
+                    ¡Yosh! ¡Bienvenido a nuestro libro de aventuras! ¡Aquí guardamos todos nuestros increíbles recuerdos juntos!
+                </span>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">📷</div>
+                    <div class="stat-number" id="totalMemories">0</div>
+                    <div class="stat-label">Memorias Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎬</div>
+                    <div class="stat-number" id="totalVideos">0</div>
+                    <div class="stat-label">Videos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-number" id="daysOfAdventure">0</div>
+                    <div class="stat-label">Días de Aventura</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number" id="favoriteCharacter">Luffy</div>
+                    <div class="stat-label">Personaje Favorito</div>
+                </div>
+            </div>
+            
+            <div class="character-guide" style="margin-top: 30px;">
+                <span class="character-avatar">🗺️</span>
+                <span class="character-message">
+                    ¡Explora nuestra galería para ver todos los momentos especiales que hemos vivido juntos!
+                </span>
+            </div>
+        </div>
+        
+        <!-- Vista Galería -->
+        <div id="gallery" class="view">
+            <div class="character-guide">
+                <span class="character-avatar" id="galleryCharAvatar">🧭</span>
+                <span class="character-message" id="galleryCharMessage">
+                    ¡Aquí están todos nuestros preciosos recuerdos! Cada uno cuenta una historia única de nuestra aventura.
+                </span>
+            </div>
+            
+            <div id="memoriesContainer" class="memories-grid">
+                <!-- Las memorias se cargarán aquí -->
+            </div>
+            
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-message">¡No hay memorias aún!</div>
+                <div class="empty-state-submessage" id="emptyStateSubmessage">Pronto se añadirán nuevas aventuras</div>
+            </div>
+        </div>
+        
+        <!-- Vista Estadísticas -->
+        <div id="stats" class="view">
+            <div class="character-guide">
+                <span class="character-avatar">📊</span>
+                <span class="character-message">
+                    ¡Mira cuánto hemos viajado juntos! Estas son las estadísticas de nuestra aventura.
+                </span>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">🏴‍☠️</div>
+                    <div class="stat-number" id="adventureLevel">Novato</div>
+                    <div class="stat-label">Nivel de Pirata</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-number" id="treasurePoints">0</div>
+                    <div class="stat-label">Puntos de Tesoro</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌟</div>
+                    <div class="stat-number" id="epicMoments">0</div>
+                    <div class="stat-label">Momentos Épicos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number" id="crewSize">1</div>
+                    <div class="stat-label">Tamaño de Tripulación</div>
+                </div>
+            </div>
+            
+            <div class="character-guide" style="margin-top: 30px;">
+                <span class="character-avatar">🎯</span>
+                <span class="character-message" id="statsMessage">
+                    ¡Cada memoria añadida es un tesoro más en nuestro cofre de recuerdos!
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botón de modo creador -->
+    <button class="creator-mode-btn" onclick="openLoginModal()">🔒</button>
+    
+    <!-- Botón de agregar (solo visible en modo creador) -->
+    <button class="add-btn" onclick="openAddModal()">➕</button>
+    
+    <!-- Modal de login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLoginModal()">✕</button>
+            <h2 style="font-family: 'Pirata One', cursive; color: var(--wood); margin-bottom: 20px; text-align: center;">
+                Modo Creador
+            </h2>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">🔑 Contraseña</label>
+                    <input type="password" class="form-input" id="passwordInput" placeholder="Introduce la contraseña" required>
+                </div>
+                
+                <button type="submit" class="form-btn">
+                    ⚓ Acceder
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de agregar memoria -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAddModal()">✕</button>
+            <h2 style="font-family: 'Pirata One', cursive; color: var(--wood); margin-bottom: 20px; text-align: center;">
+                Nueva Aventura
+            </h2>
+            
+            <form id="memoryForm">
+                <div class="form-group">
+                    <label class="form-label">📷 Foto o Video</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileSelect(event)">
+                        <label for="fileInput" class="file-input-label">
+                            Seleccionar archivo
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">⚓ Título de la Aventura</label>
+                    <input type="text" class="form-input" id="titleInput" placeholder="Ej: La gran batalla del ramen" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">📅 Fecha</label>
+                    <input type="date" class="form-input" id="dateInput" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">📝 Descripción</label>
+                    <textarea class="form-textarea" id="descriptionInput" placeholder="Cuenta la historia de este momento épico..."></textarea>
+                </div>
+                
+                <button type="submit" class="form-btn">
+                    ⚓ Guardar Memoria
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de detalle -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDetailModal()">✕</button>
+            <div id="detailContent">
+                <!-- El contenido se cargará dinámicamente -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuración
+        const CREATOR_PASSWORD = "tucontraseña123"; // Cambia esto por tu contraseña deseada
+        
+        // Characters y sus frases
+        const characters = [
+            { name: 'Luffy', avatar: '👒', phrases: [
+                '¡Qué aventura tan genial! ¡Quiero vivir más momentos así!',
+                '¡Sugoi! ¡Este recuerdo es increíble!',
+                '¡Esto sí que es un tesoro de verdad!'
+            ]},
+            { name: 'Nami', avatar: '🧭', phrases: [
+                'Estos recuerdos valen más que cualquier tesoro',
+                'Navegando a través de hermosas memorias',
+                '¡Qué momento tan precioso para guardar!'
+            ]},
+            { name: 'Zoro', avatar: '⚔️', phrases: [
+                'Hmph... no está mal para una memoria',
+                'Un recuerdo digno de un espadachín',
+                'Este momento tiene honor'
+            ]},
+            { name: 'Sanji', avatar: '🍳', phrases: [
+                '¡Qué momento tan romántico, mellorine!~',
+                '¡Este recuerdo es tan dulce como mis postres!',
+                '¡Una memoria digna de un caballero!'
+            ]},
+            { name: 'Usopp', avatar: '🎯', phrases: [
+                '¡Contaré esta historia por todo el mundo!',
+                '¡El gran Capitán Usopp aprueba este recuerdo!',
+                '¡Esta aventura será legendaria!'
+            ]},
+            { name: 'Chopper', avatar: '🦌', phrases: [
+                '¡Se ve súper divertido!',
+                '¡Doctora! ¡Digo... qué memoria tan genial!',
+                '¡Esto me hace muy feliz!'
+            ]},
+            { name: 'Robin', avatar: '📚', phrases: [
+                'Qué memoria tan preciosa para preservar',
+                'La historia de esta aventura es fascinante',
+                'Un momento que trasciende el tiempo'
+            ]},
+            { name: 'Franky', avatar: '🤖', phrases: [
+                '¡SÚPER recuerdo!',
+                '¡Esta memoria es SÚPER genial!',
+                '¡OW! ¡Qué momento tan SÚPER!'
+            ]},
+            { name: 'Brook', avatar: '💀', phrases: [
+                'Yohohoho, qué momento tan emotivo',
+                '¡Aunque no tengo ojos, puedo ver lo hermoso de este recuerdo!',
+                '¡Esta memoria toca mi alma! ¡Ah, pero si no tengo! Yohohoho!'
+            ]}
+        ];
+        
+        // Estado de la aplicación
+        let memories = [];
+        let currentMemory = null;
+        let isCreatorMode = false;
+        
+        // Inicializar la app
+        function initApp() {
+            loadMemories();
+            updateStats();
+            updateGallery();
+            setRandomWelcomeMessage();
+            checkCreatorMode();
+            
+            // Configurar fecha actual por defecto
+            document.getElementById('dateInput').valueAsDate = new Date();
+        }
+        
+        // Verificar si estamos en modo creador
+        function checkCreatorMode() {
+            isCreatorMode = localStorage.getItem('isCreatorMode') === 'true';
+            updateCreatorModeUI();
+        }
+        
+        // Actualizar UI según el modo
+        function updateCreatorModeUI() {
+            const addBtn = document.querySelector('.add-btn');
+            const creatorModeBtn = document.querySelector('.creator-mode-btn');
+            const emptyStateSubmessage = document.getElementById('emptyStateSubmessage');
+            
+            if (isCreatorMode) {
+                addBtn.style.display = 'block';
+                creatorModeBtn.innerHTML = '🔓';
+                emptyStateSubmessage.textContent = 'Presiona el botón + para agregar tu primera aventura';
+            } else {
+                addBtn.style.display = 'none';
+                creatorModeBtn.innerHTML = '🔒';
+                emptyStateSubmessage.textContent = 'Pronto se añadirán nuevas aventuras';
+            }
+        }
+        
+        // Abrir modal de login
+        function openLoginModal() {
+            if (isCreatorMode) {
+                // Si ya estamos en modo creador, salir del modo
+                isCreatorMode = false;
+                localStorage.setItem('isCreatorMode', 'false');
+                updateCreatorModeUI();
+                showCharacterReaction('Has salido del modo creador', '🔒');
+            } else {
+                // Mostrar modal de login
+                document.getElementById('loginModal').classList.add('active');
+            }
+        }
+        
+        // Cerrar modal de login
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('loginForm').reset();
+        }
+        
+        // Manejar envío del formulario de login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('passwordInput').value;
+            
+            if (password === CREATOR_PASSWORD) {
+                isCreatorMode = true;
+                localStorage.setItem('isCreatorMode', 'true');
+                updateCreatorModeUI();
+                closeLoginModal();
+                showCharacterReaction('¡Has entrado en modo creador!', '🔓');
+            } else {
+                alert('Contraseña incorrecta');
+            }
+        });
+        
+        // Cargar memorias del localStorage
+        function loadMemories() {
+            const stored = localStorage.getItem('nakamaMemories');
+            if (stored) {
+                memories = JSON.parse(stored);
+            }
+        }
+        
+        // Guardar memorias en localStorage
+        function saveMemories() {
+            localStorage.setItem('nakamaMemories', JSON.stringify(memories));
+        }
+        
+        // Cambiar vista
+        function showView(viewName) {
+            // Ocultar todas las vistas
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Mostrar vista seleccionada
+            document.getElementById(viewName).classList.add('active');
+            
+            // Actualizar botones de navegación
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Actualizar mensaje del personaje según la vista
+            if (viewName === 'gallery') {
+                setRandomGalleryMessage();
+            } else if (viewName === 'stats') {
+                updateStatsMessage();
+            }
+        }
+        
+        // Establecer mensaje aleatorio de bienvenida
+        function setRandomWelcomeMessage() {
+            const character = characters[Math.floor(Math.random() * characters.length)];
+            const welcomeMessages = [
+                '¡Yosh! ¡Bienvenido a nuestro libro de aventuras! ¡Aquí guardamos todos nuestros increíbles recuerdos juntos!',
+                '¡Oi! ¡Es hora de navegar por nuestras memorias más preciadas!',
+                '¡Prepárate para una aventura a través del tiempo y los recuerdos!'
+            ];
+            document.getElementById('welcomeMessage').textContent = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+        }
+        
+        // Establecer mensaje aleatorio en galería
+        function setRandomGalleryMessage() {
+            const character = characters[Math.floor(Math.random() * characters.length)];
+            document.getElementById('galleryCharAvatar').textContent = character.avatar;
+            document.getElementById('galleryCharMessage').textContent = character.phrases[Math.floor(Math.random() * character.phrases.length)];
+        }
+        
+        // Actualizar mensaje de estadísticas
+        function updateStatsMessage() {
+            const messages = [
+                '¡Cada memoria añadida es un tesoro más en nuestro cofre de recuerdos!',
+                '¡Nuestra aventura crece con cada recuerdo que guardamos!',
+                '¡El One Piece de los recuerdos está al alcance de nuestra mano!'
+            ];
+            document.getElementById('statsMessage').textContent = messages[Math.floor(Math.random() * messages.length)];
+        }
+        
+        // Manejar selección de archivo
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentMemory = {
+                        file: e.target.result,
+                        type: file.type.startsWith('video') ? 'video' : 'image'
+                    };
+                };
+                reader.readAsDataURL(file);
+                
+                // Actualizar label
+                document.querySelector('.file-input-label').textContent = file.name;
+            }
+        }
+        
+        // Abrir modal de agregar
+        function openAddModal() {
+            if (!isCreatorMode) return;
+            
+            document.getElementById('addModal').classList.add('active');
+            showCharacterReaction('¡Es hora de agregar una nueva aventura!', '✨');
+        }
+        
+        // Cerrar modal de agregar
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('memoryForm').reset();
+            document.querySelector('.file-input-label').textContent = 'Seleccionar archivo';
+            currentMemory = null;
+        }
+        
+        // Abrir modal de detalle
+        function openDetailModal(memoryId) {
+            const memory = memories.find(m => m.id === memoryId);
+            if (!memory) return;
+            
+            const character = characters[Math.floor(Math.random() * characters.length)];
+            
+            let mediaHtml = '';
+            if (memory.type === 'video') {
+                mediaHtml = `<video class="detail-image" controls><source src="${memory.file}" type="video/mp4"></video>`;
+            } else {
+                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
+            }
+            
+            let deleteButton = '';
+            if (isCreatorMode) {
+                deleteButton = `
+                    <button class="form-btn" style="background: linear-gradient(135deg, var(--coral) 0%, #dc2626 100%); color: white; margin-top: 20px;" onclick="deleteMemory('${memoryId}')">
+                        🗑️ Eliminar Memoria
+                    </button>
+                `;
+            }
+            
+            const detailHtml = `
+                <div class="detail-view">
+                    ${mediaHtml}
+                    <h2 class="detail-title">${memory.title}</h2>
+                    <p class="detail-date">Día ${memory.dayNumber} de nuestra aventura - ${new Date(memory.date).toLocaleDateString('es-ES')}</p>
+                    <div class="detail-description">${memory.description || 'Sin descripción'}</div>
+                    
+                    <div class="character-guide" style="margin-top: 20px;">
+                        <span class="character-avatar">${character.avatar}</span>
+                        <span class="character-message">${character.phrases[Math.floor(Math.random() * character.phrases.length)]}</span>
+                    </div>
+                    
+                    ${deleteButton}
+                </div>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = detailHtml;
+            document.getElementById('detailModal').classList.add('active');
+        }
+        
+        // Cerrar modal de detalle
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+        
+        // Eliminar memoria
+        function deleteMemory(memoryId) {
+            if (!isCreatorMode) return;
+            
+            if (confirm('¿Estás seguro de que quieres eliminar esta memoria? ¡No podrás recuperarla!')) {
+                memories = memories.filter(m => m.id !== memoryId);
+                saveMemories();
+                updateGallery();
+                updateStats();
+                closeDetailModal();
+                showCharacterReaction('La memoria ha sido eliminada...', '😢');
+            }
+        }
+        
+        // Mostrar reacción del personaje
+        function showCharacterReaction(message, emoji) {
+            const reaction = document.createElement('div');
+            reaction.className = 'character-guide';
+            reaction.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 300; animation: fadeIn 0.5s;';
+            reaction.innerHTML = `
+                <span class="character-avatar">${emoji}</span>
+                <span class="character-message">${message}</span>
+            `;
+            document.body.appendChild(reaction);
+            
+            setTimeout(() => {
+                reaction.remove();
+            }, 3000);
+        }
+        
+        // Actualizar galería
+        function updateGallery() {
+            const container = document.getElementById('memoriesContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (memories.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+                container.innerHTML = memories.map(memory => {
+                    const thumbnail = memory.type === 'video' 
+                        ? `<video class="memory-thumbnail"><source src="${memory.file}" type="video/mp4"></video>`
+                        : `<img src="${memory.file}" alt="${memory.title}" class="memory-thumbnail">`;
+                    
+                    return `
+                        <div class="memory-card" onclick="openDetailModal('${memory.id}')">
+                            ${thumbnail}
+                            <div class="memory-title">${memory.title}</div>
+                            <div class="memory-date">Día ${memory.dayNumber}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+        
+        // Actualizar estadísticas
+        function updateStats() {
+            // Calcular estadísticas
+            const totalMemories = memories.length;
+            const totalVideos = memories.filter(m => m.type === 'video').length;
+            const daysOfAdventure = memories.length > 0 
+                ? Math.ceil((new Date() - new Date(memories[0].date)) / (1000 * 60 * 60 * 24))
+                : 0;
+            
+            // Actualizar elementos del DOM
+            document.getElementById('totalMemories').textContent = totalMemories;
+            document.getElementById('totalVideos').textContent = totalVideos;
+            document.getElementById('daysOfAdventure').textContent = daysOfAdventure;
+            
+            // Calcular nivel de pirata
+            let level = 'Novato';
+            if (totalMemories >= 50) level = 'Rey Pirata';
+            else if (totalMemories >= 30) level = 'Yonko';
+            else if (totalMemories >= 20) level = 'Supernova';
+            else if (totalMemories >= 10) level = 'Capitán';
+            else if (totalMemories >= 5) level = 'Marinero';
+            
+            document.getElementById('adventureLevel').textContent = level;
+            document.getElementById('treasurePoints').textContent = totalMemories * 100;
+            document.getElementById('epicMoments').textContent = Math.floor(totalMemories / 3);
+            document.getElementById('crewSize').textContent = Math.min(9, Math.floor(totalMemories / 5) + 1);
+        }
+        
+        // Manejar envío del formulario
+        document.getElementById('memoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!isCreatorMode) return;
+            
+            if (!currentMemory) {
+                alert('Por favor selecciona una foto o video');
+                return;
+            }
+            
+            const title = document.getElementById('titleInput').value;
+            const date = document.getElementById('dateInput').value;
+            const description = document.getElementById('descriptionInput').value;
+            
+            // Calcular número de día
+            const dayNumber = memories.length + 1;
+            
+            // Crear nueva memoria
+            const newMemory = {
+                id: Date.now().toString(),
+                title: title,
+                date: date,
+                dayNumber: dayNumber,
+                description: description,
+                file: currentMemory.file,
+                type: currentMemory.type,
+                character: characters[Math.floor(Math.random() * characters.length)].name,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Agregar a memorias
+            memories.unshift(newMemory);
+            saveMemories();
+            
+            // Actualizar UI
+            updateGallery();
+            updateStats();
+            closeAddModal();
+            
+            // Mostrar mensaje de éxito con personaje aleatorio
+            const character = characters[Math.floor(Math.random() * characters.length)];
+            showCharacterReaction(character.phrases[Math.floor(Math.random() * character.phrases.length)], character.avatar);
+        });
+        
+        // Cerrar modales al hacer clic fuera
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+        
+        // Prevenir zoom en iOS
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+        
+        // Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            const sw = `
+                self.addEventListener('install', function(event) {
+                    event.waitUntil(
+                        caches.open('nakama-memories-v1').then(function(cache) {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
+                
+                self.addEventListener('fetch', function(event) {
+                    event.respondWith(
+                        caches.match(event.request).then(function(response) {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([sw], {type: 'application/javascript'});
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl).then(function(registration) {
+                console.log('Service Worker registrado');
+            }).catch(function(error) {
+                console.log('Error al registrar Service Worker:', error);
+            });
+        }
+        
+        // Manifest para PWA
+        const manifest = {
+            name: 'Nuestras Memorias',
+            short_name: 'Memorias',
+            description: 'Libro de aventuras piratas',
+            start_url: '/',
+            display: 'standalone',
+            background_color: '#1e40af',
+            theme_color: '#1e40af',
+            icons: [
+                {
+                    src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+                    sizes: '192x192',
+                    type: 'image/png'
+                }
+            ]
+        };
+        
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestUrl;
+        document.head.appendChild(link);
+        
+        // Inicializar app cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
