@@ -447,6 +447,11 @@
             margin-bottom: 20px;
         }
         
+        .detail-image iframe {
+            border: none;
+            border-radius: 8px;
+        }
+        
         .detail-title {
             font-family: 'Pirata One', cursive;
             font-size: 2em;
@@ -735,7 +740,7 @@
                     </div>
                     
                     <!-- Opción de enlace de Drive -->
-                    // ... existing code ...
+                    <!-- Opción de enlace de Drive -->
                 <div id="driveLinkOption" style="display:none;">
                     <div class="form-group">
                         <label class="form-label">🔗 Enlace de Google Drive</label>
@@ -1048,12 +1053,16 @@
 
             const fileType = document.querySelector('input[name="gdriveFileType"]:checked').value;
             const directUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+    const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+    const thumbnailUrl = `https://drive.google.com/thumbnail?id=${fileId}`;
 
-            currentMemory = {
-                file: directUrl,
-                type: fileType,
-                isGoogleDrive: true
-            };
+    currentMemory = {
+        file: previewUrl,
+        thumbnail: thumbnailUrl,
+        direct: directUrl,
+        type: fileType,
+        isGoogleDrive: true
+    };
             
             processingIndicator.innerHTML = `✅ Enlace para ${fileType} procesado correctamente.`;
         }
@@ -1083,7 +1092,9 @@ function openDetailModal(memoryId) {
     const character = characters[Math.floor(Math.random() * characters.length)];
     
     let mediaHtml = '';
-    if (memory.type === 'video') {
+    if (memory.isGoogleDrive) {
+        mediaHtml = `<iframe src="${memory.file}" width="100%" height="400" allow="autoplay" allowfullscreen class="detail-image"></iframe>`;
+    } else if (memory.type === 'video') {
         mediaHtml = `<video class="detail-image" controls><source src="${memory.file}" type="video/mp4"></video>`;
     } else {
         mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
@@ -1176,8 +1187,9 @@ function openDetailModal(memoryId) {
         emptyState.style.display = 'none';
         container.innerHTML = memories.map(memory => {
             let thumbnail;
-            
-            if (memory.type === 'video') {
+            if (memory.isGoogleDrive) {
+                thumbnail = `<img src="${memory.thumbnail}" alt="${memory.title}" class="memory-thumbnail">`;
+            } else if (memory.type === 'video') {
                 thumbnail = `<video class="memory-thumbnail"><source src="${memory.file}" type="video/mp4"></video>`;
             } else {
                 thumbnail = `<img src="${memory.file}" alt="${memory.title}" class="memory-thumbnail">`;
