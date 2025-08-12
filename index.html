@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -735,15 +735,22 @@
                     </div>
                     
                     <!-- Opción de enlace de Drive -->
-                    <div id="driveLinkOption" style="display: none;">
-                        <input type="text" class="form-input" id="driveLinkInput" placeholder="Pega el enlace de Google Drive aquí">
-                        <p style="font-size: 0.8em; color: #64748b; margin-top: 5px;">
-                            Asegúrate de que el enlace sea público o tenga permisos de visualización
-                        </p>
-                        <button type="button" class="form-btn" style="margin-top: 10px; background: #4f46e5;" onclick="processGoogleDriveLink()">
-                            🔄 Procesar enlace
-                        </button>
+                    // ... existing code ...
+                <div id="driveLinkOption" style="display:none;">
+                    <div class="form-group">
+                        <label class="form-label">🔗 Enlace de Google Drive</label>
+                        <input type="text" class="form-input" id="driveLinkInput" placeholder="Pega el enlace público aquí">
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo de archivo</label>
+                        <div style="display: flex; gap: 20px;">
+                            <label style="cursor: pointer;"><input type="radio" name="gdriveFileType" value="image" checked> 🖼️ Imagen</label>
+                            <label style="cursor: pointer;"><input type="radio" name="gdriveFileType" value="video"> 🎥 Video</label>
+                        </div>
+                    </div>
+                    <button type="button" class="form-btn" onclick="processGoogleDriveLink()">
+                        🔗 Procesar Enlace
+                    </button>
                 </div>
                 
                 <div class="form-group">
@@ -1020,88 +1027,35 @@
                 return;
             }
             
-            // Mostrar indicador de carga
-            const processingIndicator = document.createElement('div');
+            const processingIndicator = document.getElementById('processingIndicator') || document.createElement('div');
             processingIndicator.innerHTML = '<div class="loading"></div> Procesando enlace...';
             processingIndicator.style.textAlign = 'center';
             processingIndicator.style.margin = '10px 0';
             processingIndicator.id = 'processingIndicator';
             
-            const existingIndicator = document.getElementById('processingIndicator');
-            if (existingIndicator) {
-                existingIndicator.remove();
+            if (!document.getElementById('processingIndicator')) {
+                document.getElementById('driveLinkOption').appendChild(processingIndicator);
             }
             
-            document.getElementById('driveLinkOption').appendChild(processingIndicator);
-            
-            // Extraer ID del enlace de Google Drive
             let fileId = '';
-            
-            // Formato: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-            if (driveLink.includes('/file/d/')) {
-                const match = driveLink.match(/\/file\/d\/([^\/]+)/);
-                if (match && match[1]) {
-                    fileId = match[1];
-                }
-            }
-            // Formato: https://drive.google.com/open?id=FILE_ID
-            else if (driveLink.includes('?id=')) {
-                const match = driveLink.match(/\?id=([^&]+)/);
-                if (match && match[1]) {
-                    fileId = match[1];
-                }
-            }
-            // Formato: https://docs.google.com/document/d/FILE_ID/edit
-            else if (driveLink.includes('/d/')) {
-                const match = driveLink.match(/\/d\/([^\/]+)/);
-                if (match && match[1]) {
-                    fileId = match[1];
-                }
-            }
-            
-            if (!fileId) {
-                processingIndicator.innerHTML = '❌ No se pudo extraer el ID del archivo. Verifica el enlace.';
+            const match = driveLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                fileId = match[1];
+            } else {
+                 processingIndicator.innerHTML = '❌ No se pudo extraer el ID del archivo. Asegúrate de que el enlace sea correcto y público.';
                 return;
             }
-            
-            // Limpiar el ID si contiene parámetros adicionales
-            if (fileId.includes('?') || fileId.includes('/')) {
-                fileId = fileId.split('?')[0].split('/')[0];
-            }
-            
-            console.log('ID extraído:', fileId); // Para depuración
-            
-            // Construir URL directa para imágenes
+
+            const fileType = document.querySelector('input[name="gdriveFileType"]:checked').value;
             const directUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+
+            currentMemory = {
+                file: directUrl,
+                type: fileType,
+                isGoogleDrive: true
+            };
             
-            // Verificar si es una imagen o video válido
-            const img = new Image();
-            img.onload = function() {
-                // Es una imagen válida
-                currentMemory = {
-                    file: directUrl,
-                    type: 'image',
-                    isGoogleDrive: true
-                };
-                processingIndicator.innerHTML = '✅ Imagen cargada correctamente';
-            };
-            img.onerror = function() {
-                // Intentar como video
-                const video = document.createElement('video');
-                video.onloadeddata = function() {
-                    currentMemory = {
-                        file: directUrl,
-                        type: 'video',
-                        isGoogleDrive: true
-                    };
-                    processingIndicator.innerHTML = '✅ Video cargado correctamente';
-                };
-                video.onerror = function() {
-                    processingIndicator.innerHTML = '❌ No se pudo cargar el archivo. Asegúrate de que sea una imagen o video y que el enlace sea público.';
-                };
-                video.src = directUrl;
-            };
-            img.src = directUrl;
+            processingIndicator.innerHTML = `✅ Enlace para ${fileType} procesado correctamente.`;
         }
         
         // Abrir modal de agregar
