@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "title": "Nuestra primera aventura",
+    "title": "Nuestra primera foto",
     "date": "2023-08-02",
     "dayNumber": 1,
     "description": "Esta fue nuestra primer foto juntos, fue en el HyM de Punta Carretas, me insistio un poquiiiito por la foto, pero termino siendo de mis preferidas.",
@@ -18,7 +18,7 @@
     "title": "Barbie",
     "date": "2023-08-09",
     "dayNumber": 2,
-    "description": "Un día increíble en la playa, buscando tesoros y disfrutando del mar.",
+    "description": "Cuando fuimos a ver barbie al cine, creo que me termino gustando mas a mi JAJAJAJAJA.",
     "file": "https://drive.google.com/file/d/1Oi4sfQWcDvaR17lXvLwQT3XPUZJ2QJbG/preview",
     "type": "image",
     "isGoogleDrive": true,
@@ -26,5 +26,21 @@
     "fileId": "1Oi4sfQWcDvaR17lXvLwQT3XPUZJ2QJbG",
     "character": "Nami",
     "createdAt": "2023-08-09T15:30:00.000Z"
+  },
+  {
+    "id": "3",
+    "title": "Ababa conoce mi family",
+    "date": "2023-08-24",
+    "dayNumber": 3,
+    "description": "Cuando fuimos a ver barbie al cine, creo que me termino gustando mas a mi JAJAJAJAJA.",
+    "file": "https://drive.google.com/file/d/1KASEJdHsxoODrEr8u2m8NaUG0XYmwY67/preview",
+    "type": "image",
+    "isGoogleDrive": true,
+    "thumbnail": "https://drive.google.com/thumbnail?id=1KASEJdHsxoODrEr8u2m8NaUG0XYmwY67&sz=w200",
+    "fileId": "1KASEJdHsxoODrEr8u2m8NaUG0XYmwY67",
+    "character": "Zoro",
+    "createdAt": "2023-08-24T15:30:00.000Z"
   }
+
 ]
+
