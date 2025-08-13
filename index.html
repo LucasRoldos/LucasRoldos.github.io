@@ -1376,11 +1376,26 @@ function loadMemories() {
             }
         });
         
-        // Prevenir zoom en iOS
-        document.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
-        });
+    // Inicializar la app
+    document.addEventListener('DOMContentLoaded', function() {
+        initApp();
         
-    </script>
+        // Registrar el Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(function(registration) {
+                    console.log('Service Worker registrado con éxito:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('Error al registrar el Service Worker:', error);
+                });
+        }
+    });
+    
+    // Prevenir zoom en iOS
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
+</script>
 </body>
 </html>
