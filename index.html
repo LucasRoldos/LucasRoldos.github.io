@@ -1196,18 +1196,20 @@ function loadMemories() {
         }
         
         // Abrir modal de detalle (MEJORADO)
-        function openDetailModal(memoryId) {
-            const memory = memories.find(m => m.id === memoryId);
+         function openDetailModal(id) {
+            const memory = memories.find(m => m.id === id);
             if (!memory) return;
-
+            
+            const detailContent = document.getElementById('detailContent');
             let mediaHtml = '';
+            
             if (memory.isGoogleDrive) {
                 if (memory.type === 'video') {
-                    mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay"></iframe>`;
+                    mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay" frameborder="0"></iframe>`;
                 } else {
-                    // Usar URL de alta calidad para la imagen, pidiendo un tamaño mayor a la miniatura
-                    const imageUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1920`;
-                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image" onerror="this.onerror=null; this.src='${memory.thumbnail}';">`;
+                    // Usar URL de alta calidad para la imagen
+                    const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
+                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image">`;
                 }
             } else if (memory.type === 'video') {
                 mediaHtml = `<video src="${memory.file}" class="detail-image" controls autoplay></video>`;
@@ -1398,4 +1400,3 @@ function loadMemories() {
 </script>
 </body>
 </html>
-
