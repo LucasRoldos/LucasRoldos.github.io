@@ -4,7 +4,7 @@
     "title": "Nuestra primera aventura",
     "date": "2023-08-02",
     "dayNumber": 1,
-    "description": "Este fue nuestra primer foto juntos, fue en el HyM de Punta Carretas, me insistio un poquiiiito por la foto, pero termino siendo de mis preferidas.",
+    "description": "Esta fue nuestra primer foto juntos, fue en el HyM de Punta Carretas, me insistio un poquiiiito por la foto, pero termino siendo de mis preferidas.",
     "file": "https://drive.google.com/file/d/TU_ID_DE_ARCHIVO_AQUI/preview",
     "type": "image",
     "isGoogleDrive": true,
@@ -27,4 +27,5 @@
     "character": "Nami",
     "createdAt": "2023-08-09T15:30:00.000Z"
   }
+
 ]
