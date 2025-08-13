@@ -1206,7 +1206,7 @@ function loadMemories() {
                     mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay"></iframe>`;
                 } else {
                     // Usar URL de alta calidad para la imagen, pidiendo un tamaño mayor a la miniatura
-                    const imageUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1024`;
+                    const imageUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1920`;
                     mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image" onerror="this.onerror=null; this.src='${memory.thumbnail}';">`;
                 }
             } else if (memory.type === 'video') {
@@ -1398,3 +1398,4 @@ function loadMemories() {
 </script>
 </body>
 </html>
+
