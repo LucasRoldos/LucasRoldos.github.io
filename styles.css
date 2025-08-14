@@ -212,14 +212,141 @@ html.theme-transition {
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s ease-in, transform 0.3s ease-in;
-}
-
-@keyframes fadeIn {
+}@keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Personaje guía */
+.character-message, .char-avatar-img {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.character-message.fade-out, .char-avatar-img.fade-out {
+    opacity: 0;
+}
+
+/* Estilos para el modal informativo de la galería */
+.gallery-info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+    backdrop-filter: blur(5px);
+}
+
+.gallery-info-content {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    border: 2px solid var(--gold);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.gallery-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+.gallery-info-header h3 {
+    font-family: 'Pirata One', cursive;
+    font-size: 1.8em;
+}
+
+.gallery-info-close {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: transform 0.2s;
+}
+
+.gallery-info-close:hover {
+    transform: scale(1.2);
+}
+
+.gallery-info-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.info-icon {
+    font-size: 1.5em;
+    background-color: var(--gold);
+    color: var(--wood);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-text h4 {
+    font-family: 'Pirata One', cursive;
+    font-size: 1.3em;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.info-text p {
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.gallery-info-footer {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gallery-info-btn {
+    background: linear-gradient(135deg, var(--coral) 0%, #dc2626 100%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.gallery-info-btn:hover {
+    transform: scale(1.05);
+}
+
+.dont-show-again {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+
+.dont-show-again input {
+    cursor: pointer;
+}
+
 .character-guide {
     background: var(--character-guide-bg);
     border-radius: 20px;
@@ -234,6 +361,14 @@ html.theme-transition {
     transition: background var(--transition-medium);
 }
 
+.character-guide .character-message, .character-guide .char-avatar-img {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.character-guide .character-message.fade-out, .character-guide .char-avatar-img.fade-out {
+    opacity: 0;
+}
+
 .character-guide::before {
     content: '';
     position: absolute;
@@ -244,6 +379,11 @@ html.theme-transition {
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
     border-top: 10px solid white;
+}
+
+.character-guide .fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
 }
 
 .character-avatar {
@@ -847,6 +987,155 @@ html.theme-transition {
 
 
 
+/* Modal informativo de galería */
+.gallery-info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.gallery-info-content {
+    background: var(--card-bg);
+    border-radius: 15px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 2px solid var(--gold);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.3s ease-out;
+}
+
+.gallery-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gallery-info-header h3 {
+    margin: 0;
+    color: var(--gold);
+    font-size: 1.4em;
+}
+
+.gallery-info-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s;
+}
+
+.gallery-info-close:hover {
+    color: var(--coral);
+}
+
+.gallery-info-body {
+    padding: 25px;
+}
+
+.info-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    align-items: flex-start;
+}
+
+.info-section:last-child {
+    margin-bottom: 0;
+}
+
+.info-icon {
+    font-size: 2em;
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.info-text h4 {
+    margin: 0 0 8px 0;
+    color: var(--gold);
+    font-size: 1.1em;
+}
+
+.info-text p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-size: 0.95em;
+}
+
+.gallery-info-footer {
+    padding: 20px 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.gallery-info-btn {
+    background: var(--gold);
+    color: var(--bg-primary);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.gallery-info-btn:hover {
+    background: var(--coral);
+    transform: translateY(-2px);
+}
+
+.dont-show-again {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.dont-show-again input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: var(--gold);
+}
+
+/* Responsive para el modal informativo */
+@media (max-width: 768px) {
+    .gallery-info-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .gallery-info-body {
+        padding: 20px;
+    }
+    
+    .info-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .info-icon {
+        font-size: 1.5em;
+    }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .app-title {
@@ -928,6 +1217,37 @@ html.theme-transition {
         width: 40px;
         height: 40px;
         font-size: 18px;
+    }
+    
+    /* Mejoras para el modo presentación en móviles */
+    .presentation-media {
+        max-width: 95%;
+        max-height: 50vh;
+    }
+    
+    .presentation-info {
+        padding: 10px;
+        width: 95%;
+        margin-top: 10px;
+    }
+    
+    .presentation-slide .character-message {
+        font-size: 0.9em;
+        margin-top: 10px;
+    }
+    
+    .presentation-controls {
+        bottom: 10%;
+        padding: 0 15px;
+    }
+    
+    .presentation-progress {
+        bottom: 3%;
+    }
+    
+    .progress-dot {
+        width: 8px;
+        height: 8px;
     }
 }
 
@@ -1091,7 +1411,7 @@ html.theme-transition {
 
 .presentation-media {
     max-width: 90%;
-    max-height: 70vh;
+    max-height: 60vh;
     object-fit: contain;
     border-radius: 10px;
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
@@ -1099,22 +1419,22 @@ html.theme-transition {
 
 .presentation-controls {
     position: absolute;
-    bottom: 20%;
+    bottom: 15%;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
-    padding: 0 50px;
+    padding: 0 30px;
 }
 
 .presentation-btn {
     background: rgba(255, 255, 255, 0.2);
     color: white;
     border: none;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     transition: background 0.3s, transform 0.3s;
     display: flex;
@@ -1129,18 +1449,19 @@ html.theme-transition {
 
 .presentation-progress {
     position: absolute;
-    bottom: 10%;
+    bottom: 5%;
     left: 0;
     right: 0;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     padding: 10px;
+    flex-wrap: wrap;
 }
 
 .progress-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     cursor: pointer;
@@ -1155,6 +1476,17 @@ html.theme-transition {
 .progress-dot:hover {
     transform: scale(1.1);
     background: rgba(255, 255, 255, 0.5);
+}
+
+/* Información de la presentación para móviles */
+.presentation-info {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--gold);
+    margin-top: 15px;
+    width: 90%;
+    max-width: 400px;
 }
 
 /* Empty state */
