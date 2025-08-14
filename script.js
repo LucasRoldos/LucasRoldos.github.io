@@ -245,6 +245,11 @@ function saveMemories() {
     localStorage.setItem('nakamaMemories', JSON.stringify(memories));
 }
 
+// Variables para el cambio automático de mensajes
+let galleryMessageInterval;
+let welcomeMessageInterval;
+let currentGalleryMessageIndex = 0;
+
 // Cambiar vista (ARREGLADO)
 function showView(viewName) {
     // Ocultar todas las vistas con animación
@@ -275,31 +280,79 @@ function showView(viewName) {
     // Actualizar mensaje del personaje según la vista
     if (viewName === 'gallery') {
         setRandomGalleryMessage();
+        startGalleryMessages();
+        showGalleryInfo();
     } else if (viewName === 'stats') {
         updateStatsMessage();
+        stopGalleryMessages();
     } else if (viewName === 'timeline') {
         // Actualizar la línea de tiempo
         updateTimeline();
+        stopGalleryMessages();
+    } else {
+        stopGalleryMessages();
     }
+}
+
+// Mostrar el modal informativo de la galería
+function showGalleryInfo() {
+    // Verificar si el usuario ha elegido no mostrar el modal
+    const dontShowAgain = localStorage.getItem('dontShowGalleryInfo') === 'true';
+    
+    if (!dontShowAgain) {
+        document.getElementById('galleryInfoModal').style.display = 'flex';
+    }
+}
+
+// Cerrar el modal informativo de la galería
+function closeGalleryInfo() {
+    const dontShowAgain = document.getElementById('dontShowAgain').checked;
+    
+    // Si el usuario marcó "No mostrar de nuevo", guardar la preferencia
+    if (dontShowAgain) {
+        localStorage.setItem('dontShowGalleryInfo', 'true');
+    }
+    
+    // Ocultar el modal con una animación de fade-out
+    const modal = document.getElementById('galleryInfoModal');
+    modal.style.opacity = '0';
+    setTimeout(() => {
+        modal.style.display = 'none';
+        modal.style.opacity = '1';
+    }, 300);
 }
 
 // Establecer mensaje aleatorio de bienvenida (actualizado con Luffy)
 function setRandomWelcomeMessage() {
-    const welcomeMessages = [
-        '¡Yosh! ¡Bienvenido a nuestro libro de aventuras! ¡Aquí guardamos algunos de nuestros increíbles recuerdos juntos!',
-        '¡Oi! ¡Es hora de navegar por nuestras memorias más preciadas!',
-        '¡Prepárate para una aventura a través del tiempo y los recuerdos!'
-    ];
-    
-    const welcomeElement = document.getElementById('welcomeMessage');
-    if (welcomeElement) {
-        welcomeElement.textContent = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
-    }
-    
-    // Actualizar también el avatar del mensaje de bienvenida para usar siempre Luffy
-    const welcomeAvatar = document.querySelector('#home .character-guide .character-avatar');
-    if (welcomeAvatar) {
-        welcomeAvatar.outerHTML = '<img src="luffy.png" alt="Luffy" class="char-avatar-img">';
+    const welcomeMessageEl = document.getElementById('welcomeMessage');
+    const charAvatarEl = document.querySelector('#home .char-avatar-img');
+
+    if (welcomeMessageEl && charAvatarEl) {
+        const changeMessage = () => {
+            welcomeMessageEl.classList.add('fade-out');
+            charAvatarEl.classList.add('fade-out');
+
+            setTimeout(() => {
+                const randomChar = characters[Math.floor(Math.random() * characters.length)];
+                const randomPhrase = randomChar.phrases[Math.floor(Math.random() * randomChar.phrases.length)];
+
+                welcomeMessageEl.textContent = randomPhrase;
+                charAvatarEl.src = randomChar.avatar;
+                charAvatarEl.alt = randomChar.name;
+
+                welcomeMessageEl.classList.remove('fade-out');
+                charAvatarEl.classList.remove('fade-out');
+            }, 500); // Coincidir con el tiempo de transición de CSS
+        };
+
+        // Mensaje inicial
+        changeMessage();
+
+        // Cambiar mensaje cada 4 segundos
+        if (welcomeMessageInterval) {
+            clearInterval(welcomeMessageInterval);
+        }
+        welcomeMessageInterval = setInterval(changeMessage, 4000);
     }
 }
 
@@ -634,7 +687,6 @@ function updateGallery() {
         container.appendChild(card);
     });
     
-
 }
 
 
@@ -888,6 +940,7 @@ function startPresentationMode() {
         const slide = document.createElement('div');
         slide.className = `presentation-slide ${index === 0 ? 'active' : ''}`;
         slide.setAttribute('data-index', index);
+        slide.setAttribute('data-type', memory.type || 'image');
         
         // Preparar el contenido multimedia
         let mediaHtml = '';
@@ -896,21 +949,25 @@ function startPresentationMode() {
                 mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
             } else {
                 const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;
-            }
+                mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;            }
         } else if (memory.type === 'video') {
-            mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay></video>`;
+            mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
         } else {
             mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}">`;
         }
         
-        // Añadir información de la memoria
+        // Añadir información de la memoria y comentario del personaje
+        const characterComment = getRandomCharacterComment(memory.character || 'Luffy');
         slide.innerHTML = `
             ${mediaHtml}
             <div class="presentation-info">
                 <div class="presentation-title">${memory.title}</div>
                 <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
                 <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
+                <div class="character-comment">
+                    <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
+                    <span class="comment-text">${characterComment}</span>
+                </div>
             </div>
         `;
         
@@ -928,11 +985,44 @@ function startPresentationMode() {
     // Mostrar el modo presentación
     presentationMode.style.display = 'flex';
     
-    // Iniciar presentación automática
-    window.presentationInterval = setInterval(() => {
-        navigatePresentation('next');
-    }, 5000); // Cambiar diapositiva cada 5 segundos
+    // Configurar la presentación automática
+    scheduleNextSlide();
 }
+
+// Función para programar el cambio automático de diapositivas
+function scheduleNextSlide() {
+    // Limpiar cualquier intervalo existente
+    if (window.presentationInterval) {
+        clearTimeout(window.presentationInterval);
+    }
+    
+    const currentSlide = document.querySelector('.presentation-slide.active');
+    if (!currentSlide) return;
+    
+    const slideType = currentSlide.getAttribute('data-type');
+    const slideIndex = parseInt(currentSlide.getAttribute('data-index'));
+    
+    // Si es un video, esperar a que termine
+    if (slideType === 'video') {
+        const video = document.getElementById(`video-${slideIndex}`);
+        if (video) {
+            // Si el video está reproduciéndose, esperar a que termine
+            if (!video.ended && !video.paused) {
+                video.onended = function() {
+                    // Esperar 2 segundos después de que termine el video
+                    window.presentationInterval = setTimeout(() => {
+                        navigatePresentation('next');
+                    }, 2000);
+                };
+                return;
+            }
+        }
+    }
+    
+    // Para imágenes o si el video no está disponible, usar un tiempo fijo
+    window.presentationInterval = setTimeout(() => {
+        navigatePresentation('next');
+    }, 5000); // 5 segundos para imágenes
 
 // Navegar en el modo presentación
 function navigatePresentation(direction, targetIndex) {
@@ -963,6 +1053,9 @@ function navigatePresentation(direction, targetIndex) {
     const currentDot = document.querySelector('.progress-dot.active');
     if (currentDot) currentDot.classList.remove('active');
     dots[newIndex].classList.add('active');
+    
+    // Programar el siguiente cambio automático
+    scheduleNextSlide();
 }
 
 // Cerrar modo presentación
@@ -1114,4 +1207,5 @@ function filterMemoriesByDate(date) {
             </div>
         `;
     }
+}
 }
