@@ -1196,7 +1196,7 @@ function loadMemories() {
         }
         
         // Abrir modal de detalle (MEJORADO)
-         function openDetailModal(id) {
+        function openDetailModal(id) {
             const memory = memories.find(m => m.id === id);
             if (!memory) return;
             
@@ -1205,20 +1205,19 @@ function loadMemories() {
             
             if (memory.isGoogleDrive) {
                 if (memory.type === 'video') {
-                    mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay" frameborder="0"></iframe>`;
-                } else {
-                    // Usar URL de alta calidad para la imagen
-                    const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image">`;
-                }
-            } else if (memory.type === 'video') {
-                mediaHtml = `<video src="${memory.file}" class="detail-image" controls autoplay></video>`;
-            } else {
-                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
-            }
-
-            const sourceIndicator = memory.isGoogleDrive ? 
-                `<div style="text-align: center; margin-top: 5px; font-size: 0.8em; color: #64748b;">☁️ Alojado en Google Drive</div>` : '';
+            mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay" frameborder="0"></iframe>`;
+        } else {
+            // Usar URL directa para obtener la imagen en calidad original
+            const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
+            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;
+        }
+    } else if (memory.type === 'video') {
+        mediaHtml = `<video src="${memory.file}" class="detail-image" controls autoplay></video>`;
+    } else {
+        mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
+    }
+    const sourceIndicator = memory.isGoogleDrive ? 
+        `<div style="text-align: center; margin-top: 5px; font-size: 0.8em; color: #64748b;">☁️ Alojado en Google Drive</div>` : '';
 
             const detailHtml = `
                 <h2 class="detail-title">${memory.title}</h2>
