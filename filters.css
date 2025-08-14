@@ -1,0 +1,512 @@
+/* Filtros estilo One Piece para imágenes */
+.filter-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Filtro estilo Manga (blanco y negro) */
+.filter-manga {
+    filter: grayscale(100%) contrast(120%);
+}
+
+/* Filtro estilo Wanted Poster */
+.filter-wanted {
+    filter: sepia(50%) contrast(110%) brightness(90%);
+    border: 8px solid #8B4513;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Filtro estilo Sunny (brillante y cálido) */
+.filter-sunny {
+    filter: brightness(110%) saturate(130%) contrast(110%);
+}
+
+/* Filtro estilo Merry (nostálgico) */
+.filter-merry {
+    filter: sepia(30%) saturate(90%) brightness(105%);
+}
+
+/* Filtro estilo Grand Line (azulado) */
+.filter-grandline {
+    filter: hue-rotate(210deg) saturate(80%) brightness(105%);
+}
+
+/* Filtro estilo Gear 5 (brillante y energético) */
+.filter-gear5 {
+    filter: brightness(120%) contrast(120%) saturate(150%);
+}
+
+/* Filtro estilo Haki (oscuro y poderoso) */
+.filter-haki {
+    filter: contrast(130%) brightness(80%) saturate(110%);
+}
+
+/* Filtro estilo Poneglyph (antiguo) */
+.filter-poneglyph {
+    filter: grayscale(50%) sepia(50%) hue-rotate(300deg);
+}
+
+/* Filtro estilo Devil Fruit (vibrante y extraño) */
+.filter-devilfruit {
+    filter: hue-rotate(30deg) saturate(150%) contrast(120%);
+}
+
+/* Filtro estilo Skypiea (etéreo) */
+.filter-skypiea {
+    filter: brightness(120%) contrast(90%) saturate(110%);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Estilos para selector de filtros en móvil */
+.filter-selector {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 0;
+    margin: 10px 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.filter-selector::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.filter-option {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    background-size: cover;
+    background-position: center;
+}
+
+.filter-option.active {
+    border-color: var(--gold);
+    transform: scale(1.1);
+}
+
+.filter-option:hover {
+    transform: scale(1.05);
+}
+
+.filter-name {
+    font-size: 10px;
+    text-align: center;
+    margin-top: 5px;
+    color: var(--text-primary);
+}
+
+/* Estilos para modo presentación */
+.presentation-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.presentation-content {
+    width: 90%;
+    max-width: 800px;
+    height: 80%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+}
+
+.presentation-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--card-bg);
+}
+
+.presentation-slide.active {
+    opacity: 1;
+    z-index: 10;
+}
+
+.presentation-image {
+    max-width: 100%;
+    max-height: 70%;
+    object-fit: contain;
+}
+
+.presentation-video {
+    max-width: 100%;
+    max-height: 70%;
+    object-fit: contain;
+}
+
+.presentation-info {
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+}
+
+.presentation-title {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.presentation-description {
+    font-size: 1em;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.presentation-date {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+}
+
+.presentation-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 20;
+}
+
+.presentation-btn {
+    background: rgba(251, 191, 36, 0.8);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: var(--wood);
+    font-size: 1.5em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.presentation-btn:hover {
+    transform: scale(1.1);
+    background: rgba(251, 191, 36, 1);
+}
+
+.presentation-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(239, 68, 68, 0.8);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.presentation-close:hover {
+    transform: scale(1.1);
+    background: rgba(239, 68, 68, 1);
+}
+
+.presentation-progress {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 20;
+}
+
+.progress-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.progress-dot.active {
+    background: var(--gold);
+    transform: scale(1.2);
+}
+
+/* Línea de tiempo */
+.timeline-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 20px 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.timeline-container::-webkit-scrollbar {
+    display: none;
+}
+
+.timeline {
+    position: relative;
+    min-width: max-content;
+    padding: 20px 0;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.timeline-events {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    gap: 40px;
+    padding: 0 20px;
+}
+
+.timeline-event {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.timeline-event:hover {
+    transform: translateY(-5px);
+}
+
+.timeline-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.timeline-event.active .timeline-dot {
+    transform: scale(1.3);
+    background: var(--coral);
+}
+
+.timeline-thumbnail {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.timeline-event.active .timeline-thumbnail {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.5);
+}
+
+.timeline-date {
+    font-size: 0.8em;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+
+
+/* Animaciones mejoradas */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Clases de animación para aplicar */
+.animate-slideInRight {
+    animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-slideInLeft {
+    animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.animate-slideInUp {
+    animation: slideInUp 0.5s ease-out forwards;
+}
+
+.animate-zoomIn {
+    animation: zoomIn 0.5s ease-out forwards;
+}
+
+.animate-bounce {
+    animation: bounce 1s ease infinite;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease infinite;
+}
+
+.animate-shake {
+    animation: shake 0.5s ease;
+}
+
+.animate-rotate {
+    animation: rotate 2s linear infinite;
+}
+
+/* Responsive para móvil */
+@media (max-width: 768px) {
+    .presentation-content {
+        width: 95%;
+        height: 85%;
+    }
+    
+    .presentation-title {
+        font-size: 1.2em;
+    }
+    
+    .presentation-description {
+        font-size: 0.9em;
+    }
+    
+    .presentation-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2em;
+    }
+    
+    .timeline-thumbnail {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .timeline-events {
+        gap: 30px;
+    }
+    
+    .filter-option {
+        width: 50px;
+        height: 50px;
+    }
+}
