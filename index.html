@@ -10,6 +10,8 @@
     
     <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="filters.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Modal de Login -->
@@ -50,6 +52,8 @@
     <nav class="main-nav">
         <button class="nav-btn active" onclick="showView('home')">🏠 Inicio</button>
         <button class="nav-btn" onclick="showView('gallery')">📸 Galería</button>
+        <button class="nav-btn" onclick="showView('timeline')">📅 Línea de tiempo</button>
+        <button class="nav-btn theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Modo</button>
     </nav>
     
     <div class="container">
@@ -96,6 +100,10 @@
                 </span>
             </div>
             
+            <div class="gallery-actions">
+                <button class="action-btn" onclick="startPresentationMode()"><i class="fas fa-play"></i> Presentación</button>
+            </div>
+            
             <div id="memoriesContainer" class="memories-grid">
                 <!-- Las memorias se cargarán aquí -->
             </div>
@@ -106,16 +114,64 @@
                 <div class="empty-state-submessage" id="emptyStateSubmessage">Pronto se añadirán nuevas aventuras</div>
             </div>
         </div>
+        
+        <!-- Vista Línea de Tiempo -->
+        <div id="timeline" class="view">
+            <div class="character-guide">
+                <span class="character-avatar">⏳</span>
+                <span class="character-message">
+                    ¡Navega por nuestra línea de tiempo! Cada punto marca un momento especial en nuestra aventura.
+                </span>
+            </div>
+            
+            <div class="timeline-container">
+                <div class="timeline">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-events" id="timelineEvents">
+                        <!-- Los eventos de la línea de tiempo se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+            
+            <div id="timelineMemoriesContainer" class="memories-grid">
+                <!-- Las memorias filtradas por fecha se mostrarán aquí -->
+            </div>
+        </div>
+        
+
     </div>
     
 
     <!-- Modal de detalle -->
     <div id="detailModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content animate-zoomIn">
             <button class="modal-close" onclick="closeDetailModal()">✕</button>
             <div id="detailContent">
                 <!-- El contenido se cargará dinámicamente -->
             </div>
+            <div class="filter-selector" id="filterSelector">
+                <!-- Los filtros se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modo Presentación -->
+    <div id="presentationMode" class="presentation-mode" style="display: none;">
+        <button class="presentation-close" onclick="closePresentationMode()"><i class="fas fa-times"></i></button>
+        
+        <div class="presentation-content">
+            <div id="presentationSlides">
+                <!-- Las diapositivas se cargarán dinámicamente -->
+            </div>
+        </div>
+        
+        <div class="presentation-controls">
+            <button class="presentation-btn" onclick="navigatePresentation('prev')"><i class="fas fa-chevron-left"></i></button>
+            <button class="presentation-btn" onclick="navigatePresentation('next')"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <div class="presentation-progress" id="presentationProgress">
+            <!-- Los indicadores de progreso se cargarán dinámicamente -->
         </div>
     </div>
     
