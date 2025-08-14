@@ -323,16 +323,19 @@
         .nav-arrows {
             position: absolute;
             top: 50%;
+            left: 0;
+            right: 0;
             transform: translateY(-50%);
-            width: 100%;
             display: flex;
             justify-content: space-between;
-            padding: 0 20px;
+            align-items: center;
+            padding: 0 10px;
             pointer-events: none;
+            z-index: 10;
         }
         
         .nav-arrow {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             color: white;
             border: none;
             border-radius: 50%;
@@ -345,11 +348,11 @@
             justify-content: center;
             transition: all 0.3s;
             pointer-events: auto;
-            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
         .nav-arrow:hover {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             transform: scale(1.1);
         }
         
@@ -360,6 +363,7 @@
         .nav-arrow:disabled {
             opacity: 0.3;
             cursor: not-allowed;
+            transform: none;
         }
 
         .modal-content {
@@ -485,11 +489,21 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
         
-        .detail-image {
+        /* Contenedor de imagen para centrar */
+        .image-container {
+            position: relative;
             width: 100%;
-            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin-bottom: 20px;
+        }
+
+        .detail-image {
+            max-width: 100%;
+            height: auto;
             max-height: 400px;
+            border-radius: 10px;
             object-fit: contain;
         }
         
@@ -597,7 +611,7 @@
             
             /* Estilos para el comentario de personaje en móvil */
             .nav-arrows {
-                padding: 0 10px;
+                padding: 0 5px;
             }
             
             .nav-arrow {
@@ -1195,9 +1209,14 @@ function loadMemories() {
                     <button class="nav-arrow" onclick="navigateMemory('prev')" ${!hasPrev ? 'disabled' : ''} title="Anterior">‹</button>
                     <button class="nav-arrow" onclick="navigateMemory('next')" ${!hasNext ? 'disabled' : ''} title="Siguiente">›</button>
                 </div>
+                
                 <h2 class="detail-title">${memory.title}</h2>
                 <p class="detail-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</p>
-                ${mediaHtml}
+                
+                <div class="image-container">
+                    ${mediaHtml}
+                </div>
+                
                 ${sourceIndicator}
                 <p class="detail-description">${memory.description || 'Sin descripción disponible'}</p>
                 
