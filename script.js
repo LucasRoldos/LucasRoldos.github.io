@@ -980,6 +980,7 @@ function scheduleNextSlide() {
     window.presentationInterval = setTimeout(() => {
         navigatePresentation('next');
     }, 5000); // 5 segundos para imágenes
+}
 
 // Navegar en el modo presentación
 function navigatePresentation(direction, targetIndex) {
@@ -1176,5 +1177,4 @@ function showGalleryInfo() {
 function closeGalleryInfo() {
   document.getElementById('galleryInfoModal').style.display = 'none';
   localStorage.setItem('galleryInfoShown', 'true');
-}
 }
