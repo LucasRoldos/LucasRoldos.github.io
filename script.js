@@ -247,7 +247,6 @@ function saveMemories() {
 
 // Variables para el cambio automático de mensajes
 let galleryMessageInterval;
-let welcomeMessageInterval;
 let currentGalleryMessageIndex = 0;
 
 // Cambiar vista (ARREGLADO)
@@ -294,65 +293,23 @@ function showView(viewName) {
     }
 }
 
-// Mostrar el modal informativo de la galería
-function showGalleryInfo() {
-    // Verificar si el usuario ha elegido no mostrar el modal
-    const dontShowAgain = localStorage.getItem('dontShowGalleryInfo') === 'true';
-    
-    if (!dontShowAgain) {
-        document.getElementById('galleryInfoModal').style.display = 'flex';
-    }
-}
-
-// Cerrar el modal informativo de la galería
-function closeGalleryInfo() {
-    const dontShowAgain = document.getElementById('dontShowAgain').checked;
-    
-    // Si el usuario marcó "No mostrar de nuevo", guardar la preferencia
-    if (dontShowAgain) {
-        localStorage.setItem('dontShowGalleryInfo', 'true');
-    }
-    
-    // Ocultar el modal con una animación de fade-out
-    const modal = document.getElementById('galleryInfoModal');
-    modal.style.opacity = '0';
-    setTimeout(() => {
-        modal.style.display = 'none';
-        modal.style.opacity = '1';
-    }, 300);
-}
-
 // Establecer mensaje aleatorio de bienvenida (actualizado con Luffy)
 function setRandomWelcomeMessage() {
-    const welcomeMessageEl = document.getElementById('welcomeMessage');
-    const charAvatarEl = document.querySelector('#home .char-avatar-img');
-
-    if (welcomeMessageEl && charAvatarEl) {
-        const changeMessage = () => {
-            welcomeMessageEl.classList.add('fade-out');
-            charAvatarEl.classList.add('fade-out');
-
-            setTimeout(() => {
-                const randomChar = characters[Math.floor(Math.random() * characters.length)];
-                const randomPhrase = randomChar.phrases[Math.floor(Math.random() * randomChar.phrases.length)];
-
-                welcomeMessageEl.textContent = randomPhrase;
-                charAvatarEl.src = randomChar.avatar;
-                charAvatarEl.alt = randomChar.name;
-
-                welcomeMessageEl.classList.remove('fade-out');
-                charAvatarEl.classList.remove('fade-out');
-            }, 500); // Coincidir con el tiempo de transición de CSS
-        };
-
-        // Mensaje inicial
-        changeMessage();
-
-        // Cambiar mensaje cada 4 segundos
-        if (welcomeMessageInterval) {
-            clearInterval(welcomeMessageInterval);
-        }
-        welcomeMessageInterval = setInterval(changeMessage, 4000);
+    const welcomeMessages = [
+        '¡Yosh! ¡Bienvenido a nuestro libro de aventuras! ¡Aquí guardamos algunos de nuestros increíbles recuerdos juntos!',
+        '¡Oi! ¡Es hora de navegar por nuestras memorias más preciadas!',
+        '¡Prepárate para una aventura a través del tiempo y los recuerdos!'
+    ];
+    
+    const welcomeElement = document.getElementById('welcomeMessage');
+    if (welcomeElement) {
+        welcomeElement.textContent = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+    }
+    
+    // Actualizar también el avatar del mensaje de bienvenida para usar siempre Luffy
+    const welcomeAvatar = document.querySelector('#home .character-guide .character-avatar');
+    if (welcomeAvatar) {
+        welcomeAvatar.outerHTML = '<img src="luffy.png" alt="Luffy" class="char-avatar-img">';
     }
 }
 
@@ -1207,5 +1164,17 @@ function filterMemoriesByDate(date) {
             </div>
         `;
     }
+}
+
+function showGalleryInfo() {
+  if (localStorage.getItem('galleryInfoShown')) {
+    return;
+  }
+  document.getElementById('galleryInfoModal').style.display = 'block';
+}
+
+function closeGalleryInfo() {
+  document.getElementById('galleryInfoModal').style.display = 'none';
+  localStorage.setItem('galleryInfoShown', 'true');
 }
 }
