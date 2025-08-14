@@ -104,6 +104,38 @@
                 <button class="action-btn" onclick="startPresentationMode()"><i class="fas fa-play"></i> Presentación</button>
             </div>
             
+            <!-- Modal informativo de galería -->
+            <div id="galleryInfoModal" class="gallery-info-modal" style="display: none;">
+                <div class="gallery-info-content">
+                    <div class="gallery-info-header">
+                        <h3>🎬 ¡Bienvenida a la Galería!</h3>
+                        <button class="gallery-info-close" onclick="closeGalleryInfo()">✕</button>
+                    </div>
+                    <div class="gallery-info-body">
+                        <div class="info-section">
+                            <div class="info-icon">▶️</div>
+                            <div class="info-text">
+                                <h4>Modo Presentación</h4>
+                                <p>Reproduce todas las memorias automáticamente. Los videos se reproducen completos antes de pasar a la siguiente memoria, es por si anda cansada y no quiere ir imagen por imagen.</p>
+                            </div>
+                        </div>
+                        <div class="info-section">
+                            <div class="info-icon">👆</div>
+                            <div class="info-text">
+                                <h4>Exploración Manual</h4>
+                                <p>Toca cualquier imagen para verla en detalle, podes meterle filtros de One Piece, hay comentarios de personajes, reacciones, y algunos comentarios mios.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info-footer">
+                        <button class="gallery-info-btn" onclick="closeGalleryInfo()">¡Entendido!</button>
+                        <label class="dont-show-again">
+                            <input type="checkbox" id="dontShowAgain"> No mostrar de nuevo
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
             <div id="memoriesContainer" class="memories-grid">
                 <!-- Las memorias se cargarán aquí -->
             </div>
@@ -120,7 +152,7 @@
             <div class="character-guide">
                 <span class="character-avatar">⏳</span>
                 <span class="character-message">
-                    ¡Navega por nuestra línea de tiempo! Cada punto marca un momento especial en nuestra aventura.
+                    Cada punto marca un momento especial en nuestra aventura.
                 </span>
             </div>
             
