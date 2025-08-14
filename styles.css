@@ -212,141 +212,14 @@ html.theme-transition {
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s ease-in, transform 0.3s ease-in;
-}@keyframes fadeIn {
+}
+
+@keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.character-message, .char-avatar-img {
-    transition: opacity 0.5s ease-in-out;
-}
-
-.character-message.fade-out, .char-avatar-img.fade-out {
-    opacity: 0;
-}
-
-/* Estilos para el modal informativo de la galería */
-.gallery-info-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1001;
-    backdrop-filter: blur(5px);
-}
-
-.gallery-info-content {
-    background: var(--card-bg);
-    padding: 30px;
-    border-radius: 20px;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    border: 2px solid var(--gold);
-    animation: fadeIn 0.3s ease-out;
-}
-
-.gallery-info-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    color: var(--text-secondary);
-}
-
-.gallery-info-header h3 {
-    font-family: 'Pirata One', cursive;
-    font-size: 1.8em;
-}
-
-.gallery-info-close {
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    color: var(--text-primary);
-    transition: transform 0.2s;
-}
-
-.gallery-info-close:hover {
-    transform: scale(1.2);
-}
-
-.gallery-info-body {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.info-section {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-}
-
-.info-icon {
-    font-size: 1.5em;
-    background-color: var(--gold);
-    color: var(--wood);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.info-text h4 {
-    font-family: 'Pirata One', cursive;
-    font-size: 1.3em;
-    color: var(--text-secondary);
-    margin-bottom: 5px;
-}
-
-.info-text p {
-    font-size: 0.9em;
-    line-height: 1.5;
-}
-
-.gallery-info-footer {
-    margin-top: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.gallery-info-btn {
-    background: linear-gradient(135deg, var(--coral) 0%, #dc2626 100%);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: transform 0.2s;
-}
-
-.gallery-info-btn:hover {
-    transform: scale(1.05);
-}
-
-.dont-show-again {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.8em;
-    cursor: pointer;
-}
-
-.dont-show-again input {
-    cursor: pointer;
-}
-
+/* Personaje guía */
 .character-guide {
     background: var(--character-guide-bg);
     border-radius: 20px;
@@ -361,14 +234,6 @@ html.theme-transition {
     transition: background var(--transition-medium);
 }
 
-.character-guide .character-message, .character-guide .char-avatar-img {
-    transition: opacity 0.5s ease-in-out;
-}
-
-.character-guide .character-message.fade-out, .character-guide .char-avatar-img.fade-out {
-    opacity: 0;
-}
-
 .character-guide::before {
     content: '';
     position: absolute;
@@ -379,11 +244,6 @@ html.theme-transition {
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
     border-top: 10px solid white;
-}
-
-.character-guide .fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
 }
 
 .character-avatar {
