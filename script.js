@@ -385,15 +385,14 @@ function openDetailModal(id) {
         memory.reactions = {};
     }
     
-    let reactionsHtml = '<div class="emoji-reactions" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;">';
+    let reactionsHtml = '<div class="emoji-reactions">';
     onepiece_emojis.forEach(emoji => {
         const count = memory.reactions[emoji.icon] || 0;
+        const activeClass = count > 0 ? 'active' : '';
         reactionsHtml += `
-            <div class="emoji-reaction" onclick="addReaction('${id}', '${emoji.icon}')" 
-                 title="${emoji.description}" style="cursor: pointer; display: flex; align-items: center; 
-                 background: var(--parchment-light); padding: 5px 10px; border-radius: 20px; border: 1px solid var(--gold-light);">
-                <div class="emoji-icon" style="font-size: 1.2em;">${emoji.icon}</div>
-                <div class="emoji-count" style="margin-left: 5px; font-size: 0.9em; color: var(--wood);">${count}</div>
+            <div class="emoji-reaction ${activeClass}" onclick="addReaction('${id}', '${emoji.icon}')" title="${emoji.description}">
+                <div class="emoji-icon">${emoji.icon}</div>
+                <div class="emoji-count">${count}</div>
             </div>
         `;
     });
@@ -449,19 +448,51 @@ function addReaction(memoryId, emoji) {
         memory.reactions = {};
     }
     
-    // Incrementar contador de esta reacción
-    memory.reactions[emoji] = (memory.reactions[emoji] || 0) + 1;
+    // Verificar si ya se ha dado esta reacción
+    if (memory.reactions[emoji] && memory.reactions[emoji] > 0) {
+        // Ya existe esta reacción, no hacer nada
+        return;
+    }
+    
+    // Establecer contador a 1 (solo una reacción por emoji)
+    memory.reactions[emoji] = 1;
     
     // Guardar cambios
     saveMemories();
     
-    // Actualizar UI
-    openDetailModal(memoryId);
+    // Actualizar UI sin recargar el modal completo
+    updateReactionsUI(memoryId);
     
     // Mostrar reacción del personaje
     const character = characters[Math.floor(Math.random() * characters.length)];
     const message = `¡${character.name} también reaccionó con ${emoji}!`;
     showCharacterReaction(message, character.avatar);
+}
+
+// Función para actualizar solo la UI de reacciones sin recargar todo el modal
+function updateReactionsUI(memoryId) {
+    const memory = memories.find(m => m.id === memoryId);
+    if (!memory) return;
+    
+    // Obtener el contenedor de reacciones
+    const reactionsContainer = document.querySelector('.emoji-reactions');
+    if (!reactionsContainer) return;
+    
+    // Actualizar el HTML de las reacciones
+    let reactionsHtml = '';
+    onepiece_emojis.forEach(emoji => {
+        const count = memory.reactions[emoji.icon] || 0;
+        const activeClass = count > 0 ? 'active' : '';
+        reactionsHtml += `
+            <div class="emoji-reaction ${activeClass}" onclick="addReaction('${memory.id}', '${emoji.icon}')" title="${emoji.description}">
+                <div class="emoji-icon">${emoji.icon}</div>
+                <div class="emoji-count">${count}</div>
+            </div>
+        `;
+    });
+    
+    // Actualizar el contenido
+    reactionsContainer.innerHTML = reactionsHtml;
 }
 
 // Función para navegar entre memorias (CORREGIDA)
