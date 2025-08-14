@@ -1161,7 +1161,7 @@ function loadMemories() {
         
          
         
-        // Abrir modal de detalle (MEJORADO)
+        // Abrir modal de detalle (CORREGIDO - eliminado movimiento horizontal)
         function openDetailModal(id) {
             const memoryIndex = getMemoryIndexById(id);
             const memory = memories[memoryIndex];
@@ -1186,9 +1186,9 @@ function loadMemories() {
             // Obtener comentario aleatorio
             const characterComment = getRandomCharacterComment();
             
-            // Determinar si mostrar flechas
-            const hasPrev = memoryIndex < memories.length - 1;
-            const hasNext = memoryIndex > 0;
+            // CORREGIDO: Determinar si mostrar flechas con lógica correcta
+            const hasPrev = memoryIndex > 0; // Anterior si no es la primera
+            const hasNext = memoryIndex < memories.length - 1; // Siguiente si no es la última
             
             const detailHtml = `
                 <div class="nav-arrows">
@@ -1220,16 +1220,16 @@ function loadMemories() {
             return memories.findIndex(m => m.id === id);
         }
         
-        // Función para navegar entre memorias
+        // Función para navegar entre memorias (CORREGIDA)
         function navigateMemory(direction) {
             const currentId = document.getElementById('detailModal').getAttribute('data-current-id');
             const currentIndex = getMemoryIndexById(currentId);
             
             let newIndex;
             if (direction === 'prev') {
-                newIndex = currentIndex + 1; // Índice anterior (array está en orden inverso)
+                newIndex = currentIndex - 1; // Ahora prev va a la memoria anterior (índice menor)
             } else {
-                newIndex = currentIndex - 1; // Índice siguiente
+                newIndex = currentIndex + 1; // Ahora next va a la memoria siguiente (índice mayor)
             }
             
             if (newIndex >= 0 && newIndex < memories.length) {
