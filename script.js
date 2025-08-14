@@ -634,14 +634,7 @@ function updateGallery() {
         container.appendChild(card);
     });
     
-    // Añadir botón de presentación si hay memorias
-    if (memories.length > 0) {
-        const presentationBtn = document.createElement('button');
-        presentationBtn.className = 'presentation-btn';
-        presentationBtn.innerHTML = '<i class="fas fa-play-circle"></i> Iniciar presentación';
-        presentationBtn.onclick = startPresentationMode;
-        container.appendChild(presentationBtn);
-    }
+
 }
 
 
