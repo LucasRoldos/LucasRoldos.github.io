@@ -197,6 +197,10 @@ function initApp() {
     updateStats();
     updateGallery();
     setRandomWelcomeMessage();
+    initTheme();
+    initFilters();
+    initTimeline();
+    updateTimeline();
     
     // Configurar fecha actual por defecto
     const dateInput = document.getElementById('dateInput');
@@ -243,7 +247,7 @@ function saveMemories() {
 
 // Cambiar vista (ARREGLADO)
 function showView(viewName) {
-    // Ocultar todas las vistas
+    // Ocultar todas las vistas con animación
     document.querySelectorAll('.view').forEach(view => {
         view.classList.remove('active');
     });
@@ -261,7 +265,9 @@ function showView(viewName) {
     buttons.forEach(btn => {
         const buttonText = btn.textContent.toLowerCase();
         if ((viewName === 'home' && buttonText.includes('inicio')) || 
-            (viewName === 'gallery' && buttonText.includes('galería'))) {
+            (viewName === 'gallery' && buttonText.includes('galería')) ||
+            (viewName === 'timeline' && buttonText.includes('línea')) ||
+            (viewName === 'animeEvents' && buttonText.includes('anime'))) {
             btn.classList.add('active');
         }
     });
@@ -271,6 +277,9 @@ function showView(viewName) {
         setRandomGalleryMessage();
     } else if (viewName === 'stats') {
         updateStatsMessage();
+    } else if (viewName === 'timeline') {
+        // Actualizar la línea de tiempo
+        updateTimeline();
     }
 }
 
@@ -351,11 +360,14 @@ function handleFileSelect(event) {
 
 
 
-// Abrir modal de detalle (CORREGIDO - eliminado movimiento horizontal)
+// Abrir modal de detalle con animaciones mejoradas
 function openDetailModal(id) {
     const memoryIndex = getMemoryIndexById(id);
     const memory = memories[memoryIndex];
     if (!memory) return;
+    
+    // Aplicar filtro si existe
+    const filterClass = memory.filter || '';
     
     let mediaHtml = '';
     if (memory.isGoogleDrive) {
@@ -363,12 +375,12 @@ function openDetailModal(id) {
             mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay" frameborder="0"></iframe>`;
         } else {
             const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;
+            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image ${filterClass}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;            
         }
     } else if (memory.type === 'video') {
-        mediaHtml = `<video src="${memory.file}" class="detail-image" controls autoplay></video>`;
+        mediaHtml = `<video src="${memory.file}" class="detail-image ${filterClass}" controls autoplay></video>`;
     } else {
-        mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
+        mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image ${filterClass}">`;
     }
     
     const sourceIndicator = memory.isGoogleDrive ? `<div style="text-align: center; margin-top: 5px; font-size: 0.8em; color: #64748b;">☁️ Alojado en Google Drive</div>` : '';
@@ -384,6 +396,14 @@ function openDetailModal(id) {
     if (!memory.reactions) {
         memory.reactions = {};
     }
+    
+    // Añadir selector de filtros
+    const filterSelectorHtml = `
+        <div class="filter-selector-container">
+            <h3>Filtros de imagen</h3>
+            <div id="filterSelector" class="filter-selector"></div>
+        </div>
+    `;
     
     let reactionsHtml = '<div class="emoji-reactions">';
     onepiece_emojis.forEach(emoji => {
@@ -412,6 +432,10 @@ function openDetailModal(id) {
         </div>
         
         ${sourceIndicator}
+        
+        <!-- Selector de filtros -->
+        ${filterSelectorHtml}
+        
         <p class="detail-description">${memory.description || 'Sin descripción disponible'}</p>
         
         <!-- Comentario de personaje -->
@@ -427,16 +451,51 @@ function openDetailModal(id) {
         ${reactionsHtml}
     `;
     
-    document.getElementById('detailContent').innerHTML = detailHtml;
-    document.getElementById('detailModal').setAttribute('data-current-id', id);
-    document.getElementById('detailModal').classList.add('active');
+    // Ocultar el modal actual con animación
+    const detailModal = document.getElementById('detailModal');
+    const detailContent = document.getElementById('detailContent');
+    
+    if (detailModal.classList.contains('active')) {
+        // Si ya está abierto, animar la transición
+        detailContent.classList.add('animate-fadeOut');
+        
+        setTimeout(() => {
+            // Actualizar contenido
+            detailContent.innerHTML = detailHtml;
+            detailModal.setAttribute('data-current-id', id);
+            
+            // Animar entrada del nuevo contenido
+            detailContent.classList.remove('animate-fadeOut');
+            detailContent.classList.add('animate-fadeIn');
+            
+            // Inicializar selector de filtros
+            updateFilterUI(filterClass);
+            
+            setTimeout(() => {
+                detailContent.classList.remove('animate-fadeIn');
+            }, 500);
+        }, 300);
+    } else {
+        // Si está cerrado, abrir con animación
+        detailContent.innerHTML = detailHtml;
+        detailModal.setAttribute('data-current-id', id);
+        detailModal.classList.add('active');
+        detailModal.classList.add('animate-scaleIn');
+        
+        // Inicializar selector de filtros
+        updateFilterUI(filterClass);
+        
+        setTimeout(() => {
+            detailModal.classList.remove('animate-scaleIn');
+        }, 500);
+    }
 }
 // Función para obtener índice de memoria por ID
 function getMemoryIndexById(id) {
     return memories.findIndex(m => m.id === id);
 }
 
-// Función para añadir reacción con emoji
+// Función para añadir o quitar reacción con emoji
 function addReaction(memoryId, emoji) {
     const memoryIndex = getMemoryIndexById(memoryId);
     if (memoryIndex === -1) return;
@@ -450,23 +509,18 @@ function addReaction(memoryId, emoji) {
     
     // Verificar si ya se ha dado esta reacción
     if (memory.reactions[emoji] && memory.reactions[emoji] > 0) {
-        // Ya existe esta reacción, no hacer nada
-        return;
+        // Ya existe esta reacción, quitarla
+        delete memory.reactions[emoji];
+    } else {
+        // Establecer contador a 1 (solo una reacción por emoji)
+        memory.reactions[emoji] = 1;
     }
-    
-    // Establecer contador a 1 (solo una reacción por emoji)
-    memory.reactions[emoji] = 1;
     
     // Guardar cambios
     saveMemories();
     
     // Actualizar UI sin recargar el modal completo
     updateReactionsUI(memoryId);
-    
-    // Mostrar reacción del personaje
-    const character = characters[Math.floor(Math.random() * characters.length)];
-    const message = `¡${character.name} también reaccionó con ${emoji}!`;
-    showCharacterReaction(message, character.avatar);
 }
 
 // Función para actualizar solo la UI de reacciones sin recargar todo el modal
@@ -538,17 +592,23 @@ function showCharacterReaction(message, avatarPath) {  // Modificado para recibi
 function updateGallery() {
     const container = document.getElementById('memoriesContainer');
     container.innerHTML = '';
-    memories.forEach(memory => {
+    memories.forEach((memory, index) => {
         const card = document.createElement('div');
         card.className = 'memory-card';
         card.onclick = () => openDetailModal(memory.id);
+        // Agregar retraso en la animación basado en el índice
+        card.style.animationDelay = `${index * 0.1}s`;
+        
+        // Aplicar filtro si existe
+        const filterClass = memory.filter || '';
+        
         let thumbnailHtml = '';
         if (memory.isGoogleDrive) {
-            thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
+            thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail ${filterClass}" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
         } else {
             thumbnailHtml = memory.type === 'video' ? 
-                `<video src="${memory.thumbnail || memory.file}" class="memory-thumbnail" muted></video>` :
-                `<img src="${memory.thumbnail || memory.file}" class="memory-thumbnail" alt="Thumbnail">`;
+                `<video src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${filterClass}" muted></video>` :
+                `<img src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${filterClass}" alt="Thumbnail">`;
         }
         
         // Mostrar contador de reacciones si hay alguna
@@ -573,6 +633,15 @@ function updateGallery() {
         `;
         container.appendChild(card);
     });
+    
+    // Añadir botón de presentación si hay memorias
+    if (memories.length > 0) {
+        const presentationBtn = document.createElement('button');
+        presentationBtn.className = 'presentation-btn';
+        presentationBtn.innerHTML = '<i class="fas fa-play-circle"></i> Iniciar presentación';
+        presentationBtn.onclick = startPresentationMode;
+        container.appendChild(presentationBtn);
+    }
 }
 
 
@@ -681,3 +750,375 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+// Funciones para el modo oscuro/claro
+function initTheme() {
+    // Verificar si hay un tema guardado en localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('themeToggle').innerHTML = '☀️ Modo';
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.getElementById('themeToggle').innerHTML = '🌙 Modo';
+    }
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    // Agregar clase de transición
+    document.documentElement.classList.add('theme-transition');
+    
+    // Pequeña pausa antes de cambiar el tema para que la animación sea más suave
+    setTimeout(() => {
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeToggleBtn.innerHTML = '🌙 Modo';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggleBtn.innerHTML = '☀️ Modo';
+        }
+    }, 300);
+    
+    // Eliminar la clase después de la animación completa
+    setTimeout(() => {
+        document.documentElement.classList.remove('theme-transition');
+    }, 1500);
+}
+
+// Inicializar filtros de imágenes
+function initFilters() {
+    const filters = [
+        { name: 'Original', class: '' },
+        { name: 'Manga', class: 'filter-manga' },
+        { name: 'Wanted', class: 'filter-wanted' },
+        { name: 'Sunny', class: 'filter-sunny' },
+        { name: 'Merry', class: 'filter-merry' },
+        { name: 'Grand Line', class: 'filter-grandline' },
+        { name: 'Gear 5', class: 'filter-gear5' },
+        { name: 'Haki', class: 'filter-haki' },
+        { name: 'Poneglyph', class: 'filter-poneglyph' },
+        { name: 'Devil Fruit', class: 'filter-devilfruit' },
+        { name: 'Skypiea', class: 'filter-skypiea' }
+    ];
+    
+    // Guardar los filtros en una variable global para usarlos más tarde
+    window.imageFilters = filters;
+}
+
+// Aplicar filtro a la imagen actual
+function applyFilter(filterClass) {
+    const detailModal = document.getElementById('detailModal');
+    const memoryId = detailModal.getAttribute('data-current-id');
+    const memoryIndex = getMemoryIndexById(memoryId);
+    const memory = memories[memoryIndex];
+    
+    if (!memory) return;
+    
+    // Guardar el filtro seleccionado en la memoria
+    memory.filter = filterClass;
+    saveMemories();
+    
+    // Aplicar el filtro a la imagen o video
+    const mediaElement = document.querySelector('.detail-image');
+    if (mediaElement) {
+        // Eliminar todas las clases de filtro anteriores
+        window.imageFilters.forEach(filter => {
+            if (filter.class) mediaElement.classList.remove(filter.class);
+        });
+        
+        // Añadir la nueva clase de filtro si no es 'Original'
+        if (filterClass) {
+            mediaElement.classList.add(filterClass);
+        }
+    }
+    
+    // Actualizar la UI para mostrar el filtro seleccionado
+    updateFilterUI(filterClass);
+}
+
+// Actualizar la UI de los filtros
+function updateFilterUI(activeFilterClass) {
+    const filterSelector = document.getElementById('filterSelector');
+    if (!filterSelector) return;
+    
+    // Limpiar el selector de filtros
+    filterSelector.innerHTML = '';
+    
+    // Añadir cada opción de filtro
+    window.imageFilters.forEach(filter => {
+        const filterOption = document.createElement('div');
+        filterOption.className = `filter-option ${filter.class === activeFilterClass ? 'active' : ''}`;
+        filterOption.onclick = () => applyFilter(filter.class);
+        
+        // Usar una imagen de ejemplo para mostrar el filtro
+        filterOption.style.backgroundImage = 'url("luffy.png")';
+        
+        // Añadir la clase de filtro al contenedor
+        if (filter.class) {
+            filterOption.classList.add(filter.class);
+        }
+        
+        // Añadir el nombre del filtro
+        const filterName = document.createElement('div');
+        filterName.className = 'filter-name';
+        filterName.textContent = filter.name;
+        
+        // Añadir al selector
+        filterSelector.appendChild(filterOption);
+        filterSelector.appendChild(filterName);
+    });
+}
+
+// Iniciar modo presentación
+function startPresentationMode() {
+    if (memories.length === 0) {
+        alert('No hay memorias para mostrar en modo presentación');
+        return;
+    }
+    
+    const presentationMode = document.getElementById('presentationMode');
+    const presentationSlides = document.getElementById('presentationSlides');
+    const presentationProgress = document.getElementById('presentationProgress');
+    
+    // Limpiar contenedores
+    presentationSlides.innerHTML = '';
+    presentationProgress.innerHTML = '';
+    
+    // Crear diapositivas para cada memoria
+    memories.forEach((memory, index) => {
+        // Crear diapositiva
+        const slide = document.createElement('div');
+        slide.className = `presentation-slide ${index === 0 ? 'active' : ''}`;
+        slide.setAttribute('data-index', index);
+        
+        // Preparar el contenido multimedia
+        let mediaHtml = '';
+        if (memory.isGoogleDrive) {
+            if (memory.type === 'video') {
+                mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
+            } else {
+                const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
+                mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;
+            }
+        } else if (memory.type === 'video') {
+            mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay></video>`;
+        } else {
+            mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}">`;
+        }
+        
+        // Añadir información de la memoria
+        slide.innerHTML = `
+            ${mediaHtml}
+            <div class="presentation-info">
+                <div class="presentation-title">${memory.title}</div>
+                <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
+                <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
+            </div>
+        `;
+        
+        // Añadir diapositiva al contenedor
+        presentationSlides.appendChild(slide);
+        
+        // Añadir indicador de progreso
+        const progressDot = document.createElement('div');
+        progressDot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
+        progressDot.setAttribute('data-index', index);
+        progressDot.onclick = () => navigatePresentation('goto', index);
+        presentationProgress.appendChild(progressDot);
+    });
+    
+    // Mostrar el modo presentación
+    presentationMode.style.display = 'flex';
+    
+    // Iniciar presentación automática
+    window.presentationInterval = setInterval(() => {
+        navigatePresentation('next');
+    }, 5000); // Cambiar diapositiva cada 5 segundos
+}
+
+// Navegar en el modo presentación
+function navigatePresentation(direction, targetIndex) {
+    const slides = document.querySelectorAll('.presentation-slide');
+    const dots = document.querySelectorAll('.progress-dot');
+    
+    if (slides.length === 0) return;
+    
+    // Encontrar la diapositiva activa actual
+    const currentSlide = document.querySelector('.presentation-slide.active');
+    const currentIndex = parseInt(currentSlide.getAttribute('data-index'));
+    
+    // Calcular el nuevo índice
+    let newIndex;
+    if (direction === 'goto' && targetIndex !== undefined) {
+        newIndex = targetIndex;
+    } else if (direction === 'prev') {
+        newIndex = (currentIndex - 1 + slides.length) % slides.length;
+    } else { // 'next'
+        newIndex = (currentIndex + 1) % slides.length;
+    }
+    
+    // Actualizar diapositivas
+    currentSlide.classList.remove('active');
+    slides[newIndex].classList.add('active');
+    
+    // Actualizar indicadores de progreso
+    const currentDot = document.querySelector('.progress-dot.active');
+    if (currentDot) currentDot.classList.remove('active');
+    dots[newIndex].classList.add('active');
+}
+
+// Cerrar modo presentación
+function closePresentationMode() {
+    const presentationMode = document.getElementById('presentationMode');
+    presentationMode.style.display = 'none';
+    
+    // Detener presentación automática
+    if (window.presentationInterval) {
+        clearInterval(window.presentationInterval);
+    }
+}
+
+// Inicializar línea de tiempo
+function initTimeline() {
+    // La línea de tiempo se actualizará cuando se carguen las memorias
+    document.getElementById('timeline').addEventListener('click', function(e) {
+        // Si se hace clic en un evento de la línea de tiempo, mostrar las memorias de esa fecha
+        if (e.target.closest('.timeline-event')) {
+            const eventElement = e.target.closest('.timeline-event');
+            const date = eventElement.getAttribute('data-date');
+            
+            // Marcar el evento como activo
+            document.querySelectorAll('.timeline-event').forEach(event => {
+                event.classList.remove('active');
+            });
+            eventElement.classList.add('active');
+            
+            // Filtrar memorias por fecha
+            filterMemoriesByDate(date);
+        }
+    });
+}
+
+// Actualizar línea de tiempo
+function updateTimeline() {
+    const timelineEvents = document.getElementById('timelineEvents');
+    if (!timelineEvents) return;
+    
+    // Limpiar eventos existentes
+    timelineEvents.innerHTML = '';
+    
+    // Obtener fechas únicas de las memorias
+    const uniqueDates = [];
+    memories.forEach(memory => {
+        const date = memory.date.split('T')[0]; // Obtener solo la parte de la fecha
+        if (!uniqueDates.includes(date)) {
+            uniqueDates.push(date);
+        }
+    });
+    
+    // Ordenar fechas
+    uniqueDates.sort();
+    
+    // Crear eventos para cada fecha
+    uniqueDates.forEach(date => {
+        // Encontrar la primera memoria de esta fecha para usar como miniatura
+        const firstMemory = memories.find(memory => memory.date.startsWith(date));
+        if (!firstMemory) return;
+        
+        // Crear elemento de evento
+        const eventElement = document.createElement('div');
+        eventElement.className = 'timeline-event';
+        eventElement.setAttribute('data-date', date);
+        
+        // Crear miniatura
+        let thumbnailSrc = '';
+        if (firstMemory.isGoogleDrive) {
+            thumbnailSrc = firstMemory.thumbnail || `https://drive.google.com/thumbnail?id=${firstMemory.fileId}&sz=w80`;
+        } else {
+            thumbnailSrc = firstMemory.thumbnail || firstMemory.file;
+        }
+        
+        // Formatear fecha para mostrar
+        const displayDate = new Date(date).toLocaleDateString('es-ES', {
+            day: 'numeric',
+            month: 'short'
+        });
+        
+        // Añadir contenido al evento
+        eventElement.innerHTML = `
+            <div class="timeline-dot"></div>
+            <img src="${thumbnailSrc}" alt="${displayDate}" class="timeline-thumbnail">
+            <div class="timeline-date">${displayDate}</div>
+        `;
+        
+        // Añadir evento a la línea de tiempo
+        timelineEvents.appendChild(eventElement);
+    });
+}
+
+// Filtrar memorias por fecha
+function filterMemoriesByDate(date) {
+    const container = document.getElementById('timelineMemoriesContainer');
+    if (!container) return;
+    
+    // Limpiar contenedor
+    container.innerHTML = '';
+    
+    // Filtrar memorias por fecha
+    const filteredMemories = memories.filter(memory => memory.date.startsWith(date));
+    
+    // Mostrar memorias filtradas
+    filteredMemories.forEach((memory, index) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card animate-slideInUp';
+        card.onclick = () => openDetailModal(memory.id);
+        // Agregar retraso en la animación basado en el índice
+        card.style.animationDelay = `${index * 0.1}s`;
+        
+        let thumbnailHtml = '';
+        if (memory.isGoogleDrive) {
+            thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail ${memory.filter || ''}" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
+        } else {
+            thumbnailHtml = memory.type === 'video' ? 
+                `<video src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${memory.filter || ''}" muted></video>` :
+                `<img src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${memory.filter || ''}" alt="Thumbnail">`;
+        }
+        
+        // Mostrar contador de reacciones si hay alguna
+        let reactionsCount = 0;
+        let reactionsHtml = '';
+        
+        if (memory.reactions) {
+            Object.values(memory.reactions).forEach(count => {
+                reactionsCount += count;
+            });
+            
+            if (reactionsCount > 0) {
+                reactionsHtml = `<div class="reaction-count">❤️ ${reactionsCount}</div>`;
+            }
+        }
+        
+        card.innerHTML = `
+            ${thumbnailHtml}
+            <div class="memory-title">${memory.title}</div>
+            <div class="memory-date">Día ${memory.dayNumber}</div>
+            ${reactionsHtml}
+        `;
+        container.appendChild(card);
+    });
+    
+    // Si no hay memorias, mostrar mensaje
+    if (filteredMemories.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-message">No hay memorias para esta fecha</div>
+            </div>
+        `;
+    }
+}
