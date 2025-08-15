@@ -1577,8 +1577,8 @@ html.theme-transition {
     
     /* Mejoras para el modo presentación en móviles */
     .presentation-media {
-        max-width: 95%;
-        max-height: 70vh;
+        max-width: 98%;
+        max-height: 85vh;
     }
     
     .presentation-info {
@@ -1632,13 +1632,13 @@ html.theme-transition {
     }
     
     .presentation-media-container {
-        max-height: 65% !important;
+        max-height: 85% !important;
     }
     
     .presentation-image,
     .presentation-video {
-        max-width: 95% !important;
-        max-height: 85% !important;
+        max-width: 98% !important;
+        max-height: 95% !important;
     }
     
     .presentation-date {
