@@ -1371,11 +1371,11 @@ function scheduleNextSlide() {
     }
     
     // Para imágenes o si el video no está disponible, usar un tiempo fijo
-    console.log('Configurando timer de 5 segundos...');
+    console.log('Configurando timer de 7 segundos...');
     window.presentationInterval = setTimeout(() => {
         console.log('Timer expirado, navegando a siguiente...');
         navigatePresentation('next');
-    }, 5000); // 5 segundos para imágenes
+    }, 7000); // 7 segundos para imágenes (2 segundos más)
     
     // Resetear animación del botón siguiente para diapositivas no-video
     const nextButton = document.querySelector('.presentation-btn[onclick*="next"]');
