@@ -1,244 +1,20 @@
-// Credenciales de acceso
-const VALID_USERNAME = 'ababa';
-const VALID_PASSWORD = 'akamaru1';
-
-// Manejar el formulario de login
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('usernameInput').value.trim();
-    const password = document.getElementById('passwordInput').value.trim();
-    
-    if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        // Login exitoso
-        document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-        
-        // Guardar estado de sesión en localStorage
-        localStorage.setItem('nakamaLoggedIn', 'true');
-        
-        // Inicializar la aplicación
-        initApp();
-    } else {
-        // Mostrar error
-        document.getElementById('loginError').style.display = 'block';
-        
-        // Limpiar campos y enfocar
-        document.getElementById('usernameInput').value = '';
-        document.getElementById('passwordInput').value = '';
-        document.getElementById('usernameInput').focus();
-    }
-});
-
-// Verificar si el usuario ya está logueado al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-    const isLoggedIn = localStorage.getItem('nakamaLoggedIn') === 'true';
-    
-    if (isLoggedIn) {
-        // Usuario ya autenticado
-        document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-        initApp();
-    } else {
-        // Mostrar login
-        document.getElementById('usernameInput').focus();
-    }
-});
-
-// Función para obtener un comentario aleatorio de un personaje
-function getRandomCharacterComment() {
-    const randomCharacter = characters[Math.floor(Math.random() * characters.length)];
-    const comments = characterComments[randomCharacter.name];
-    const randomComment = comments[Math.floor(Math.random() * comments.length)];
-    
-    return {
-        character: randomCharacter.name,
-        avatar: randomCharacter.avatar,
-        comment: randomComment
-    };
-}
-
-// Comentarios personalizados para cada personaje
-const characterComments = {
-    'Luffy': [
-        '¡Esta aventura fue tan épica como encontrar el One Piece!',
-        '¡Shishishi! Qué día tan divertido tuvimos!',
-        '¡Esta memoria me hace querer gritar "¡Soy yo, Luffy!"!',
-        '¡Wooo! ¡Qué aventura tan increíble!',
-        '¡Esta foto captura la esencia de nuestra tripulación!'
-    ],
-    'Zoro': [
-        'Un momento digno de recordar, como mi sueño de ser el mejor espadachín.',
-        'Esta memoria tiene el filo de una buena espada.',
-        'Un día que vale la pena proteger con mi vida.',
-        'Incluso yo podría perderme en este recuerdo.',
-        'Un momento que honra nuestra promesa como nakama.'
-    ],
-    'Nami': [
-        '¡Este recuerdo vale más que cualquier mapa del tesoro!',
-        '¡Qué día perfecto para navegar juntos!',
-        'Esta memoria brilla más que mis Belly.',
-        'Un momento que navegaría mil veces en mi mente.',
-        '¡Qué clima perfecto para esta aventura!'
-    ],
-    'Usopp': [
-        '¡Esta historia es tan épica como mis 8000 seguidores!',
-        '¡El gran Usopp aprueba esta memoria épica!',
-        '¡Incluso mis ballestas no podrían disparar un momento más perfecto!',
-        '¡Esta aventura es más emocionante que cualquiera de mis historias!',
-        '¡Mis nakama serían tan orgullosos de este momento!'
-    ],
-    'Sanji': [
-        '¡Esta memoria está más dulce que cualquier postre!',
-        '¡Mellorine! ¡Qué momento tan hermoso!',
-        'Un día que merece un banquete de celebración.',
-        'Esta memoria tiene el sabor perfecto de la aventura.',
-        '¡Un momento que calienta el corazón más que mis patadas!'
-    ],
-    'Chopper': [
-        '¡Wooo! ¡Qué recuerdo tan lindo y emocionante!',
-        '¡Este momento me hace tan feliz que podría saltar!',
-        '¡Una aventura digna de ser celebrada con chocolate!',
-        '¡Qué día tan mágico para mis nakama!',
-        '¡Esta memoria es tan dulce como las golosinas!'
-    ],
-    'Robin': [
-        'Un momento precioso que merece ser preservado para siempre.',
-        'La historia de nuestra aventura se vuelve más rica con este recuerdo.',
-        'Un instante que trasciende el tiempo y el espacio.',
-        'Esta memoria florece como las flores que tanto amo.',
-        'Un momento que ilumina nuestra jornada como nakama.'
-    ],
-    'Franky': [
-        '¡SÚPER! ¡Esta memoria es tan épica como mi cyborg!',
-        '¡Esta aventura está más construida que mis mejores creaciones!',
-        '¡OW! ¡Qué momento tan SÚPER!',
-        '¡Esta memoria tiene más estilo que mis gafas!',
-        '¡Un día que merece ser grabado en acero!'
-    ],
-    'Brook': [
-        'Yohohoho, qué momento tan emotivo para mi alma.',
-        '¡Aunque no tengo ojos, puedo ver lo hermoso de este recuerdo!',
-        'Un instante que toca las cuerdas de mi corazón... ¡Ah, pero no tengo!',
-        'Esta memoria es más dulce que cualquier canción.',
-        '¡Un momento digno de ser cantado por toda la eternidad!'
-    ]
-};
-
-// Characters y sus frases
-const characters = [
-    { name: 'Luffy', avatar: 'luffy.png', phrases: [
-        '¡Esta memoria me da ganas de más aventuras!',
-        '¡Qué recuerdo tan genial! ¡Vamos por más!',
-        '¡Ja ja ja! ¡Esto es lo mejor!'
-    ]},
-    { name: 'Zoro', avatar: 'zoro.png', phrases: [
-        'Un buen recuerdo para afilar la memoria',
-        'No me perderé este momento',
-        '¡Qué corte tan perfecto de aventura!'
-    ]},
-    { name: 'Nami', avatar: 'nami.png', phrases: [
-        '¡Este recuerdo vale su peso en Berries!',
-        'Navegando por memorias felices',
-        '¡Qué clima perfecto para recordar!'
-    ]},
-    { name: 'Usopp', avatar: 'usopp.png', phrases: [
-        '¡El gran capitán Usopp aprueba esta memoria!',
-        '¡Qué historia tan épica!',
-        '¡Mis 8000 seguidores estarían de acuerdo!'
-    ]},
-    { name: 'Sanji', avatar: 'sanji.png', phrases: [
-        '¡Un recuerdo con sabor a aventura!',
-        '¡Mellorine! ¡Qué memoria tan hermosa!',
-        '¡Esto merece un banquete de celebración!'
-    ]},
-    { name: 'Chopper', avatar: 'chopper.png', phrases: [
-        '¡Woooow! ¡Qué recuerdo tan lindo!',
-        '¡Doctora! ¡Digo... qué memoria tan genial!',
-        '¡Esto me hace muy feliz!'
-    ]},
-    { name: 'Robin', avatar: 'robin.png', phrases: [
-        'Qué memoria tan preciosa para preservar',
-        'La historia de esta aventura es fascinante',
-        'Un momento que trasciende el tiempo'
-    ]},
-    { name: 'Franky', avatar: 'franky.png', phrases: [
-        '¡SÚPER recuerdo!',
-        '¡Esta memoria es SÚPER genial!',
-        '¡OW! ¡Qué momento tan SÚPER!'
-    ]},
-    { name: 'Brook', avatar: 'brook.png', phrases: [
-        'Yohohoho, qué momento tan emotivo',
-        '¡Aunque no tengo ojos, puedo ver lo hermoso de este recuerdo!',
-        '¡Esta memoria toca mi alma! ¡Ah, pero si no tengo! Yohohoho!'
-    ]}
-];
-
-// Estado de la aplicación
-let memories = [];
-let currentMemory = null;
-let isAuthenticated = false;
-let isLoading = false;
-
-// Emojis temáticos de One Piece
-const onepiece_emojis = [
-    { icon: '⚓', name: 'Ancla', description: '¡Anclado en mi memoria!' },
-    { icon: '🏴‍☠️', name: 'Pirata', description: '¡Aventura pirata!' },
-    { icon: '🍖', name: 'Carne', description: '¡Como Luffy!' },
-    { icon: '👒', name: 'Sombrero', description: '¡Rey de los Piratas!' },
-    { icon: '⚔️', name: 'Espadas', description: '¡Como Zoro!' },
-    { icon: '💰', name: 'Tesoro', description: '¡Un tesoro de recuerdo!' }
-];
-
-
-// Inicializar la app
-function initApp() {
-    loadMemories();
-    updateStats();
-    updateGallery();
-    setRandomWelcomeMessage();
-    initTheme();
-    initFilters();
-    initTimeline();
-    updateTimeline();
-    
-    // Configurar fecha actual por defecto
-    const dateInput = document.getElementById('dateInput');
-    if (dateInput) {
-        dateInput.valueAsDate = new Date();
-    }
-}
-
-// Agregar función de logout (opcional)
-function logout() {
-    localStorage.removeItem('nakamaLoggedIn');
-    location.reload(); // Recargar para mostrar login
-}
-
-
 // Cargar memorias del localStorage o del archivo JSON
 function loadMemories() {
-    console.log('Cargando memorias...');
     // Primero intentar cargar del archivo JSON
     fetch('./memories.json')
         .then(response => response.json())
         .then(data => {
-            console.log('Memorias cargadas:', data.length, 'memorias');
-            console.log('Memorias de Google Drive:', data.filter(m => m.isGoogleDrive).length);
             memories = data;
             updateGallery();
             updateStats();
         })
         .catch(error => {
-            console.error('Error cargando memorias:', error);
             // Si falla, intentar cargar del localStorage como respaldo
             const stored = localStorage.getItem('nakamaMemories');
             if (stored) {
                 memories = JSON.parse(stored);
-                console.log('Memorias cargadas desde localStorage:', memories.length);
             } else {
                 memories = [];
-                console.log('No hay memorias disponibles');
             }
             updateGallery();
             updateStats();
@@ -415,461 +191,11 @@ function handleFileSelect(event) {
     }
 }
 
-
-
-// Abrir modal de detalle con animaciones mejoradas
-function openDetailModal(id) {
-    const memoryIndex = getMemoryIndexById(id);
-    const memory = memories[memoryIndex];
-    if (!memory) return;
-    
-    // Aplicar filtro si existe
-    const filterClass = memory.filter || '';
-    
-    let mediaHtml = '';
-    if (memory.isGoogleDrive) {
-        if (memory.type === 'video') {
-            mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay" frameborder="0"></iframe>`;
-        } else {
-            const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image ${filterClass}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;            
-        }
-    } else if (memory.type === 'video') {
-        mediaHtml = `<video src="${memory.file}" class="detail-image ${filterClass}" controls autoplay></video>`;
-    } else {
-        mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="detail-image ${filterClass}">`;
-    }
-    
-    const sourceIndicator = memory.isGoogleDrive ? `<div style="text-align: center; margin-top: 5px; font-size: 0.8em; color: #64748b;">☁️ Alojado en Google Drive</div>` : '';
-    
-    // Obtener comentario aleatorio
-    const characterComment = getRandomCharacterComment();
-    
-    // CORREGIDO: Determinar si mostrar flechas con lógica correcta
-    const hasPrev = memoryIndex > 0; // Anterior si no es la primera
-    const hasNext = memoryIndex < memories.length - 1; // Siguiente si no es la última
-    
-    // Preparar reacciones con emojis
-    if (!memory.reactions) {
-        memory.reactions = {};
-    }
-    
-    // Añadir selector de filtros
-    const filterSelectorHtml = `
-        <div class="filter-selector-container">
-            <h3>Filtros de imagen</h3>
-            <div id="filterSelector" class="filter-selector"></div>
-        </div>
-    `;
-    
-    let reactionsHtml = '<div class="emoji-reactions">';
-    onepiece_emojis.forEach(emoji => {
-        const count = memory.reactions[emoji.icon] || 0;
-        const activeClass = count > 0 ? 'active' : '';
-        reactionsHtml += `
-            <div class="emoji-reaction ${activeClass}" onclick="addReaction('${id}', '${emoji.icon}')" title="${emoji.description}">
-                <div class="emoji-icon">${emoji.icon}</div>
-                <div class="emoji-count">${count}</div>
-            </div>
-        `;
-    });
-    reactionsHtml += '</div>';
-    
-    const detailHtml = `
-        <div class="nav-arrows">
-            <button class="nav-arrow" onclick="navigateMemory('prev')" ${!hasPrev ? 'disabled' : ''} title="Anterior">‹</button>
-            <button class="nav-arrow" onclick="navigateMemory('next')" ${!hasNext ? 'disabled' : ''} title="Siguiente">›</button>
-        </div>
-        
-        <h2 class="detail-title">${memory.title}</h2>
-        <p class="detail-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</p>
-        
-        <div class="image-container">
-            ${mediaHtml}
-        </div>
-        
-        ${sourceIndicator}
-        
-        <!-- Selector de filtros -->
-        ${filterSelectorHtml}
-        
-        <p class="detail-description">${memory.description || 'Sin descripción disponible'}</p>
-        
-        <!-- Comentario de personaje -->
-        <div style="margin-top: 20px; padding: 15px; background: var(--parchment); border-radius: 10px; border: 2px dashed var(--gold); display: flex; align-items: center; gap: 10px;">
-            <img src="${characterComment.avatar}" alt="${characterComment.character}" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold);">
-            <div>
-                <strong style="color: var(--wood); font-size: 0.9em;">${characterComment.character} dice:</strong>
-                <p style="color: var(--wood); margin: 0; font-size: 0.9em; line-height: 1.4;">${characterComment.comment}</p>
-            </div>
-        </div>
-        
-        <!-- Reacciones con emojis -->
-        ${reactionsHtml}
-    `;
-    
-    // Ocultar el modal actual con animación
-    const detailModal = document.getElementById('detailModal');
-    const detailContent = document.getElementById('detailContent');
-    
-    if (detailModal.classList.contains('active')) {
-        // Si ya está abierto, animar la transición
-        detailContent.classList.add('animate-fadeOut');
-        
-        setTimeout(() => {
-            // Actualizar contenido
-            detailContent.innerHTML = detailHtml;
-            detailModal.setAttribute('data-current-id', id);
-            
-            // Animar entrada del nuevo contenido
-            detailContent.classList.remove('animate-fadeOut');
-            detailContent.classList.add('animate-fadeIn');
-            
-            // Inicializar selector de filtros
-            updateFilterUI(filterClass);
-            
-            setTimeout(() => {
-                detailContent.classList.remove('animate-fadeIn');
-            }, 500);
-        }, 300);
-    } else {
-        // Si está cerrado, abrir con animación
-        detailContent.innerHTML = detailHtml;
-        detailModal.setAttribute('data-current-id', id);
-        detailModal.classList.add('active');
-        detailModal.classList.add('animate-scaleIn');
-        
-        // Inicializar selector de filtros
-        updateFilterUI(filterClass);
-        
-        setTimeout(() => {
-            detailModal.classList.remove('animate-scaleIn');
-        }, 500);
-    }
-}
-// Función para obtener un emoji aleatorio de personaje
-function getCharacterEmoji(character) {
-    const emojis = ['🏴‍☠️', '⚓', '⚔️', '👒', '🍖', '💰', '🏝️', '🌊', '🔥', '⚡', '🌟', '💎'];
-    return emojis[Math.floor(Math.random() * emojis.length)];
-}
-
-// Función para iniciar mensajes automáticos en galería
-function startGalleryMessages() {
-    if (galleryMessageInterval) {
-        clearInterval(galleryMessageInterval);
-    }
-    
-    galleryMessageInterval = setInterval(() => {
-        setRandomGalleryMessage();
-    }, 5000);
-}
-
-// Función para detener mensajes automáticos en galería
-function stopGalleryMessages() {
-    if (galleryMessageInterval) {
-        clearInterval(galleryMessageInterval);
-        galleryMessageInterval = null;
-    }
-}
-
-// Función para obtener índice de memoria por ID
-function getMemoryIndexById(id) {
-    return memories.findIndex(m => m.id === id);
-}
-
-// Función para añadir o quitar reacción con emoji
-function addReaction(memoryId, emoji) {
-    const memoryIndex = getMemoryIndexById(memoryId);
-    if (memoryIndex === -1) return;
-    
-    const memory = memories[memoryIndex];
-    
-    // Inicializar objeto de reacciones si no existe
-    if (!memory.reactions) {
-        memory.reactions = {};
-    }
-    
-    // Verificar si ya se ha dado esta reacción
-    if (memory.reactions[emoji] && memory.reactions[emoji] > 0) {
-        // Ya existe esta reacción, quitarla
-        delete memory.reactions[emoji];
-    } else {
-        // Establecer contador a 1 (solo una reacción por emoji)
-        memory.reactions[emoji] = 1;
-    }
-    
-    // Guardar cambios
-    saveMemories();
-    
-    // Actualizar UI sin recargar el modal completo
-    updateReactionsUI(memoryId);
-}
-
-// Función para actualizar solo la UI de reacciones sin recargar todo el modal
-function updateReactionsUI(memoryId) {
-    const memory = memories.find(m => m.id === memoryId);
-    if (!memory) return;
-    
-    // Obtener el contenedor de reacciones
-    const reactionsContainer = document.querySelector('.emoji-reactions');
-    if (!reactionsContainer) return;
-    
-    // Actualizar el HTML de las reacciones
-    let reactionsHtml = '';
-    onepiece_emojis.forEach(emoji => {
-        const count = memory.reactions[emoji.icon] || 0;
-        const activeClass = count > 0 ? 'active' : '';
-        reactionsHtml += `
-            <div class="emoji-reaction ${activeClass}" onclick="addReaction('${memory.id}', '${emoji.icon}')" title="${emoji.description}">
-                <div class="emoji-icon">${emoji.icon}</div>
-                <div class="emoji-count">${count}</div>
-            </div>
-        `;
-    });
-    
-    // Actualizar el contenido
-    reactionsContainer.innerHTML = reactionsHtml;
-}
-
-// Función para navegar entre memorias (CORREGIDA)
-function navigateMemory(direction) {
-    const currentId = document.getElementById('detailModal').getAttribute('data-current-id');
-    const currentIndex = getMemoryIndexById(currentId);
-    
-    let newIndex;
-    if (direction === 'prev') {
-        newIndex = currentIndex - 1; // Ahora prev va a la memoria anterior (índice menor)
-    } else {
-        newIndex = currentIndex + 1; // Ahora next va a la memoria siguiente (índice mayor)
-    }
-    
-    if (newIndex >= 0 && newIndex < memories.length) {
-        openDetailModal(memories[newIndex].id);
-    }
-}
-
-// Cerrar modal de detalle
-function closeDetailModal() {
-    document.getElementById('detailModal').classList.remove('active');
-}
-
-
-// Mostrar reacción del personaje
-function showCharacterReaction(message, avatarPath) {  // Modificado para recibir path en lugar de emoji
-    const reaction = document.createElement('div');
-    reaction.className = 'character-guide';
-    reaction.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 300; animation: fadeIn 0.5s;';
-    reaction.innerHTML = `
-        <img src="${avatarPath}" alt="Character" class="char-avatar-img">
-        <span class="character-message">${message}</span>
-    `;
-    document.body.appendChild(reaction);
-    
-    setTimeout(() => {
-        reaction.remove();
-    }, 3000);
-}
-
-// Actualizar galería (ARREGLADO)
-function updateGallery() {
-    const container = document.getElementById('memoriesContainer');
-    container.innerHTML = '';
-    
-    if (memories.length === 0) {
-        document.getElementById('emptyState').style.display = 'block';
-        return;
-    }
-    
-    document.getElementById('emptyState').style.display = 'none';
-    
-    memories.forEach((memory, index) => {
-        const card = document.createElement('div');
-        card.className = 'memory-card animate-fadeInUp';
-        card.onclick = () => openDetailModal(memory.id);
-        // Agregar retraso en la animación basado en el índice
-        card.style.animationDelay = `${index * 0.1}s`;
-        
-        // Forzar animación en dispositivos móviles
-        card.style.animationDuration = '0.5s';
-        card.style.animationFillMode = 'both';
-        
-        // Aplicar filtro si existe
-        const filterClass = memory.filter || '';
-        
-        let thumbnailHtml = '';
-        if (memory.isGoogleDrive) {
-            thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail ${filterClass}" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
-        } else {
-            thumbnailHtml = memory.type === 'video' ? 
-                `<video src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${filterClass}" muted></video>` :
-                `<img src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${filterClass}" alt="Thumbnail">`;
-        }
-        
-        // Mostrar contador de reacciones si hay alguna
-        let reactionsCount = 0;
-        let reactionsHtml = '';
-        
-        if (memory.reactions) {
-            Object.values(memory.reactions).forEach(count => {
-                reactionsCount += count;
-            });
-            
-            if (reactionsCount > 0) {
-                reactionsHtml = `<div class="reaction-count">❤️ ${reactionsCount}</div>`;
-            }
-        }
-        
-        card.innerHTML = `
-            ${thumbnailHtml}
-            <div class="memory-title">${memory.title}</div>
-            <div class="memory-date">Día ${memory.dayNumber}</div>
-            ${reactionsHtml}
-        `;
-        container.appendChild(card);
-    });
-    
-}
-
-
-// Actualizar función updateStats para calcular desde el 17 de julio de 2023
-function updateStats() {
-    // Calcular estadísticas básicas
-    const totalMemories = memories.length;
-    const totalVideos = memories.filter(m => m.type === 'video').length;
-    
-    // Calcular días de aventura desde el 17 de julio de 2023
-    const startDate = new Date('2023-07-17');
-    const today = new Date();
-    const daysOfAdventure = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24));
-    
-    // Actualizar elementos del DOM
-    document.getElementById('totalMemories').textContent = totalMemories;
-    document.getElementById('totalVideos').textContent = totalVideos;
-    document.getElementById('daysOfAdventure').textContent = daysOfAdventure;
-}
-
-// Manejar envío del formulario (ARREGLADO)
-const memoryForm = document.getElementById('memoryForm');
-if (memoryForm) {
-    memoryForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    if (!isCreatorMode) return;
-    
-    if (!currentMemory) {
-        alert('Por favor selecciona una foto o video, o proporciona un enlace de Google Drive');
-        return;
-    }
-    
-    const title = document.getElementById('titleInput').value;
-    const date = document.getElementById('dateInput').value;
-    const description = document.getElementById('descriptionInput').value;
-    
-    // Calcular número de día
-    const dayNumber = memories.length + 1;
-    
-    // Crear nueva memoria
-    const newMemory = {
-        id: Date.now().toString(),
-        title: title,
-        date: date,
-        dayNumber: dayNumber,
-        description: description,
-        file: currentMemory.file,
-        type: currentMemory.type,
-        isGoogleDrive: currentMemory.isGoogleDrive || false,
-        character: characters[Math.floor(Math.random() * characters.length)].name,
-        createdAt: new Date().toISOString(),
-        reactions: {} // Inicializar objeto de reacciones vacío
-    };
-    
-    // Agregar campos específicos para Google Drive
-    if (currentMemory.isGoogleDrive) {
-        newMemory.thumbnail = currentMemory.thumbnail;
-        newMemory.fileId = currentMemory.fileId;
-    }
-    
-    // Agregar a memorias
-    memories.unshift(newMemory);
-    saveMemories();
-    
-    // Actualizar UI
-    updateGallery();
-    updateStats();
-    closeAddModal();
-    
-    // Mostrar mensaje de éxito con personaje aleatorio
-    const character = characters[Math.floor(Math.random() * characters.length)];
-    showCharacterReaction(character.phrases[Math.floor(Math.random() * character.phrases.length)], character.avatar);
-});
-
-// Cerrar modales al hacer clic fuera
-window.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal')) {
-        e.target.classList.remove('active');
-    }
-});
-
-// Registrar el Service Worker (ya se maneja en el DOMContentLoaded modificado)
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
-        .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-        })
-        .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
-        });
-}
-
-// Prevenir zoom en iOS
-document.addEventListener('gesturestart', function (e) {
-    e.preventDefault();
-});
-
-// Agregar navegación con teclado
-document.addEventListener('keydown', function(e) {
-    if (document.getElementById('detailModal').classList.contains('active')) {
-        if (e.key === 'ArrowLeft') {
-            navigateMemory('prev');
-        } else if (e.key === 'ArrowRight') {
-            navigateMemory('next');
-        } else if (e.key === 'Escape') {
-            closeDetailModal();
-        }
-    }
-});
-}
-
-// Función para inicializar animaciones
-function initAnimations() {
-    // Agregar event listeners para animaciones hover en dispositivos táctiles
-    const memoryCards = document.querySelectorAll('.memory-card');
-    memoryCards.forEach(card => {
-        card.addEventListener('touchstart', function() {
-            this.classList.add('touch-hover');
-        });
-        
-        card.addEventListener('touchend', function() {
-            this.classList.remove('touch-hover');
-        });
-    });
-}
-
-// Función para soporte táctil
-function initTouchSupport() {
-    // Agregar clase CSS para dispositivos táctiles
-    if ('ontouchstart' in window) {
-        document.body.classList.add('touch-device');
-    }
-}
-
 // Función para forzar el inicio del modo presentación
 function forceStartPresentation() {
     try {
-        console.log('Iniciando modo presentación...');
         startPresentationMode();
     } catch (error) {
-        console.error('Error al iniciar presentación:', error);
         alert('Hubo un problema al iniciar el modo presentación. Por favor, intenta de nuevo.');
     }
 }
@@ -999,54 +325,22 @@ function updateFilterUI(activeFilterClass) {
 
 // Iniciar modo presentación
 function startPresentationMode() {
-    console.log('Iniciando modo presentación...');
-    console.log('Memorias disponibles:', memories.length);
-    console.log('Memorias:', memories);
-    
     if (memories.length === 0) {
         alert('No hay memorias para mostrar en modo presentación');
         return;
-    }
-    
-    // Verificar si hay memorias de Google Drive y advertir sobre posibles problemas de CORS
-    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
-    if (googleDriveMemories.length > 0) {
-        console.warn(`⚠️ ${googleDriveMemories.length} memorias de Google Drive detectadas. Algunas pueden tener problemas de CORS.`);
-        
-        // Verificar entorno de hosting
-        const isHosted = !window.location.hostname.includes('localhost') && 
-                         !window.location.hostname.includes('127.0.0.1') &&
-                         window.location.protocol !== 'file:';
-        
-        if (isHosted) {
-            console.warn('🏠 Estás en un entorno hosteado. Los archivos de Google Drive pueden no cargarse.');
-            console.warn('🔗 Solución: Asegúrate de que los archivos de Google Drive sean públicos');
-            console.warn('🔗 Usa el enlace "Compartir" -> "Cualquier persona con el enlace puede ver"');
-        } else {
-            console.log('💻 Entorno local detectado - Google Drive debería funcionar');
-        }
     }
     
     const presentationMode = document.getElementById('presentationMode');
     const presentationSlides = document.getElementById('presentationSlides');
     const presentationProgress = document.getElementById('presentationProgress');
     
-    console.log('Elementos encontrados:', {
-        presentationMode: !!presentationMode,
-        presentationSlides: !!presentationSlides,
-        presentationProgress: !!presentationProgress
-    });
-    
     if (!presentationMode || !presentationSlides || !presentationProgress) {
-        console.error('Faltan elementos del DOM para el modo presentación');
         return;
     }
     
     // Limpiar contenedores
     presentationSlides.innerHTML = '';
     presentationProgress.innerHTML = '';
-    
-    console.log('Creando diapositivas...');
     
     // Crear diapositivas para cada memoria
     memories.forEach((memory, index) => {
@@ -1059,114 +353,86 @@ function startPresentationMode() {
             
             // Preparar el contenido multimedia
             let mediaHtml = '';
-            console.log(`Procesando memoria ${index}:`, memory);
             
             if (memory.isGoogleDrive) {
-                console.log(`Google Drive memory: ${memory.title}, type: ${memory.type}, fileId: ${memory.fileId}`);
                 if (memory.type === 'video') {
                     const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
-                    console.log(`Video iframe URL: ${driveUrl}`);
-                    mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
+                    mediaHtml = `
+                        <iframe 
+                            src="${driveUrl}" 
+                            class="presentation-video" 
+                            frameborder="0" 
+                            allowfullscreen
+                            onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML='<div style=\\'background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;\\'><h3>${memory.title}</h3><a href=\\'https://drive.google.com/file/d/${memory.fileId}/view\\' target=\\'_blank\\' style=\\'color: var(--coral); font-weight: bold; font-size: 1.2em;\\'>Ver Video en Google Drive</a></div>'""></iframe>
+                    `;
                 } else {
-                    // Intentar múltiples URLs para Google Drive
                     const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                    const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-                    const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w1200`;
+                    const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1920`;
+                    const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w1920`;
                     
-                    console.log(`Image URLs: ${imageUrl}, ${thumbnailUrl}, ${directUrl}`);
-                    mediaHtml = `<img src="${imageUrl}" 
-                        alt="${memory.title}" 
-                        class="presentation-image ${memory.filter || ''}" 
-                        onerror="this.onerror=function(){this.onerror=null;this.src='${thumbnailUrl}';console.log('Fallback to thumbnail');}; this.src='${thumbnailUrl}'" 
-                        data-src="${imageUrl}" 
-                        data-fallback="${thumbnailUrl}" 
-                        style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                    mediaHtml = `
+                        <img src="${imageUrl}" 
+                             alt="${memory.title}" 
+                             class="presentation-image" 
+                             onerror="this.onerror=function(){this.onerror=null;this.src='${thumbnailUrl}';}; this.src='${thumbnailUrl}'"
+                             onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML='<div style=\\'background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;\\'><h3>${memory.title}</h3><a href=\\'https://drive.google.com/file/d/${memory.fileId}/view\\' target=\\'_blank\\' style=\\'color: var(--coral); font-weight: bold; font-size: 1.2em;\\'>Ver en Google Drive</a></div>'"">
+                    `;
                 }
-            } else if (memory.type === 'video') {
-                mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
             } else {
-                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                // Archivos locales
+                if (memory.type === 'video') {
+                    mediaHtml = `
+                        <video class="presentation-video" controls autoplay muted>
+                            <source src="${memory.file}" type="video/mp4">
+                            Tu navegador no soporta el elemento video.
+                        </video>
+                    `;
+                } else {
+                    mediaHtml = `
+                        <img src="${memory.file}" alt="${memory.title}" class="presentation-image">
+                    `;
+                }
             }
             
-            // Añadir información de la memoria y comentario del personaje
-            const characterComment = getRandomCharacterComment(memory.character || 'Luffy');
-            
-            // Añadir enlace directo para hosted environment
-            const driveLink = memory.isGoogleDrive ? 
-                `<a href="https://drive.google.com/file/d/${memory.fileId}/view" target="_blank" style="color: var(--gold); text-decoration: underline;">Ver en Google Drive</a>` : '';
-            
+            // Crear contenido de la diapositiva
             slide.innerHTML = `
-                ${mediaHtml}
-                <div class="presentation-info">
-                    <div class="presentation-title">${memory.title}</div>
-                    <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
-                    <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
-                    ${driveLink}
-                    <div class="character-comment">
-                        <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
-                        <span class="comment-text">${characterComment}</span>
+                <div class="presentation-content">
+                    ${mediaHtml}
+                    <div class="presentation-info">
+                        <h2>${memory.title}</h2>
+                        <p>${memory.description || ''}</p>
+                        <div class="presentation-date">${formatDate(memory.date)}</div>
                     </div>
                 </div>
             `;
             
-            // Añadir eventos de carga para debugging
+            // Configurar manejo de errores para imágenes
             const img = slide.querySelector('img');
             if (img) {
-                img.style.display = 'block'; // Forzar visibilidad
-                img.style.visibility = 'visible';
-                img.onload = function() {
-                    console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
-                    this.style.display = 'block';
-                    this.style.visibility = 'visible';
-                };
-                img.onerror = function(e) {
-                    console.error(`✗ Error al cargar imagen: ${memory.title}`, e);
-                    // Fallback para hosted environment - mostrar thumbnail
-                    const fallbackUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-                    console.log(`Intentando fallback: ${fallbackUrl}`);
+                img.onerror = function() {
+                    // Intentar con URL de thumbnail
+                    const fallbackUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1920`;
                     this.src = fallbackUrl;
                     
-                    // Si aún falla, mostrar mensaje visual
+                    // Si el fallback también falla, mostrar mensaje
                     this.onerror = function() {
                         this.style.display = 'none';
                         const errorDiv = document.createElement('div');
                         errorDiv.innerHTML = `
                             <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;">
                                 <h3>${memory.title}</h3>
-                                <p>Imagen no disponible en este entorno</p>
+                                <p style="color: var(--coral); margin: 10px 0;">
+                                    ⚠️ La imagen no pudo cargarse. 
+                                </p>
                                 <a href="https://drive.google.com/file/d/${memory.fileId}/view" 
                                    target="_blank" 
-                                   style="color: var(--coral); font-weight: bold;">
+                                   style="color: var(--coral); font-weight: bold; font-size: 1.2em;">
                                    Ver en Google Drive
                                 </a>
                             </div>
                         `;
                         this.parentNode.appendChild(errorDiv);
                     };
-                };
-            }
-            
-            const iframe = slide.querySelector('iframe');
-            if (iframe) {
-                iframe.onload = function() {
-                    console.log(`✓ Video iframe cargado: ${memory.title}`);
-                };
-                iframe.onerror = function(e) {
-                    console.error(`✗ Error al cargar iframe: ${memory.title}`, e);
-                    // Reemplazar con enlace directo
-                    const fallbackLink = document.createElement('div');
-                    fallbackLink.innerHTML = `
-                        <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;">
-                            <h3>${memory.title}</h3>
-                            <a href="https://drive.google.com/file/d/${memory.fileId}/view" 
-                               target="_blank" 
-                               style="color: var(--coral); font-weight: bold; font-size: 1.2em;">
-                               Ver Video en Google Drive
-                            </a>
-                        </div>
-                    `;
-                    this.parentNode.appendChild(fallbackLink);
-                    this.style.display = 'none';
                 };
             }
             
@@ -1180,9 +446,8 @@ function startPresentationMode() {
             progressDot.onclick = () => navigatePresentation('goto', index);
             presentationProgress.appendChild(progressDot);
             
-            console.log(`Diapositiva ${index} creada correctamente`);
         } catch (error) {
-            console.error(`Error creando diapositiva ${index}:`, error);
+            // Silencioso - sin console.error
         }
     });
     
@@ -1195,91 +460,63 @@ function startPresentationMode() {
     
     presentationMode.style.opacity = '1';
     
-    console.log('Modo presentación mostrado, iniciando timer...');
-    
     // Configurar la presentación automática
     scheduleNextSlide();
 }
 
 // Función para programar el cambio automático de diapositivas
 function scheduleNextSlide() {
-    console.log('Programando siguiente diapositiva...');
-    
     // Limpiar cualquier intervalo existente
     if (window.presentationInterval) {
-        console.log('Limpiando intervalo anterior:', window.presentationInterval);
         clearTimeout(window.presentationInterval);
     }
     
     const currentSlide = document.querySelector('.presentation-slide.active');
     if (!currentSlide) {
-        console.error('No se encontró diapositiva activa');
         return;
     }
     
     const slideType = currentSlide.getAttribute('data-type');
     const slideIndex = parseInt(currentSlide.getAttribute('data-index'));
     
-    console.log('Diapositiva actual:', { slideType, slideIndex });
-    
     // Si es un video, esperar a que termine
     if (slideType === 'video') {
         const video = document.getElementById(`video-${slideIndex}`);
         if (video) {
-            console.log('Video encontrado, configurando eventos...');
-            
             // Si el video está reproduciéndose, esperar a que termine
             if (!video.ended && !video.paused) {
-                console.log('Video reproduciéndose, esperando a que termine...');
                 video.onended = function() {
-                    console.log('Video terminado, esperando 2 segundos...');
                     window.presentationInterval = setTimeout(() => {
-                        console.log('Navegando a siguiente después de video...');
                         navigatePresentation('next');
                     }, 2000);
                 };
                 return;
-            } else {
-                console.log('Video pausado o terminado, usando timer fijo');
             }
-        } else {
-            console.log('No se encontró elemento video, usando timer fijo');
         }
     }
     
     // Para imágenes o si el video no está disponible, usar un tiempo fijo
-    console.log('Configurando timer de 5 segundos...');
     window.presentationInterval = setTimeout(() => {
-        console.log('Timer expirado, navegando a siguiente...');
         navigatePresentation('next');
     }, 5000); // 5 segundos para imágenes
-    
-    console.log('Timer configurado:', window.presentationInterval);
 }
 
 // Navegar en el modo presentación
 function navigatePresentation(direction, targetIndex) {
-    console.log('Navegando presentación:', { direction, targetIndex });
-    
     const slides = document.querySelectorAll('.presentation-slide');
     const dots = document.querySelectorAll('.progress-dot');
     
-    console.log('Total diapositivas:', slides.length);
-    
     if (slides.length === 0) {
-        console.error('No hay diapositivas para navegar');
         return;
     }
     
     // Encontrar la diapositiva activa actual
     const currentSlide = document.querySelector('.presentation-slide.active');
     if (!currentSlide) {
-        console.error('No se encontró diapositiva activa');
         return;
     }
     
     const currentIndex = parseInt(currentSlide.getAttribute('data-index'));
-    console.log('Índice actual:', currentIndex);
     
     // Calcular el nuevo índice
     let newIndex;
@@ -1291,8 +528,6 @@ function navigatePresentation(direction, targetIndex) {
         newIndex = (currentIndex + 1) % slides.length;
     }
     
-    console.log('Nuevo índice:', newIndex);
-    
     // Actualizar diapositivas
     currentSlide.classList.remove('active');
     slides[newIndex].classList.add('active');
@@ -1302,371 +537,385 @@ function navigatePresentation(direction, targetIndex) {
     if (currentDot) currentDot.classList.remove('active');
     dots[newIndex].classList.add('active');
     
-    console.log('Navegación completada, programando siguiente...');
-    
     // Programar el siguiente cambio automático
     scheduleNextSlide();
 }
 
 // Cerrar modo presentación
 function closePresentationMode() {
-    console.log('Cerrando modo presentación...');
     const presentationMode = document.getElementById('presentationMode');
     presentationMode.style.display = 'none';
     
     // Detener presentación automática
     if (window.presentationInterval) {
-        console.log('Deteniendo timer:', window.presentationInterval);
         clearInterval(window.presentationInterval);
         window.presentationInterval = null;
     }
 }
 
-// Función de diagnóstico para debugging
-function debugPresentationMode() {
-    console.log('=== DIAGNÓSTICO MODO PRESENTACIÓN ===');
-    console.log('URL actual:', window.location.href);
-    console.log('User agent:', navigator.userAgent);
-    console.log('Memorias cargadas:', memories.length);
-    console.log('Memorias de Google Drive:', memories.filter(m => m.isGoogleDrive).length);
+// Función para actualizar la galería
+function updateGallery() {
+    const gallery = document.getElementById('galleryGrid');
+    gallery.innerHTML = '';
     
-    const elements = {
-        presentationMode: document.getElementById('presentationMode'),
-        presentationSlides: document.getElementById('presentationSlides'),
-        presentationProgress: document.getElementById('presentationProgress'),
-        startButton: document.querySelector('[onclick="startPresentationMode()"]')
-    };
-    
-    console.log('Elementos del DOM:', elements);
-    
-    if (memories.length > 0) {
-        console.log('Primera memoria:', memories[0]);
-    }
-    
-    // Verificar memorias de Google Drive específicamente
-    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
-    console.log('Detalles de memorias de Google Drive:');
-    googleDriveMemories.forEach((memory, index) => {
-        console.log(`GD Memory ${index + 1}:`, {
-            title: memory.title,
-            type: memory.type,
-            fileId: memory.fileId,
-            hasFileId: !!memory.fileId,
-            file: memory.file,
-            thumbnail: memory.thumbnail
-        });
-    });
-    
-    // Verificar si hay errores en la consola
-    if (window.console && window.console.error) {
-        console.log('Verificar la consola para errores');
-    }
-    
-    // Verificar estilos de presentación
-    if (elements.presentationMode) {
-        const computedStyle = window.getComputedStyle(elements.presentationMode);
-        console.log('Estilos computados de presentationMode:', {
-            display: computedStyle.display,
-            opacity: computedStyle.opacity,
-            visibility: computedStyle.visibility,
-            zIndex: computedStyle.zIndex,
-            position: computedStyle.position,
-            top: computedStyle.top,
-            left: computedStyle.left,
-            width: computedStyle.width,
-            height: computedStyle.height
-        });
-    }
-    
-    // Verificar entorno de hosting
-    console.log('Entorno de hosting:', {
-        protocol: window.location.protocol,
-        hostname: window.location.hostname,
-        port: window.location.port,
-        isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
-        origin: window.location.origin
-    });
-}
-
-// Función para probar específicamente memorias de Google Drive
-function testGoogleDriveMemories() {
-    console.log('=== TEST MEMORIAS GOOGLE DRIVE ===');
-    
-    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
-    console.log('Total memorias Google Drive:', googleDriveMemories.length);
-    
-    googleDriveMemories.forEach((memory, index) => {
-        console.log(`Testing GD Memory ${index + 1}:`, memory.title);
-        
-        // Probar construcción de URL
-        let testUrl = '';
-        if (memory.type === 'image') {
-            testUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-        } else if (memory.type === 'video') {
-            testUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
-        }
-        
-        console.log('URL generada:', testUrl);
-        
-        // Crear elemento de prueba
-        const testImg = new Image();
-        testImg.onload = function() {
-            console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
-        };
-        testImg.onerror = function() {
-            console.log(`✗ Error al cargar imagen: ${memory.title}`, {
-                url: testUrl,
-                fileId: memory.fileId,
-                error: 'CORS o archivo no accesible'
-            });
-        };
-        testImg.src = testUrl;
-    });
-}
-
-// Función para forzar el modo presentación
-function forcePresentationMode() {
-    console.log('Forzando modo presentación...');
-    
-    // Crear datos de prueba si no hay memorias
     if (memories.length === 0) {
-        console.log('Creando datos de prueba...');
-        memories.push({
-            title: 'Memoria de Prueba',
-            description: 'Esta es una memoria de prueba para verificar el modo presentación',
-            date: new Date().toISOString(),
-            dayNumber: 1,
-            file: 'luffy.png',
-            type: 'image',
-            character: 'Luffy'
-        });
-    }
-    
-    // Mostrar el modo presentación
-    const presentationMode = document.getElementById('presentationMode');
-    if (presentationMode) {
-        presentationMode.classList.add('force-show');
-        presentationMode.style.display = 'flex';
-        presentationMode.style.opacity = '1';
-        presentationMode.style.visibility = 'visible';
-        console.log('Modo presentación forzado');
-    }
-    
-    // Crear diapositivas
-    startPresentationMode();
-}
-
-// Función para probar animaciones de tarjetas
-function testCardAnimations() {
-    console.log('Probando animaciones de tarjetas...');
-    const cards = document.querySelectorAll('.memory-card');
-    console.log('Tarjetas encontradas:', cards.length);
-    
-    cards.forEach((card, index) => {
-        console.log(`Animando tarjeta ${index}`);
-        card.style.animation = 'none';
-        card.offsetHeight; // Trigger reflow
-        card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`;
-    });
-}
-
-// Listener global para errores
-window.addEventListener('error', function(e) {
-    console.error('Error global capturado:', e.error);
-    console.error('Mensaje:', e.message);
-    console.error('Archivo:', e.filename);
-    console.error('Línea:', e.lineno);
-});
-
-// Listener para cuando el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM completamente cargado');
-    debugPresentationMode();
-    
-    // Agregar botones de prueba temporales
-    const testBtn = document.createElement('button');
-    testBtn.textContent = 'TEST PRESENTACIÓN';
-    testBtn.style.position = 'fixed';
-    testBtn.style.top = '10px';
-    testBtn.style.right = '10px';
-    testBtn.style.zIndex = '9999';
-    testBtn.style.padding = '10px';
-    testBtn.style.background = 'red';
-    testBtn.style.color = 'white';
-    testBtn.onclick = function() {
-        console.log('Botón de prueba presionado');
-        startPresentationMode();
-    };
-    document.body.appendChild(testBtn);
-    
-    // Botón para probar memorias de Google Drive
-    const gdTestBtn = document.createElement('button');
-    gdTestBtn.textContent = 'TEST GOOGLE DRIVE';
-    gdTestBtn.style.position = 'fixed';
-    gdTestBtn.style.top = '50px';
-    gdTestBtn.style.right = '10px';
-    gdTestBtn.style.zIndex = '9999';
-    gdTestBtn.style.padding = '10px';
-    gdTestBtn.style.background = 'blue';
-    gdTestBtn.style.color = 'white';
-    gdTestBtn.onclick = function() {
-        console.log('Botón de prueba Google Drive presionado');
-        testGoogleDriveMemories();
-    };
-    document.body.appendChild(gdTestBtn);
-});
-
-// Inicializar línea de tiempo
-function initTimeline() {
-    // La línea de tiempo se actualizará cuando se carguen las memorias
-    document.getElementById('timeline').addEventListener('click', function(e) {
-        // Si se hace clic en un evento de la línea de tiempo, mostrar las memorias de esa fecha
-        if (e.target.closest('.timeline-event')) {
-            const eventElement = e.target.closest('.timeline-event');
-            const date = eventElement.getAttribute('data-date');
-            
-            // Marcar el evento como activo
-            document.querySelectorAll('.timeline-event').forEach(event => {
-                event.classList.remove('active');
-            });
-            eventElement.classList.add('active');
-            
-            // Filtrar memorias por fecha
-            filterMemoriesByDate(date);
-        }
-    });
-}
-
-// Actualizar línea de tiempo
-function updateTimeline() {
-    const timelineEvents = document.getElementById('timelineEvents');
-    if (!timelineEvents) return;
-    
-    // Limpiar eventos existentes
-    timelineEvents.innerHTML = '';
-    
-    // Obtener fechas únicas de las memorias
-    const uniqueDates = [];
-    memories.forEach(memory => {
-        const date = memory.date.split('T')[0]; // Obtener solo la parte de la fecha
-        if (!uniqueDates.includes(date)) {
-            uniqueDates.push(date);
-        }
-    });
-    
-    // Ordenar fechas
-    uniqueDates.sort();
-    
-    // Crear eventos para cada fecha
-    uniqueDates.forEach(date => {
-        // Encontrar la primera memoria de esta fecha para usar como miniatura
-        const firstMemory = memories.find(memory => memory.date.startsWith(date));
-        if (!firstMemory) return;
-        
-        // Crear elemento de evento
-        const eventElement = document.createElement('div');
-        eventElement.className = 'timeline-event';
-        eventElement.setAttribute('data-date', date);
-        
-        // Crear miniatura
-        let thumbnailSrc = '';
-        if (firstMemory.isGoogleDrive) {
-            thumbnailSrc = firstMemory.thumbnail || `https://drive.google.com/thumbnail?id=${firstMemory.fileId}&sz=w80`;
-        } else {
-            thumbnailSrc = firstMemory.thumbnail || firstMemory.file;
-        }
-        
-        // Formatear fecha para mostrar
-        const displayDate = new Date(date).toLocaleDateString('es-ES', {
-            day: 'numeric',
-            month: 'short'
-        });
-        
-        // Añadir contenido al evento
-        eventElement.innerHTML = `
-            <div class="timeline-dot"></div>
-            <img src="${thumbnailSrc}" alt="${displayDate}" class="timeline-thumbnail">
-            <div class="timeline-date">${displayDate}</div>
+        gallery.innerHTML = `
+            <div class="empty-gallery">
+                <div class="empty-icon">📸</div>
+                <h3>No hay memorias aún</h3>
+                <p>¡Comienza a añadir tus recuerdos favoritos!</p>
+                <button class="btn btn-primary" onclick="document.getElementById('addMemoryBtn').click()">Añadir Primera Memoria</button>
+            </div>
         `;
-        
-        // Añadir evento a la línea de tiempo
-        timelineEvents.appendChild(eventElement);
+        return;
+    }
+    
+    memories.forEach((memory, index) => {
+        const card = createMemoryCard(memory, index);
+        gallery.appendChild(card);
     });
 }
 
-// Filtrar memorias por fecha
-function filterMemoriesByDate(date) {
-    const container = document.getElementById('timelineMemoriesContainer');
-    if (!container) return;
+// Crear tarjeta de memoria
+function createMemoryCard(memory, index) {
+    const card = document.createElement('div');
+    card.className = 'memory-card';
+    card.setAttribute('data-id', memory.id);
     
-    // Limpiar contenedor
-    container.innerHTML = '';
-    
-    // Filtrar memorias por fecha
-    const filteredMemories = memories.filter(memory => memory.date.startsWith(date));
-    
-    // Mostrar memorias filtradas
-    filteredMemories.forEach((memory, index) => {
-        const card = document.createElement('div');
-        card.className = 'memory-card animate-slideInUp';
-        card.onclick = () => openDetailModal(memory.id);
-        // Agregar retraso en la animación basado en el índice
-        card.style.animationDelay = `${index * 0.1}s`;
-        
-        let thumbnailHtml = '';
+    let mediaElement = '';
+    if (memory.type === 'video') {
         if (memory.isGoogleDrive) {
-            thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail ${memory.filter || ''}" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
+            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w400`;
+            mediaElement = `<img src="${thumbnailUrl}" alt="${memory.title}" class="memory-thumbnail">`;
         } else {
-            thumbnailHtml = memory.type === 'video' ? 
-                `<video src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${memory.filter || ''}" muted></video>` :
-                `<img src="${memory.thumbnail || memory.file}" class="memory-thumbnail ${memory.filter || ''}" alt="Thumbnail">`;
+            mediaElement = `<video src="${memory.file}" class="memory-thumbnail" muted></video>`;
         }
-        
-        // Mostrar contador de reacciones si hay alguna
-        let reactionsCount = 0;
-        let reactionsHtml = '';
-        
-        if (memory.reactions) {
-            Object.values(memory.reactions).forEach(count => {
-                reactionsCount += count;
-            });
-            
-            if (reactionsCount > 0) {
-                reactionsHtml = `<div class="reaction-count">❤️ ${reactionsCount}</div>`;
-            }
+    } else {
+        if (memory.isGoogleDrive) {
+            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w400`;
+            mediaElement = `<img src="${thumbnailUrl}" alt="${memory.title}" class="memory-thumbnail">`;
+        } else {
+            mediaElement = `<img src="${memory.file}" alt="${memory.title}" class="memory-thumbnail">`;
         }
-        
-        card.innerHTML = `
-            ${thumbnailHtml}
-            <div class="memory-title">${memory.title}</div>
-            <div class="memory-date">Día ${memory.dayNumber}</div>
-            ${reactionsHtml}
-        `;
-        container.appendChild(card);
+    }
+    
+    card.innerHTML = `
+        <div class="memory-card-content">
+            ${mediaElement}
+            <div class="memory-overlay">
+                <h3>${memory.title}</h3>
+                <p>${memory.description || ''}</p>
+                <div class="memory-date">${formatDate(memory.date)}</div>
+            </div>
+            <div class="memory-actions">
+                <button class="btn-icon" onclick="viewMemory('${memory.id}')" title="Ver">
+                    <span>👁️</span>
+                </button>
+                <button class="btn-icon" onclick="editMemory('${memory.id}')" title="Editar">
+                    <span>✏️</span>
+                </button>
+                <button class="btn-icon" onclick="deleteMemory('${memory.id}')" title="Eliminar">
+                    <span>🗑️</span>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Añadir eventos
+    card.addEventListener('click', (e) => {
+        if (!e.target.closest('.memory-actions')) {
+            viewMemory(memory.id);
+        }
     });
     
-    // Si no hay memorias, mostrar mensaje
-    if (filteredMemories.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
-                <div class="empty-state-message">No hay memorias para esta fecha</div>
+    return card;
+}
+
+// Ver memoria en detalle
+function viewMemory(id) {
+    const memoryIndex = getMemoryIndexById(id);
+    const memory = memories[memoryIndex];
+    
+    if (!memory) return;
+    
+    const modal = document.getElementById('detailModal');
+    const modalContent = document.getElementById('detailModalContent');
+    
+    modal.setAttribute('data-current-id', id);
+    
+    let mediaElement = '';
+    if (memory.type === 'video') {
+        if (memory.isGoogleDrive) {
+            const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
+            mediaElement = `<iframe src="${driveUrl}" class="detail-image" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+            mediaElement = `<video src="${memory.file}" class="detail-image" controls></video>`;
+        }
+    } else {
+        if (memory.isGoogleDrive) {
+            const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
+            mediaElement = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image">`;
+        } else {
+            mediaElement = `<img src="${memory.file}" alt="${memory.title}" class="detail-image">`;
+        }
+    }
+    
+    modalContent.innerHTML = `
+        <div class="detail-header">
+            <h2>${memory.title}</h2>
+            <button class="close-btn" onclick="closeDetailModal()">&times;</button>
+        </div>
+        <div class="detail-content">
+            ${mediaElement}
+            <div class="detail-info">
+                <p>${memory.description || ''}</p>
+                <div class="detail-date">${formatDate(memory.date)}</div>
+            </div>
+        </div>
+        <div class="detail-actions">
+            <button class="btn btn-primary" onclick="editMemory('${id}')">Editar</button>
+            <button class="btn btn-secondary" onclick="deleteMemory('${id}')">Eliminar</button>
+        </div>
+    `;
+    
+    modal.style.display = 'flex';
+    
+    // Aplicar filtro si existe
+    if (memory.filter) {
+        const mediaEl = modalContent.querySelector('.detail-image');
+        if (mediaEl && memory.filter) {
+            mediaEl.classList.add(memory.filter);
+        }
+    }
+    
+    // Inicializar selector de filtros
+    initFilters();
+    updateFilterUI(memory.filter || '');
+}
+
+// Cerrar modal de detalle
+function closeDetailModal() {
+    document.getElementById('detailModal').style.display = 'none';
+}
+
+// Editar memoria
+function editMemory(id) {
+    const memoryIndex = getMemoryIndexById(id);
+    const memory = memories[memoryIndex];
+    
+    if (!memory) return;
+    
+    // Cerrar modal si está abierto
+    closeDetailModal();
+    
+    // Llenar el formulario con los datos existentes
+    document.getElementById('memoryTitle').value = memory.title;
+    document.getElementById('memoryDescription').value = memory.description || '';
+    document.getElementById('memoryDate').value = memory.date;
+    
+    // Establecer la memoria actual para edición
+    currentMemory = {
+        ...memory,
+        index: memoryIndex
+    };
+    
+    // Mostrar el formulario
+    showMemoryForm();
+}
+
+// Eliminar memoria
+function deleteMemory(id) {
+    if (confirm('¿Estás seguro de que quieres eliminar esta memoria?')) {
+        const memoryIndex = getMemoryIndexById(id);
+        memories.splice(memoryIndex, 1);
+        saveMemories();
+        updateGallery();
+        updateStats();
+        closeDetailModal();
+    }
+}
+
+// Obtener índice de memoria por ID
+function getMemoryIndexById(id) {
+    return memories.findIndex(memory => memory.id === id);
+}
+
+// Actualizar estadísticas
+function updateStats() {
+    const totalMemories = memories.length;
+    const images = memories.filter(m => m.type === 'image').length;
+    const videos = memories.filter(m => m.type === 'video').length;
+    const googleDrive = memories.filter(m => m.isGoogleDrive).length;
+    
+    document.getElementById('totalMemories').textContent = totalMemories;
+    document.getElementById('totalImages').textContent = images;
+    document.getElementById('totalVideos').textContent = videos;
+    document.getElementById('totalGoogleDrive').textContent = googleDrive;
+    
+    // Actualizar gráfico
+    updateChart();
+}
+
+// Actualizar gráfico de estadísticas
+function updateChart() {
+    const ctx = document.getElementById('statsChart');
+    if (!ctx) return;
+    
+    const canvas = ctx.getContext('2d');
+    
+    // Limpiar canvas
+    canvas.clearRect(0, 0, ctx.width, ctx.height);
+    
+    // Datos para el gráfico
+    const images = memories.filter(m => m.type === 'image').length;
+    const videos = memories.filter(m => m.type === 'video').length;
+    
+    // Crear gráfico simple con divs
+    const chartContainer = document.getElementById('chartContainer');
+    if (chartContainer) {
+        chartContainer.innerHTML = `
+            <div class="chart-item">
+                <div class="chart-bar" style="height: ${images > 0 ? (images / Math.max(images, videos, 1)) * 100 : 0}%; background: var(--coral);"></div>
+                <span class="chart-label">Imágenes (${images})</span>
+            </div>
+            <div class="chart-item">
+                <div class="chart-bar" style="height: ${videos > 0 ? (videos / Math.max(images, videos, 1)) * 100 : 0}%; background: var(--gold);"></div>
+                <span class="chart-label">Videos (${videos})</span>
             </div>
         `;
     }
 }
 
-function showGalleryInfo() {
-  if (localStorage.getItem('galleryInfoShown')) {
-    return;
-  }
-  const modal = document.getElementById('galleryInfoModal');
-  modal.style.display = 'flex';
-  modal.style.alignItems = 'center';
-  modal.style.justifyContent = 'center';
+// Actualizar línea de tiempo
+function updateTimeline() {
+    const timeline = document.getElementById('timelineContent');
+    timeline.innerHTML = '';
+    
+    if (memories.length === 0) {
+        timeline.innerHTML = `
+            <div class="empty-timeline">
+                <div class="empty-icon">📅</div>
+                <h3>No hay eventos en la línea de tiempo</h3>
+                <p>Añade tus primeras memorias para verlas aquí</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Ordenar por fecha
+    const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    sortedMemories.forEach((memory, index) => {
+        const timelineItem = document.createElement('div');
+        timelineItem.className = 'timeline-item';
+        
+        let mediaElement = '';
+        if (memory.type === 'video') {
+            if (memory.isGoogleDrive) {
+                const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w200`;
+                mediaElement = `<img src="${thumbnailUrl}" alt="${memory.title}" class="timeline-thumbnail">`;
+            } else {
+                mediaElement = `<video src="${memory.file}" class="timeline-thumbnail" muted></video>`;
+            }
+        } else {
+            if (memory.isGoogleDrive) {
+                const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w200`;
+                mediaElement = `<img src="${thumbnailUrl}" alt="${memory.title}" class="timeline-thumbnail">`;
+            } else {
+                mediaElement = `<img src="${memory.file}" alt="${memory.title}" class="timeline-thumbnail">`;
+            }
+        }
+        
+        timelineItem.innerHTML = `
+            <div class="timeline-date">${formatDate(memory.date)}</div>
+            <div class="timeline-content">
+                ${mediaElement}
+                <div class="timeline-info">
+                    <h3>${memory.title}</h3>
+                    <p>${memory.description || ''}</p>
+                    <button class="btn btn-primary" onclick="viewMemory('${memory.id}')">Ver</button>
+                </div>
+            </div>
+        `;
+        
+        timeline.appendChild(timelineItem);
+    });
 }
 
-function closeGalleryInfo() {
-  document.getElementById('galleryInfoModal').style.display = 'none';
-  localStorage.setItem('galleryInfoShown', 'true');
+// Formatear fecha
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 }
+
+// Funciones para los eventos de anime
+function initAnimeEvents() {
+    // Esta función se puede expandir con eventos específicos de anime
+    // Por ahora, mostrará un mensaje temporal
+}
+
+// Funciones auxiliares
+function getCharacterEmoji(characterName) {
+    const emojis = {
+        'Luffy': '🏴‍☠️',
+        'Zoro': '⚔️',
+        'Nami': '🧭',
+        'Usopp': '🎯',
+        'Sanji': '🍖',
+        'Chopper': '🦌',
+        'Robin': '📚',
+        'Franky': '🤖',
+        'Brook': '🎵',
+        'Jinbe': '🐟'
+    };
+    return emojis[characterName] || '🏴‍☠️';
+}
+
+// Inicializar la aplicación cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Registrar Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(registration => {
+                // Service Worker registrado
+            })
+            .catch(error => {
+                // Error al registrar Service Worker
+            });
+    }
+    
+    // Inicializar componentes
+    loadMemories();
+    initTheme();
+    initFilters();
+    setRandomWelcomeMessage();
+    
+    // Configurar eventos
+    document.getElementById('addMemoryBtn').addEventListener('click', showMemoryForm);
+    document.getElementById('closeFormBtn').addEventListener('click', hideMemoryForm);
+    document.getElementById('memoryForm').addEventListener('submit', handleMemorySubmit);
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+    document.getElementById('googleDriveBtn').addEventListener('click', showGoogleDriveForm);
+    document.getElementById('closeGoogleDriveFormBtn').addEventListener('click', hideGoogleDriveForm);
+    document.getElementById('googleDriveForm').addEventListener('submit', handleGoogleDriveSubmit);
+    
+    // Cerrar modales al hacer clic fuera
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+    
+    // Prevenir el envío del formulario con Enter en campos de texto
+    document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.target.form.querySelector('button[type="submit"]:focus')) {
+                e.preventDefault();
+            }
+        });
+    });
+});
