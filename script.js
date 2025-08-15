@@ -988,14 +988,40 @@ function updateFilterUI(activeFilterClass) {
     });
 }
 
+// Función de prueba para verificar que el botón funciona
+function testPresentationClick() {
+    console.log('=== BOTÓN CLICKEADO ===');
+    alert('¡Botón funcionando! Verificando memorias...');
+    console.log('Memorias actuales:', memories.length);
+    startPresentationMode();
+}
+
 // Iniciar modo presentación
 function startPresentationMode() {
-    console.log('Iniciando modo presentación...');
-    console.log('Memorias disponibles:', memories.length);
-    console.log('Memorias:', memories);
+    try {
+            console.log('=== DEBUG: startPresentationMode llamado ===');
+            alert('Botón de presentación clickeado - iniciando...');
+            console.log('Iniciando modo presentación...');
+            console.log('Memorias disponibles:', memories.length);
+            console.log('Memorias:', memories);
+            console.log('Memorias es array:', Array.isArray(memories));
+            console.log('Memorias está definido:', typeof memories !== 'undefined');
+        } catch (error) {
+            console.error('Error en startPresentationMode:', error);
+            alert('Error: ' + error.message);
+        }
     
     if (memories.length === 0) {
-        alert('No hay memorias para mostrar en modo presentación');
+        alert('No hay memorias para mostrar en modo presentación. Cargando...');
+        // Intentar recargar memorias si están vacías
+        loadMemories();
+        setTimeout(() => {
+            if (memories.length === 0) {
+                alert('Aún no hay memorias cargadas. Por favor, recarga la página.');
+            } else {
+                alert('Memorias cargadas. Intenta nuevamente.');
+            }
+        }, 1000);
         return;
     }
     
@@ -1332,6 +1358,15 @@ window.addEventListener('error', function(e) {
 // Listener para cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM completamente cargado');
+    
+    // Verificar que el botón de presentación existe y tiene el evento correcto
+    const presentationBtn = document.querySelector('[onclick="startPresentationMode()"]');
+    if (presentationBtn) {
+        console.log('Botón de presentación encontrado:', presentationBtn);
+        console.log('Evento onclick:', presentationBtn.onclick);
+    } else {
+        console.error('Botón de presentación NO encontrado');
+    }
 });
 
 // Inicializar línea de tiempo
