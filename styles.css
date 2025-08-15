@@ -958,7 +958,8 @@ html.theme-transition {
         display: flex !important;
         justify-content: stretch !important;
         align-items: stretch !important;
-        max-height: 500px !important;
+        height: 70vh !important;
+        max-height: 70vh !important;
         width: 100% !important;
         overflow: hidden !important;
         border-radius: 10px !important;
@@ -967,7 +968,16 @@ html.theme-transition {
         padding: 3px !important;
     }
 
-.presentation-image,
+.presentation-image {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 8px !important;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
+    }
+    
     .presentation-video {
         width: 100% !important;
         max-width: 100% !important;
@@ -1344,7 +1354,15 @@ html.theme-transition {
         font-size: 0.9em !important;
     }
     
-    .presentation-image,
+    .presentation-image {
+        max-height: 100% !important;
+        height: 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 10px !important;
+        object-fit: cover !important;
+    }
+    
     .presentation-video {
         max-height: 50% !important;
         border-radius: 10px !important;
@@ -1642,7 +1660,14 @@ html.theme-transition {
         padding: 0 !important;
     }
     
-    .presentation-image,
+    .presentation-image {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: cover !important;
+    }
+    
     .presentation-video {
         width: 100% !important;
         max-width: 100% !important;
@@ -1953,6 +1978,8 @@ html.theme-transition {
 .empty-state-submessage {
     opacity: 0.8;
 }
+
+
 /* Estilos del Login */
 .login-modal {
     position: fixed;
