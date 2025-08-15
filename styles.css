@@ -873,12 +873,19 @@ html.theme-transition {
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     z-index: 1001;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     padding: 20px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.gallery-info-modal[style*="display: block"],
+.gallery-info-modal[style*="display: flex"] {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .gallery-info-modal[style*="display: block"],
