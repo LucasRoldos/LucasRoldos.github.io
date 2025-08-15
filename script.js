@@ -1008,6 +1008,12 @@ function startPresentationMode() {
         return;
     }
     
+    // Verificar si hay memorias de Google Drive y advertir sobre posibles problemas de CORS
+    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
+    if (googleDriveMemories.length > 0) {
+        console.warn(`⚠️ ${googleDriveMemories.length} memorias de Google Drive detectadas. Algunas pueden tener problemas de CORS.`);
+    }
+    
     const presentationMode = document.getElementById('presentationMode');
     const presentationSlides = document.getElementById('presentationSlides');
     const presentationProgress = document.getElementById('presentationProgress');
@@ -1049,14 +1055,24 @@ function startPresentationMode() {
                     console.log(`Video iframe URL: ${driveUrl}`);
                     mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
                 } else {
+                    // Intentar múltiples URLs para Google Drive
                     const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                    console.log(`Image URL: ${imageUrl}`);
-                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800'; console.log('Error loading image, fallback to thumbnail');">`;
+                    const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
+                    const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w1200`;
+                    
+                    console.log(`Image URLs: ${imageUrl}, ${thumbnailUrl}, ${directUrl}`);
+                    mediaHtml = `<img src="${imageUrl}" 
+                        alt="${memory.title}" 
+                        class="presentation-image ${memory.filter || ''}" 
+                        onerror="this.onerror=function(){this.onerror=null;this.src='${thumbnailUrl}';console.log('Fallback to thumbnail');}; this.src='${thumbnailUrl}'" 
+                        data-src="${imageUrl}" 
+                        data-fallback="${thumbnailUrl}" 
+                        style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
                 }
             } else if (memory.type === 'video') {
                 mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
             } else {
-                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}">`;
+                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
             }
             
             // Añadir información de la memoria y comentario del personaje
