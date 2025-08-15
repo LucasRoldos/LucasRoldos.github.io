@@ -316,10 +316,18 @@ function setRandomWelcomeMessage() {
 // Establecer mensaje aleatorio en galería (con círculo rojo alineado)
 function setRandomGalleryMessage() {
     const character = characters[Math.floor(Math.random() * characters.length)];
-    document.getElementById('galleryCharAvatar').outerHTML = `
-        <img src="${character.avatar}" alt="${character.name}" class="char-avatar-img">
-    `;
-    document.getElementById('galleryCharMessage').textContent = character.phrases[Math.floor(Math.random() * character.phrases.length)];
+    const avatarElement = document.getElementById('galleryCharAvatar');
+    const messageElement = document.getElementById('galleryCharMessage');
+    
+    if (avatarElement) {
+        avatarElement.outerHTML = `
+            <img src="${character.avatar}" alt="${character.name}" class="char-avatar-img">
+        `;
+    }
+    
+    if (messageElement) {
+        messageElement.textContent = character.phrases[Math.floor(Math.random() * character.phrases.length)];
+    }
 }
 
 // Actualizar mensaje de estadísticas
@@ -500,6 +508,31 @@ function openDetailModal(id) {
         }, 500);
     }
 }
+// Función para obtener un emoji aleatorio de personaje
+function getCharacterEmoji(character) {
+    const emojis = ['🏴‍☠️', '⚓', '⚔️', '👒', '🍖', '💰', '🏝️', '🌊', '🔥', '⚡', '🌟', '💎'];
+    return emojis[Math.floor(Math.random() * emojis.length)];
+}
+
+// Función para iniciar mensajes automáticos en galería
+function startGalleryMessages() {
+    if (galleryMessageInterval) {
+        clearInterval(galleryMessageInterval);
+    }
+    
+    galleryMessageInterval = setInterval(() => {
+        setRandomGalleryMessage();
+    }, 5000);
+}
+
+// Función para detener mensajes automáticos en galería
+function stopGalleryMessages() {
+    if (galleryMessageInterval) {
+        clearInterval(galleryMessageInterval);
+        galleryMessageInterval = null;
+    }
+}
+
 // Función para obtener índice de memoria por ID
 function getMemoryIndexById(id) {
     return memories.findIndex(m => m.id === id);
@@ -677,7 +710,9 @@ function updateStats() {
 }
 
 // Manejar envío del formulario (ARREGLADO)
-document.getElementById('memoryForm').addEventListener('submit', function(e) {
+const memoryForm = document.getElementById('memoryForm');
+if (memoryForm) {
+    memoryForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
     if (!isCreatorMode) return;
@@ -764,6 +799,7 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+}
 
 // Función para inicializar animaciones
 function initAnimations() {
