@@ -863,16 +863,7 @@ function initTouchSupport() {
     }
 }
 
-// Función para forzar el inicio del modo presentación
-function forceStartPresentation() {
-    try {
-        console.log('Iniciando modo presentación...');
-        startPresentationMode();
-    } catch (error) {
-        console.error('Error al iniciar presentación:', error);
-        alert('Hubo un problema al iniciar el modo presentación. Por favor, intenta de nuevo.');
-    }
-}
+
 
 // Funciones para el modo oscuro/claro
 function initTheme() {
@@ -1322,153 +1313,13 @@ function closePresentationMode() {
     }
 }
 
-// Función de diagnóstico para debugging
-function debugPresentationMode() {
-    console.log('=== DIAGNÓSTICO MODO PRESENTACIÓN ===');
-    console.log('URL actual:', window.location.href);
-    console.log('User agent:', navigator.userAgent);
-    console.log('Memorias cargadas:', memories.length);
-    console.log('Memorias de Google Drive:', memories.filter(m => m.isGoogleDrive).length);
-    
-    const elements = {
-        presentationMode: document.getElementById('presentationMode'),
-        presentationSlides: document.getElementById('presentationSlides'),
-        presentationProgress: document.getElementById('presentationProgress'),
-        startButton: document.querySelector('[onclick="startPresentationMode()"]')
-    };
-    
-    console.log('Elementos del DOM:', elements);
-    
-    if (memories.length > 0) {
-        console.log('Primera memoria:', memories[0]);
-    }
-    
-    // Verificar memorias de Google Drive específicamente
-    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
-    console.log('Detalles de memorias de Google Drive:');
-    googleDriveMemories.forEach((memory, index) => {
-        console.log(`GD Memory ${index + 1}:`, {
-            title: memory.title,
-            type: memory.type,
-            fileId: memory.fileId,
-            hasFileId: !!memory.fileId,
-            file: memory.file,
-            thumbnail: memory.thumbnail
-        });
-    });
-    
-    // Verificar si hay errores en la consola
-    if (window.console && window.console.error) {
-        console.log('Verificar la consola para errores');
-    }
-    
-    // Verificar estilos de presentación
-    if (elements.presentationMode) {
-        const computedStyle = window.getComputedStyle(elements.presentationMode);
-        console.log('Estilos computados de presentationMode:', {
-            display: computedStyle.display,
-            opacity: computedStyle.opacity,
-            visibility: computedStyle.visibility,
-            zIndex: computedStyle.zIndex,
-            position: computedStyle.position,
-            top: computedStyle.top,
-            left: computedStyle.left,
-            width: computedStyle.width,
-            height: computedStyle.height
-        });
-    }
-    
-    // Verificar entorno de hosting
-    console.log('Entorno de hosting:', {
-        protocol: window.location.protocol,
-        hostname: window.location.hostname,
-        port: window.location.port,
-        isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
-        origin: window.location.origin
-    });
-}
 
-// Función para probar específicamente memorias de Google Drive
-function testGoogleDriveMemories() {
-    console.log('=== TEST MEMORIAS GOOGLE DRIVE ===');
-    
-    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
-    console.log('Total memorias Google Drive:', googleDriveMemories.length);
-    
-    googleDriveMemories.forEach((memory, index) => {
-        console.log(`Testing GD Memory ${index + 1}:`, memory.title);
-        
-        // Probar construcción de URL
-        let testUrl = '';
-        if (memory.type === 'image') {
-            testUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-        } else if (memory.type === 'video') {
-            testUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
-        }
-        
-        console.log('URL generada:', testUrl);
-        
-        // Crear elemento de prueba
-        const testImg = new Image();
-        testImg.onload = function() {
-            console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
-        };
-        testImg.onerror = function() {
-            console.log(`✗ Error al cargar imagen: ${memory.title}`, {
-                url: testUrl,
-                fileId: memory.fileId,
-                error: 'CORS o archivo no accesible'
-            });
-        };
-        testImg.src = testUrl;
-    });
-}
 
-// Función para forzar el modo presentación
-function forcePresentationMode() {
-    console.log('Forzando modo presentación...');
-    
-    // Crear datos de prueba si no hay memorias
-    if (memories.length === 0) {
-        console.log('Creando datos de prueba...');
-        memories.push({
-            title: 'Memoria de Prueba',
-            description: 'Esta es una memoria de prueba para verificar el modo presentación',
-            date: new Date().toISOString(),
-            dayNumber: 1,
-            file: 'luffy.png',
-            type: 'image',
-            character: 'Luffy'
-        });
-    }
-    
-    // Mostrar el modo presentación
-    const presentationMode = document.getElementById('presentationMode');
-    if (presentationMode) {
-        presentationMode.classList.add('force-show');
-        presentationMode.style.display = 'flex';
-        presentationMode.style.opacity = '1';
-        presentationMode.style.visibility = 'visible';
-        console.log('Modo presentación forzado');
-    }
-    
-    // Crear diapositivas
-    startPresentationMode();
-}
 
-// Función para probar animaciones de tarjetas
-function testCardAnimations() {
-    console.log('Probando animaciones de tarjetas...');
-    const cards = document.querySelectorAll('.memory-card');
-    console.log('Tarjetas encontradas:', cards.length);
-    
-    cards.forEach((card, index) => {
-        console.log(`Animando tarjeta ${index}`);
-        card.style.animation = 'none';
-        card.offsetHeight; // Trigger reflow
-        card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`;
-    });
-}
+
+
+
+
 
 // Listener global para errores
 window.addEventListener('error', function(e) {
@@ -1481,39 +1332,6 @@ window.addEventListener('error', function(e) {
 // Listener para cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM completamente cargado');
-    debugPresentationMode();
-    
-    // Agregar botones de prueba temporales
-    const testBtn = document.createElement('button');
-    testBtn.textContent = 'TEST PRESENTACIÓN';
-    testBtn.style.position = 'fixed';
-    testBtn.style.top = '10px';
-    testBtn.style.right = '10px';
-    testBtn.style.zIndex = '9999';
-    testBtn.style.padding = '10px';
-    testBtn.style.background = 'red';
-    testBtn.style.color = 'white';
-    testBtn.onclick = function() {
-        console.log('Botón de prueba presionado');
-        startPresentationMode();
-    };
-    document.body.appendChild(testBtn);
-    
-    // Botón para probar memorias de Google Drive
-    const gdTestBtn = document.createElement('button');
-    gdTestBtn.textContent = 'TEST GOOGLE DRIVE';
-    gdTestBtn.style.position = 'fixed';
-    gdTestBtn.style.top = '50px';
-    gdTestBtn.style.right = '10px';
-    gdTestBtn.style.zIndex = '9999';
-    gdTestBtn.style.padding = '10px';
-    gdTestBtn.style.background = 'blue';
-    gdTestBtn.style.color = 'white';
-    gdTestBtn.onclick = function() {
-        console.log('Botón de prueba Google Drive presionado');
-        testGoogleDriveMemories();
-    };
-    document.body.appendChild(gdTestBtn);
 });
 
 // Inicializar línea de tiempo
