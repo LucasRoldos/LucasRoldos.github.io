@@ -315,19 +315,17 @@ function setRandomWelcomeMessage() {
 
 // Establecer mensaje aleatorio en galería (con círculo rojo alineado)
 function setRandomGalleryMessage() {
-    const character = characters[Math.floor(Math.random() * characters.length)];
-    const avatarElement = document.getElementById('galleryCharAvatar');
-    const messageElement = document.getElementById('galleryCharMessage');
-    
-    if (avatarElement) {
-        avatarElement.outerHTML = `
-            <img src="${character.avatar}" alt="${character.name}" class="char-avatar-img">
-        `;
-    }
-    
-    if (messageElement) {
-        messageElement.textContent = character.phrases[Math.floor(Math.random() * character.phrases.length)];
-    }
+ const character = characters[Math.floor(Math.random() * characters.length)];
+ const avatarElement = document.getElementById('galleryCharAvatar');
+ const messageElement = document.getElementById('galleryCharMessage');
+ 
+ if (avatarElement && messageElement) {
+     // Actualizar el avatar con la imagen del personaje
+     avatarElement.innerHTML = `<img src="${character.avatar}" alt="${character.name}" class="char-avatar-img">`;
+     
+     // Actualizar el mensaje con una frase aleatoria del personaje
+     messageElement.textContent = character.phrases[Math.floor(Math.random() * character.phrases.length)];
+ }
 }
 
 // Actualizar mensaje de estadísticas
@@ -1425,7 +1423,10 @@ function showGalleryInfo() {
   if (localStorage.getItem('galleryInfoShown')) {
     return;
   }
-  document.getElementById('galleryInfoModal').style.display = 'block';
+  const modal = document.getElementById('galleryInfoModal');
+  modal.style.display = 'flex';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
 }
 
 function closeGalleryInfo() {
