@@ -1031,12 +1031,12 @@ function loadPresentationSlides() {
                         mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
                     } else {
                         const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                        mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image">`;
                     }
                 } else if (memory.type === 'video') {
                     mediaHtml = `<video src="${memory.file}" class="presentation-video" controls autoplay></video>`;
                 } else {
-                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image">`;
                 }
                 
                 slide.innerHTML = `
@@ -1173,8 +1173,7 @@ function startPresentationMode() {
                         class="presentation-image ${memory.filter || ''}" 
                         onerror="this.onerror=function(){this.onerror=null;this.src='${thumbnailUrl}';console.log('Fallback to thumbnail');}; this.src='${thumbnailUrl}'" 
                         data-src="${imageUrl}" 
-                        data-fallback="${thumbnailUrl}" 
-                        style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                        data-fallback="${thumbnailUrl}">`;
                 }
             } else if (memory.type === 'video') {
                 if (memory.isGoogleDrive && memory.fileId) {
@@ -1184,7 +1183,7 @@ function startPresentationMode() {
                     mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
                 }
             } else {
-                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}">`;
             }
             
             // Añadir información de la memoria y comentario del personaje
