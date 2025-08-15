@@ -602,12 +602,24 @@ function showCharacterReaction(message, avatarPath) {  // Modificado para recibi
 function updateGallery() {
     const container = document.getElementById('memoriesContainer');
     container.innerHTML = '';
+    
+    if (memories.length === 0) {
+        document.getElementById('emptyState').style.display = 'block';
+        return;
+    }
+    
+    document.getElementById('emptyState').style.display = 'none';
+    
     memories.forEach((memory, index) => {
         const card = document.createElement('div');
         card.className = 'memory-card animate-fadeInUp';
         card.onclick = () => openDetailModal(memory.id);
         // Agregar retraso en la animación basado en el índice
         card.style.animationDelay = `${index * 0.1}s`;
+        
+        // Forzar animación en dispositivos móviles
+        card.style.animationDuration = '0.5s';
+        card.style.animationFillMode = 'both';
         
         // Aplicar filtro si existe
         const filterClass = memory.filter || '';
@@ -753,6 +765,40 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+// Función para inicializar animaciones
+function initAnimations() {
+    // Agregar event listeners para animaciones hover en dispositivos táctiles
+    const memoryCards = document.querySelectorAll('.memory-card');
+    memoryCards.forEach(card => {
+        card.addEventListener('touchstart', function() {
+            this.classList.add('touch-hover');
+        });
+        
+        card.addEventListener('touchend', function() {
+            this.classList.remove('touch-hover');
+        });
+    });
+}
+
+// Función para soporte táctil
+function initTouchSupport() {
+    // Agregar clase CSS para dispositivos táctiles
+    if ('ontouchstart' in window) {
+        document.body.classList.add('touch-device');
+    }
+}
+
+// Función para forzar el inicio del modo presentación
+function forceStartPresentation() {
+    try {
+        console.log('Iniciando modo presentación...');
+        startPresentationMode();
+    } catch (error) {
+        console.error('Error al iniciar presentación:', error);
+        alert('Hubo un problema al iniciar el modo presentación. Por favor, intenta de nuevo.');
+    }
+}
+
 // Funciones para el modo oscuro/claro
 function initTheme() {
     // Verificar si hay un tema guardado en localStorage
@@ -878,6 +924,9 @@ function updateFilterUI(activeFilterClass) {
 
 // Iniciar modo presentación
 function startPresentationMode() {
+    console.log('Iniciando modo presentación...');
+    console.log('Memorias disponibles:', memories.length);
+    
     if (memories.length === 0) {
         alert('No hay memorias para mostrar en modo presentación');
         return;
@@ -887,60 +936,87 @@ function startPresentationMode() {
     const presentationSlides = document.getElementById('presentationSlides');
     const presentationProgress = document.getElementById('presentationProgress');
     
+    console.log('Elementos encontrados:', {
+        presentationMode: !!presentationMode,
+        presentationSlides: !!presentationSlides,
+        presentationProgress: !!presentationProgress
+    });
+    
+    if (!presentationMode || !presentationSlides || !presentationProgress) {
+        console.error('Faltan elementos del DOM para el modo presentación');
+        return;
+    }
+    
     // Limpiar contenedores
     presentationSlides.innerHTML = '';
     presentationProgress.innerHTML = '';
     
+    console.log('Creando diapositivas...');
+    
     // Crear diapositivas para cada memoria
     memories.forEach((memory, index) => {
-        // Crear diapositiva
-        const slide = document.createElement('div');
-        slide.className = `presentation-slide ${index === 0 ? 'active' : ''}`;
-        slide.setAttribute('data-index', index);
-        slide.setAttribute('data-type', memory.type || 'image');
-        
-        // Preparar el contenido multimedia
-        let mediaHtml = '';
-        if (memory.isGoogleDrive) {
-            if (memory.type === 'video') {
-                mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
+        try {
+            // Crear diapositiva
+            const slide = document.createElement('div');
+            slide.className = `presentation-slide ${index === 0 ? 'active' : ''}`;
+            slide.setAttribute('data-index', index);
+            slide.setAttribute('data-type', memory.type || 'image');
+            
+            // Preparar el contenido multimedia
+            let mediaHtml = '';
+            if (memory.isGoogleDrive) {
+                if (memory.type === 'video') {
+                    mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
+                } else {
+                    const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
+                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;            }
+            } else if (memory.type === 'video') {
+                mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
             } else {
-                const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;            }
-        } else if (memory.type === 'video') {
-            mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
-        } else {
-            mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}">`;
-        }
-        
-        // Añadir información de la memoria y comentario del personaje
-        const characterComment = getRandomCharacterComment(memory.character || 'Luffy');
-        slide.innerHTML = `
-            ${mediaHtml}
-            <div class="presentation-info">
-                <div class="presentation-title">${memory.title}</div>
-                <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
-                <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
-                <div class="character-comment">
-                    <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
-                    <span class="comment-text">${characterComment}</span>
+                mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}">`;
+            }
+            
+            // Añadir información de la memoria y comentario del personaje
+            const characterComment = getRandomCharacterComment(memory.character || 'Luffy');
+            slide.innerHTML = `
+                ${mediaHtml}
+                <div class="presentation-info">
+                    <div class="presentation-title">${memory.title}</div>
+                    <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
+                    <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
+                    <div class="character-comment">
+                        <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
+                        <span class="comment-text">${characterComment}</span>
+                    </div>
                 </div>
-            </div>
-        `;
-        
-        // Añadir diapositiva al contenedor
-        presentationSlides.appendChild(slide);
-        
-        // Añadir indicador de progreso
-        const progressDot = document.createElement('div');
-        progressDot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
-        progressDot.setAttribute('data-index', index);
-        progressDot.onclick = () => navigatePresentation('goto', index);
-        presentationProgress.appendChild(progressDot);
+            `;
+            
+            // Añadir diapositiva al contenedor
+            presentationSlides.appendChild(slide);
+            
+            // Añadir indicador de progreso
+            const progressDot = document.createElement('div');
+            progressDot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
+            progressDot.setAttribute('data-index', index);
+            progressDot.onclick = () => navigatePresentation('goto', index);
+            presentationProgress.appendChild(progressDot);
+            
+            console.log(`Diapositiva ${index} creada correctamente`);
+        } catch (error) {
+            console.error(`Error creando diapositiva ${index}:`, error);
+        }
     });
     
     // Mostrar el modo presentación
     presentationMode.style.display = 'flex';
+    presentationMode.style.opacity = '0';
+    
+    // Forzar reflow para asegurar que el display se aplique antes de la transición
+    presentationMode.offsetHeight;
+    
+    presentationMode.style.opacity = '1';
+    
+    console.log('Modo presentación mostrado, iniciando timer...');
     
     // Configurar la presentación automática
     scheduleNextSlide();
@@ -948,50 +1024,83 @@ function startPresentationMode() {
 
 // Función para programar el cambio automático de diapositivas
 function scheduleNextSlide() {
+    console.log('Programando siguiente diapositiva...');
+    
     // Limpiar cualquier intervalo existente
     if (window.presentationInterval) {
+        console.log('Limpiando intervalo anterior:', window.presentationInterval);
         clearTimeout(window.presentationInterval);
     }
     
     const currentSlide = document.querySelector('.presentation-slide.active');
-    if (!currentSlide) return;
+    if (!currentSlide) {
+        console.error('No se encontró diapositiva activa');
+        return;
+    }
     
     const slideType = currentSlide.getAttribute('data-type');
     const slideIndex = parseInt(currentSlide.getAttribute('data-index'));
+    
+    console.log('Diapositiva actual:', { slideType, slideIndex });
     
     // Si es un video, esperar a que termine
     if (slideType === 'video') {
         const video = document.getElementById(`video-${slideIndex}`);
         if (video) {
+            console.log('Video encontrado, configurando eventos...');
+            
             // Si el video está reproduciéndose, esperar a que termine
             if (!video.ended && !video.paused) {
+                console.log('Video reproduciéndose, esperando a que termine...');
                 video.onended = function() {
-                    // Esperar 2 segundos después de que termine el video
+                    console.log('Video terminado, esperando 2 segundos...');
                     window.presentationInterval = setTimeout(() => {
+                        console.log('Navegando a siguiente después de video...');
                         navigatePresentation('next');
                     }, 2000);
                 };
                 return;
+            } else {
+                console.log('Video pausado o terminado, usando timer fijo');
             }
+        } else {
+            console.log('No se encontró elemento video, usando timer fijo');
         }
     }
     
     // Para imágenes o si el video no está disponible, usar un tiempo fijo
+    console.log('Configurando timer de 5 segundos...');
     window.presentationInterval = setTimeout(() => {
+        console.log('Timer expirado, navegando a siguiente...');
         navigatePresentation('next');
     }, 5000); // 5 segundos para imágenes
+    
+    console.log('Timer configurado:', window.presentationInterval);
 }
 
 // Navegar en el modo presentación
 function navigatePresentation(direction, targetIndex) {
+    console.log('Navegando presentación:', { direction, targetIndex });
+    
     const slides = document.querySelectorAll('.presentation-slide');
     const dots = document.querySelectorAll('.progress-dot');
     
-    if (slides.length === 0) return;
+    console.log('Total diapositivas:', slides.length);
+    
+    if (slides.length === 0) {
+        console.error('No hay diapositivas para navegar');
+        return;
+    }
     
     // Encontrar la diapositiva activa actual
     const currentSlide = document.querySelector('.presentation-slide.active');
+    if (!currentSlide) {
+        console.error('No se encontró diapositiva activa');
+        return;
+    }
+    
     const currentIndex = parseInt(currentSlide.getAttribute('data-index'));
+    console.log('Índice actual:', currentIndex);
     
     // Calcular el nuevo índice
     let newIndex;
@@ -1003,6 +1112,8 @@ function navigatePresentation(direction, targetIndex) {
         newIndex = (currentIndex + 1) % slides.length;
     }
     
+    console.log('Nuevo índice:', newIndex);
+    
     // Actualizar diapositivas
     currentSlide.classList.remove('active');
     slides[newIndex].classList.add('active');
@@ -1012,20 +1123,127 @@ function navigatePresentation(direction, targetIndex) {
     if (currentDot) currentDot.classList.remove('active');
     dots[newIndex].classList.add('active');
     
+    console.log('Navegación completada, programando siguiente...');
+    
     // Programar el siguiente cambio automático
     scheduleNextSlide();
 }
 
 // Cerrar modo presentación
 function closePresentationMode() {
+    console.log('Cerrando modo presentación...');
     const presentationMode = document.getElementById('presentationMode');
     presentationMode.style.display = 'none';
     
     // Detener presentación automática
     if (window.presentationInterval) {
+        console.log('Deteniendo timer:', window.presentationInterval);
         clearInterval(window.presentationInterval);
+        window.presentationInterval = null;
     }
 }
+
+// Función de diagnóstico para debugging
+function debugPresentationMode() {
+    console.log('=== DIAGNÓSTICO MODO PRESENTACIÓN ===');
+    console.log('URL actual:', window.location.href);
+    console.log('User agent:', navigator.userAgent);
+    console.log('Memorias cargadas:', memories.length);
+    
+    const elements = {
+        presentationMode: document.getElementById('presentationMode'),
+        presentationSlides: document.getElementById('presentationSlides'),
+        presentationProgress: document.getElementById('presentationProgress'),
+        startButton: document.querySelector('[onclick="startPresentationMode()"]')
+    };
+    
+    console.log('Elementos del DOM:', elements);
+    
+    if (memories.length > 0) {
+        console.log('Primera memoria:', memories[0]);
+    }
+    
+    // Verificar si hay errores en la consola
+    if (window.console && window.console.error) {
+        console.log('Verificar la consola para errores');
+    }
+}
+
+// Función para forzar el modo presentación
+function forcePresentationMode() {
+    console.log('Forzando modo presentación...');
+    
+    // Crear datos de prueba si no hay memorias
+    if (memories.length === 0) {
+        console.log('Creando datos de prueba...');
+        memories.push({
+            title: 'Memoria de Prueba',
+            description: 'Esta es una memoria de prueba para verificar el modo presentación',
+            date: new Date().toISOString(),
+            dayNumber: 1,
+            file: 'luffy.png',
+            type: 'image',
+            character: 'Luffy'
+        });
+    }
+    
+    // Mostrar el modo presentación
+    const presentationMode = document.getElementById('presentationMode');
+    if (presentationMode) {
+        presentationMode.classList.add('force-show');
+        presentationMode.style.display = 'flex';
+        presentationMode.style.opacity = '1';
+        presentationMode.style.visibility = 'visible';
+        console.log('Modo presentación forzado');
+    }
+    
+    // Crear diapositivas
+    startPresentationMode();
+}
+
+// Función para probar animaciones de tarjetas
+function testCardAnimations() {
+    console.log('Probando animaciones de tarjetas...');
+    const cards = document.querySelectorAll('.memory-card');
+    console.log('Tarjetas encontradas:', cards.length);
+    
+    cards.forEach((card, index) => {
+        console.log(`Animando tarjeta ${index}`);
+        card.style.animation = 'none';
+        card.offsetHeight; // Trigger reflow
+        card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`;
+    });
+}
+
+// Listener global para errores
+window.addEventListener('error', function(e) {
+    console.error('Error global capturado:', e.error);
+    console.error('Mensaje:', e.message);
+    console.error('Archivo:', e.filename);
+    console.error('Línea:', e.lineno);
+});
+
+// Listener para cuando el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM completamente cargado');
+    debugPresentationMode();
+    
+    // Agregar botón de prueba temporal
+    const testBtn = document.createElement('button');
+    testBtn.textContent = 'TEST PRESENTACIÓN';
+    testBtn.style.position = 'fixed';
+    testBtn.style.top = '10px';
+    testBtn.style.right = '10px';
+    testBtn.style.zIndex = '9999';
+    testBtn.style.padding = '10px';
+    testBtn.style.background = 'red';
+    testBtn.style.color = 'white';
+    testBtn.onclick = function() {
+        console.log('Botón de prueba presionado');
+        startPresentationMode();
+    };
+    document.body.appendChild(testBtn);
+});
 
 // Inicializar línea de tiempo
 function initTimeline() {
