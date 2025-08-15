@@ -969,8 +969,8 @@ html.theme-transition {
 
 .presentation-image,
     .presentation-video {
-        max-width: 95% !important;
-        max-height: 90% !important;
+        max-width: 90% !important;
+        max-height: 60% !important;
         object-fit: contain !important;
         border-radius: 8px !important;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
@@ -1396,6 +1396,38 @@ html.theme-transition {
     .info-icon {
         font-size: 1.5em;
     }
+    
+    /* Reorganizar estadísticas en móvil - 2x2 grid */
+    .stats-container {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: 1fr 1fr !important;
+        gap: 15px !important;
+        padding: 0 10px !important;
+        margin-top: 15px !important;
+    }
+    
+    .stat-card {
+        padding: 15px 10px !important;
+        min-height: 120px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+    
+    .stat-icon {
+        font-size: 30px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .stat-number {
+        font-size: 1.5em !important;
+        margin-bottom: 3px !important;
+    }
+    
+    .stat-label {
+        font-size: 0.8em !important;
+    }
 
 
 /* Estilos para forzar animaciones */
@@ -1546,7 +1578,7 @@ html.theme-transition {
     /* Mejoras para el modo presentación en móviles */
     .presentation-media {
         max-width: 95%;
-        max-height: 50vh;
+        max-height: 70vh;
     }
     
     .presentation-info {
@@ -1600,7 +1632,13 @@ html.theme-transition {
     }
     
     .presentation-media-container {
-        max-height: 45% !important;
+        max-height: 65% !important;
+    }
+    
+    .presentation-image,
+    .presentation-video {
+        max-width: 95% !important;
+        max-height: 85% !important;
     }
     
     .presentation-date {
