@@ -218,10 +218,13 @@ function logout() {
 
 // Cargar memorias del localStorage o del archivo JSON
 function loadMemories() {
+    console.log('Cargando memorias...');
     // Primero intentar cargar del archivo JSON
     fetch('./memories.json')
         .then(response => response.json())
         .then(data => {
+            console.log('Memorias cargadas:', data.length, 'memorias');
+            console.log('Memorias de Google Drive:', data.filter(m => m.isGoogleDrive).length);
             memories = data;
             updateGallery();
             updateStats();
@@ -232,8 +235,10 @@ function loadMemories() {
             const stored = localStorage.getItem('nakamaMemories');
             if (stored) {
                 memories = JSON.parse(stored);
+                console.log('Memorias cargadas desde localStorage:', memories.length);
             } else {
                 memories = [];
+                console.log('No hay memorias disponibles');
             }
             updateGallery();
             updateStats();
@@ -313,18 +318,54 @@ function setRandomWelcomeMessage() {
     }
 }
 
-// Establecer mensaje aleatorio en galería (con círculo rojo alineado)
+// Establecer mensaje aleatorio en galería (con transiciones suaves)
 function setRandomGalleryMessage() {
  const character = characters[Math.floor(Math.random() * characters.length)];
  const avatarElement = document.getElementById('galleryCharAvatar');
  const messageElement = document.getElementById('galleryCharMessage');
  
  if (avatarElement && messageElement) {
-     // Actualizar el avatar con la imagen del personaje
-     avatarElement.innerHTML = `<img src="${character.avatar}" alt="${character.name}" class="char-avatar-img">`;
+     // Limpiar cualquier contenido previo
+     avatarElement.innerHTML = '';
+     
+     // Fade out effect
+     avatarElement.style.transition = 'opacity 0.3s ease';
+     avatarElement.style.opacity = '0';
+     
+     // Update content after fade out
+     setTimeout(() => {
+         const img = document.createElement('img');
+         img.src = character.avatar;
+         img.alt = character.name;
+         img.className = 'char-avatar-img';
+         img.style.opacity = '0';
+         
+         // Esperar a que la imagen se cargue antes de mostrarla
+         img.onload = function() {
+             avatarElement.appendChild(img);
+             setTimeout(() => {
+                 img.style.transition = 'opacity 0.3s ease';
+                 img.style.opacity = '1';
+             }, 50);
+         };
+         
+         // Fallback si la imagen no carga
+         img.onerror = function() {
+             avatarElement.innerHTML = `<span style="font-size: 30px;">${getCharacterEmoji(character.name)}</span>`;
+             avatarElement.style.opacity = '1';
+         };
+         
+         avatarElement.style.opacity = '1';
+     }, 300);
      
      // Actualizar el mensaje con una frase aleatoria del personaje
-     messageElement.textContent = character.phrases[Math.floor(Math.random() * character.phrases.length)];
+     messageElement.style.transition = 'opacity 0.3s ease';
+     messageElement.style.opacity = '0';
+     
+     setTimeout(() => {
+         messageElement.textContent = character.phrases[Math.floor(Math.random() * character.phrases.length)];
+         messageElement.style.opacity = '1';
+     }, 300);
  }
 }
 
@@ -960,6 +1001,7 @@ function updateFilterUI(activeFilterClass) {
 function startPresentationMode() {
     console.log('Iniciando modo presentación...');
     console.log('Memorias disponibles:', memories.length);
+    console.log('Memorias:', memories);
     
     if (memories.length === 0) {
         alert('No hay memorias para mostrar en modo presentación');
@@ -998,12 +1040,19 @@ function startPresentationMode() {
             
             // Preparar el contenido multimedia
             let mediaHtml = '';
+            console.log(`Procesando memoria ${index}:`, memory);
+            
             if (memory.isGoogleDrive) {
+                console.log(`Google Drive memory: ${memory.title}, type: ${memory.type}, fileId: ${memory.fileId}`);
                 if (memory.type === 'video') {
-                    mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
+                    const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
+                    console.log(`Video iframe URL: ${driveUrl}`);
+                    mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
                 } else {
                     const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;            }
+                    console.log(`Image URL: ${imageUrl}`);
+                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800'; console.log('Error loading image, fallback to thumbnail');">`;
+                }
             } else if (memory.type === 'video') {
                 mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
             } else {
@@ -1183,6 +1232,7 @@ function debugPresentationMode() {
     console.log('URL actual:', window.location.href);
     console.log('User agent:', navigator.userAgent);
     console.log('Memorias cargadas:', memories.length);
+    console.log('Memorias de Google Drive:', memories.filter(m => m.isGoogleDrive).length);
     
     const elements = {
         presentationMode: document.getElementById('presentationMode'),
@@ -1197,10 +1247,60 @@ function debugPresentationMode() {
         console.log('Primera memoria:', memories[0]);
     }
     
+    // Verificar memorias de Google Drive específicamente
+    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
+    console.log('Detalles de memorias de Google Drive:');
+    googleDriveMemories.forEach((memory, index) => {
+        console.log(`GD Memory ${index + 1}:`, {
+            title: memory.title,
+            type: memory.type,
+            fileId: memory.fileId,
+            hasFileId: !!memory.fileId,
+            file: memory.file,
+            thumbnail: memory.thumbnail
+        });
+    });
+    
     // Verificar si hay errores en la consola
     if (window.console && window.console.error) {
         console.log('Verificar la consola para errores');
     }
+}
+
+// Función para probar específicamente memorias de Google Drive
+function testGoogleDriveMemories() {
+    console.log('=== TEST MEMORIAS GOOGLE DRIVE ===');
+    
+    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
+    console.log('Total memorias Google Drive:', googleDriveMemories.length);
+    
+    googleDriveMemories.forEach((memory, index) => {
+        console.log(`Testing GD Memory ${index + 1}:`, memory.title);
+        
+        // Probar construcción de URL
+        let testUrl = '';
+        if (memory.type === 'image') {
+            testUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
+        } else if (memory.type === 'video') {
+            testUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
+        }
+        
+        console.log('URL generada:', testUrl);
+        
+        // Crear elemento de prueba
+        const testImg = new Image();
+        testImg.onload = function() {
+            console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
+        };
+        testImg.onerror = function() {
+            console.log(`✗ Error al cargar imagen: ${memory.title}`, {
+                url: testUrl,
+                fileId: memory.fileId,
+                error: 'CORS o archivo no accesible'
+            });
+        };
+        testImg.src = testUrl;
+    });
 }
 
 // Función para forzar el modo presentación
@@ -1262,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM completamente cargado');
     debugPresentationMode();
     
-    // Agregar botón de prueba temporal
+    // Agregar botones de prueba temporales
     const testBtn = document.createElement('button');
     testBtn.textContent = 'TEST PRESENTACIÓN';
     testBtn.style.position = 'fixed';
@@ -1277,6 +1377,22 @@ document.addEventListener('DOMContentLoaded', function() {
         startPresentationMode();
     };
     document.body.appendChild(testBtn);
+    
+    // Botón para probar memorias de Google Drive
+    const gdTestBtn = document.createElement('button');
+    gdTestBtn.textContent = 'TEST GOOGLE DRIVE';
+    gdTestBtn.style.position = 'fixed';
+    gdTestBtn.style.top = '50px';
+    gdTestBtn.style.right = '10px';
+    gdTestBtn.style.zIndex = '9999';
+    gdTestBtn.style.padding = '10px';
+    gdTestBtn.style.background = 'blue';
+    gdTestBtn.style.color = 'white';
+    gdTestBtn.onclick = function() {
+        console.log('Botón de prueba Google Drive presionado');
+        testGoogleDriveMemories();
+    };
+    document.body.appendChild(gdTestBtn);
 });
 
 // Inicializar línea de tiempo
