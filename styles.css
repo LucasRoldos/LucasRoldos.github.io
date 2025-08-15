@@ -1116,19 +1116,8 @@ html.theme-transition {
     }
 }
 
-/* Forzar visibilidad para debugging */
-.presentation-mode.force-show {
-    display: flex !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    z-index: 9999 !important;
-    background: rgba(0, 0, 0, 0.9) !important;
-}
 
-.presentation-mode.force-show .presentation-slide {
-    opacity: 1 !important;
-    position: relative !important;
-}
+
 
 /* Prioridad máxima para evitar conflictos */
 * .presentation-mode {
@@ -1313,11 +1302,7 @@ html.theme-transition {
     animation-fill-mode: both !important;
 }
 
-/* Clase temporal para testing */
-.memory-card.test-animation {
-    animation: fadeInUp 0.5s ease-out !important;
-    animation-delay: 0s !important;
-}
+
 
 /* Soporte táctil mejorado */
 .touch-device .memory-card {
