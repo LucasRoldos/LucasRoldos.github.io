@@ -1012,6 +1012,19 @@ function startPresentationMode() {
     const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
     if (googleDriveMemories.length > 0) {
         console.warn(`⚠️ ${googleDriveMemories.length} memorias de Google Drive detectadas. Algunas pueden tener problemas de CORS.`);
+        
+        // Verificar entorno de hosting
+        const isHosted = !window.location.hostname.includes('localhost') && 
+                         !window.location.hostname.includes('127.0.0.1') &&
+                         window.location.protocol !== 'file:';
+        
+        if (isHosted) {
+            console.warn('🏠 Estás en un entorno hosteado. Los archivos de Google Drive pueden no cargarse.');
+            console.warn('🔗 Solución: Asegúrate de que los archivos de Google Drive sean públicos');
+            console.warn('🔗 Usa el enlace "Compartir" -> "Cualquier persona con el enlace puede ver"');
+        } else {
+            console.log('💻 Entorno local detectado - Google Drive debería funcionar');
+        }
     }
     
     const presentationMode = document.getElementById('presentationMode');
@@ -1077,18 +1090,85 @@ function startPresentationMode() {
             
             // Añadir información de la memoria y comentario del personaje
             const characterComment = getRandomCharacterComment(memory.character || 'Luffy');
+            
+            // Añadir enlace directo para hosted environment
+            const driveLink = memory.isGoogleDrive ? 
+                `<a href="https://drive.google.com/file/d/${memory.fileId}/view" target="_blank" style="color: var(--gold); text-decoration: underline;">Ver en Google Drive</a>` : '';
+            
             slide.innerHTML = `
                 ${mediaHtml}
                 <div class="presentation-info">
                     <div class="presentation-title">${memory.title}</div>
                     <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
                     <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
+                    ${driveLink}
                     <div class="character-comment">
                         <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
                         <span class="comment-text">${characterComment}</span>
                     </div>
                 </div>
             `;
+            
+            // Añadir eventos de carga para debugging
+            const img = slide.querySelector('img');
+            if (img) {
+                img.style.display = 'block'; // Forzar visibilidad
+                img.style.visibility = 'visible';
+                img.onload = function() {
+                    console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
+                    this.style.display = 'block';
+                    this.style.visibility = 'visible';
+                };
+                img.onerror = function(e) {
+                    console.error(`✗ Error al cargar imagen: ${memory.title}`, e);
+                    // Fallback para hosted environment - mostrar thumbnail
+                    const fallbackUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
+                    console.log(`Intentando fallback: ${fallbackUrl}`);
+                    this.src = fallbackUrl;
+                    
+                    // Si aún falla, mostrar mensaje visual
+                    this.onerror = function() {
+                        this.style.display = 'none';
+                        const errorDiv = document.createElement('div');
+                        errorDiv.innerHTML = `
+                            <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;">
+                                <h3>${memory.title}</h3>
+                                <p>Imagen no disponible en este entorno</p>
+                                <a href="https://drive.google.com/file/d/${memory.fileId}/view" 
+                                   target="_blank" 
+                                   style="color: var(--coral); font-weight: bold;">
+                                   Ver en Google Drive
+                                </a>
+                            </div>
+                        `;
+                        this.parentNode.appendChild(errorDiv);
+                    };
+                };
+            }
+            
+            const iframe = slide.querySelector('iframe');
+            if (iframe) {
+                iframe.onload = function() {
+                    console.log(`✓ Video iframe cargado: ${memory.title}`);
+                };
+                iframe.onerror = function(e) {
+                    console.error(`✗ Error al cargar iframe: ${memory.title}`, e);
+                    // Reemplazar con enlace directo
+                    const fallbackLink = document.createElement('div');
+                    fallbackLink.innerHTML = `
+                        <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;">
+                            <h3>${memory.title}</h3>
+                            <a href="https://drive.google.com/file/d/${memory.fileId}/view" 
+                               target="_blank" 
+                               style="color: var(--coral); font-weight: bold; font-size: 1.2em;">
+                               Ver Video en Google Drive
+                            </a>
+                        </div>
+                    `;
+                    this.parentNode.appendChild(fallbackLink);
+                    this.style.display = 'none';
+                };
+            }
             
             // Añadir diapositiva al contenedor
             presentationSlides.appendChild(slide);
@@ -1281,6 +1361,31 @@ function debugPresentationMode() {
     if (window.console && window.console.error) {
         console.log('Verificar la consola para errores');
     }
+    
+    // Verificar estilos de presentación
+    if (elements.presentationMode) {
+        const computedStyle = window.getComputedStyle(elements.presentationMode);
+        console.log('Estilos computados de presentationMode:', {
+            display: computedStyle.display,
+            opacity: computedStyle.opacity,
+            visibility: computedStyle.visibility,
+            zIndex: computedStyle.zIndex,
+            position: computedStyle.position,
+            top: computedStyle.top,
+            left: computedStyle.left,
+            width: computedStyle.width,
+            height: computedStyle.height
+        });
+    }
+    
+    // Verificar entorno de hosting
+    console.log('Entorno de hosting:', {
+        protocol: window.location.protocol,
+        hostname: window.location.hostname,
+        port: window.location.port,
+        isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
+        origin: window.location.origin
+    });
 }
 
 // Función para probar específicamente memorias de Google Drive
