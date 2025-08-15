@@ -988,13 +988,7 @@ function updateFilterUI(activeFilterClass) {
     });
 }
 
-// Función de prueba para verificar que el botón funciona
-function testPresentationClick() {
-    console.log('=== BOTÓN CLICKEADO ===');
-    alert('¡Botón funcionando! Verificando memorias...');
-    console.log('Memorias actuales:', memories.length);
-    startPresentationMode();
-}
+
 
 // Iniciar modo presentación
 function startPresentationMode() {
