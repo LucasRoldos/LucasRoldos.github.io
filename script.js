@@ -604,7 +604,7 @@ function updateGallery() {
     container.innerHTML = '';
     memories.forEach((memory, index) => {
         const card = document.createElement('div');
-        card.className = 'memory-card';
+        card.className = 'memory-card animate-fadeInUp';
         card.onclick = () => openDetailModal(memory.id);
         // Agregar retraso en la animación basado en el índice
         card.style.animationDelay = `${index * 0.1}s`;
