@@ -198,6 +198,18 @@ function initApp() {
     updateGallery();
     setRandomWelcomeMessage();
     initTheme();
+    
+    // Verificar y configurar el botón de presentación
+     setTimeout(() => {
+         const presentBtn = document.querySelector('.action-btn');
+         if (presentBtn && presentBtn.textContent.includes('Presentación')) {
+             presentBtn.addEventListener('click', function(e) {
+                 e.preventDefault();
+                 e.stopPropagation();
+                 startPresentationMode();
+             });
+         }
+     }, 1000);
     initFilters();
     initTimeline();
     updateTimeline();
@@ -990,19 +1002,90 @@ function updateFilterUI(activeFilterClass) {
 
 
 
+// Función para cargar las diapositivas en el modo presentación
+function loadPresentationSlides() {
+    try {
+        const presentationSlides = document.getElementById('presentationSlides');
+        const presentationProgress = document.getElementById('presentationProgress');
+        
+        if (!presentationSlides || !presentationProgress) {
+            return;
+        }
+        
+        // Limpiar contenedores
+        presentationSlides.innerHTML = '';
+        presentationProgress.innerHTML = '';
+        
+        // Crear diapositivas para cada memoria
+        memories.forEach((memory, index) => {
+            try {
+                const slide = document.createElement('div');
+                slide.className = `presentation-slide ${index === 0 ? 'active' : ''}`;
+                slide.setAttribute('data-index', index);
+                
+                let mediaHtml = '';
+                
+                if (memory.isGoogleDrive) {
+                    if (memory.type === 'video') {
+                        const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
+                        mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
+                    } else {
+                        const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
+                        mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                    }
+                } else if (memory.type === 'video') {
+                    mediaHtml = `<video src="${memory.file}" class="presentation-video" controls autoplay></video>`;
+                } else {
+                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                }
+                
+                slide.innerHTML = `
+                    ${mediaHtml}
+                    <div class="presentation-info">
+                        <div class="presentation-title">${memory.title}</div>
+                        <div class="presentation-description">${memory.description || 'Sin descripción'}</div>
+                        <div class="presentation-date">Día ${memory.dayNumber}</div>
+                    </div>
+                `;
+                
+                presentationSlides.appendChild(slide);
+                
+                // Añadir indicador de progreso
+                const progressDot = document.createElement('div');
+                progressDot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
+                progressDot.setAttribute('data-index', index);
+                presentationProgress.appendChild(progressDot);
+                
+            } catch (error) {
+                // Silencioso
+            }
+        });
+        
+    } catch (error) {
+        // Silencioso
+    }
+}
+
 // Iniciar modo presentación
 function startPresentationMode() {
     try {
-            console.log('=== DEBUG: startPresentationMode llamado ===');
-            alert('Botón de presentación clickeado - iniciando...');
-            console.log('Iniciando modo presentación...');
-            console.log('Memorias disponibles:', memories.length);
-            console.log('Memorias:', memories);
-            console.log('Memorias es array:', Array.isArray(memories));
-            console.log('Memorias está definido:', typeof memories !== 'undefined');
+            const presentationMode = document.getElementById('presentationMode');
+            
+            if (!presentationMode) {
+                return;
+            }
+            
+            // Mostrar inmediatamente sin procesar memorias
+            presentationMode.style.display = 'flex';
+            presentationMode.classList.add('active');
+            
+            // Procesar memorias después
+            if (memories.length > 0) {
+                loadPresentationSlides();
+            }
+            
         } catch (error) {
             console.error('Error en startPresentationMode:', error);
-            alert('Error: ' + error.message);
         }
     
     if (memories.length === 0) {
@@ -1094,7 +1177,12 @@ function startPresentationMode() {
                         style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
                 }
             } else if (memory.type === 'video') {
-                mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
+                if (memory.isGoogleDrive && memory.fileId) {
+                    const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
+                    mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
+                } else {
+                    mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
+                }
             } else {
                 mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
             }
@@ -1107,16 +1195,15 @@ function startPresentationMode() {
                 `<a href="https://drive.google.com/file/d/${memory.fileId}/view" target="_blank" style="color: var(--gold); text-decoration: underline;">Ver en Google Drive</a>` : '';
             
             slide.innerHTML = `
-                ${mediaHtml}
-                <div class="presentation-info">
-                    <div class="presentation-title">${memory.title}</div>
-                    <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
-                    <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
-                    ${driveLink}
-                    <div class="character-comment">
-                        <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
-                        <span class="comment-text">${characterComment}</span>
-                    </div>
+                <div class="presentation-title">${memory.title}</div>
+                <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
+                <div class="presentation-media-container">
+                    ${mediaHtml}
+                </div>
+                <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
+                <div class="character-comment">
+                    <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
+                    <span class="comment-text">${characterComment.comment}</span>
                 </div>
             `;
             
@@ -1235,26 +1322,51 @@ function scheduleNextSlide() {
     
     // Si es un video, esperar a que termine
     if (slideType === 'video') {
+        // Buscar video local
         const video = document.getElementById(`video-${slideIndex}`);
         if (video) {
-            console.log('Video encontrado, configurando eventos...');
+            console.log('Video local encontrado, configurando eventos...');
             
             // Si el video está reproduciéndose, esperar a que termine
             if (!video.ended && !video.paused) {
-                console.log('Video reproduciéndose, esperando a que termine...');
+                console.log('Video local reproduciéndose, esperando a que termine...');
                 video.onended = function() {
-                    console.log('Video terminado, esperando 2 segundos...');
+                    console.log('Video local terminado, esperando 2 segundos...');
                     window.presentationInterval = setTimeout(() => {
-                        console.log('Navegando a siguiente después de video...');
+                        console.log('Navegando a siguiente después de video local...');
                         navigatePresentation('next');
                     }, 2000);
                 };
                 return;
             } else {
-                console.log('Video pausado o terminado, usando timer fijo');
+                console.log('Video local pausado o terminado, usando timer fijo');
             }
         } else {
-            console.log('No se encontró elemento video, usando timer fijo');
+            // Buscar iframe de Google Drive
+            const iframe = currentSlide.querySelector('iframe');
+            if (iframe) {
+                console.log('Iframe de Google Drive encontrado, esperando a que termine...');
+                
+                // Para videos de Google Drive, usar un tiempo extendido (45 segundos) para dar tiempo a reproducir
+                const duration = 45000; // 45 segundos para Google Drive videos
+                
+                window.presentationInterval = setTimeout(() => {
+                    console.log('Tiempo de Google Drive expirado, navegando a siguiente...');
+                    navigatePresentation('next');
+                }, duration);
+                
+                // Resetear cualquier animación previa
+                const nextButton = document.querySelector('.presentation-btn[onclick*="next"]');
+                if (nextButton) {
+                    nextButton.style.animation = 'none';
+                    setTimeout(() => {
+                        nextButton.style.animation = 'pulse 2s infinite';
+                    }, 100);
+                }
+                
+                return;
+            }
+            console.log('No se encontró elemento video ni iframe, usando timer fijo');
         }
     }
     
@@ -1264,6 +1376,12 @@ function scheduleNextSlide() {
         console.log('Timer expirado, navegando a siguiente...');
         navigatePresentation('next');
     }, 5000); // 5 segundos para imágenes
+    
+    // Resetear animación del botón siguiente para diapositivas no-video
+    const nextButton = document.querySelector('.presentation-btn[onclick*="next"]');
+    if (nextButton) {
+        nextButton.style.animation = 'none';
+    }
     
     console.log('Timer configurado:', window.presentationInterval);
 }
@@ -1321,16 +1439,25 @@ function navigatePresentation(direction, targetIndex) {
 
 // Cerrar modo presentación
 function closePresentationMode() {
-    console.log('Cerrando modo presentación...');
     const presentationMode = document.getElementById('presentationMode');
-    presentationMode.style.display = 'none';
+    if (presentationMode) {
+        presentationMode.classList.remove('active');
+        presentationMode.style.display = 'none';
+    }
     
     // Detener presentación automática
     if (window.presentationInterval) {
-        console.log('Deteniendo timer:', window.presentationInterval);
         clearInterval(window.presentationInterval);
         window.presentationInterval = null;
     }
+    
+    // Detener videos si están reproduciendo
+    const videos = document.querySelectorAll('.presentation-video');
+    videos.forEach(video => {
+        if (video.tagName === 'VIDEO') {
+            video.pause();
+        }
+    });
 }
 
 
@@ -1351,15 +1478,31 @@ window.addEventListener('error', function(e) {
 
 // Listener para cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM completamente cargado');
-    
-    // Verificar que el botón de presentación existe y tiene el evento correcto
-    const presentationBtn = document.querySelector('[onclick="startPresentationMode()"]');
-    if (presentationBtn) {
-        console.log('Botón de presentación encontrado:', presentationBtn);
-        console.log('Evento onclick:', presentationBtn.onclick);
-    } else {
-        console.error('Botón de presentación NO encontrado');
+    // Agregar eventos táctiles para cerrar en móvil
+    const presentationMode = document.getElementById('presentationMode');
+    if (presentationMode) {
+        // Cerrar al tocar fuera del contenido
+        presentationMode.addEventListener('click', function(e) {
+            if (e.target === presentationMode) {
+                closePresentationMode();
+            }
+        });
+        
+        // Soporte para swipe down en móvil
+        let touchStartY = 0;
+        presentationMode.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+        
+        presentationMode.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const swipeDistance = touchStartY - touchEndY;
+            
+            // Si el swipe es hacia abajo y es significativo
+            if (swipeDistance < -50) {
+                closePresentationMode();
+            }
+        });
     }
 });
 
