@@ -359,8 +359,22 @@ html.theme-transition {
 }
 
 .memory-card:hover {
-    transform: translateY(-5px) rotate(-2deg);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transform: translateY(-5px) rotate(-2deg) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.memory-card:active {
+    transform: translateY(-2px) rotate(-1deg) scale(1.02);
+    transition: all 0.1s ease;
+}
+
+/* Forzar animaciones en dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+    .memory-card:active {
+        transform: translateY(-3px) rotate(-1deg) scale(1.03);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
 }
 
 .reaction-count {
@@ -863,6 +877,286 @@ html.theme-transition {
     align-items: center;
     justify-content: center;
     padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-info-modal[style*="display: block"],
+.gallery-info-modal[style*="display: flex"] {
+    opacity: 1;
+}
+
+/* Modo Presentación - ESTILOS PRIORITARIOS */
+.presentation-mode {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 10000 !important;
+    display: none !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.presentation-mode.active {
+    display: flex !important;
+    opacity: 1 !important;
+}
+
+.presentation-content {
+    width: 90% !important;
+    max-width: 1200px !important;
+    height: 80% !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+.presentation-slide {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    transition: opacity 0.8s ease-in-out !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: var(--card-bg) !important;
+    padding: 40px !important;
+    box-sizing: border-box !important;
+}
+
+.presentation-slide.active {
+    opacity: 1 !important;
+    z-index: 100 !important;
+}
+
+.presentation-image {
+    max-width: 100% !important;
+    max-height: 60% !important;
+    object-fit: contain !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.presentation-video {
+    max-width: 100% !important;
+    max-height: 60% !important;
+    object-fit: contain !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.presentation-info {
+    margin-top: 30px !important;
+    text-align: center !important;
+    max-width: 600px !important;
+}
+
+.presentation-title {
+    font-family: 'Pirata One', cursive !important;
+    font-size: 2.5em !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 15px !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.presentation-description {
+    font-size: 1.2em !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 20px !important;
+    line-height: 1.6 !important;
+}
+
+.presentation-date {
+    font-size: 1.1em !important;
+    color: var(--coral) !important;
+    font-weight: bold !important;
+}
+
+.character-comment {
+    margin-top: 25px !important;
+    padding: 20px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px !important;
+    border: 2px solid var(--gold) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    max-width: 500px !important;
+}
+
+.character-avatar {
+    font-size: 2em !important;
+    animation: bounce 2s infinite !important;
+}
+
+.comment-text {
+    font-size: 1.1em !important;
+    color: var(--text-primary) !important;
+    font-style: italic !important;
+}
+
+.presentation-controls {
+    position: absolute !important;
+    bottom: 40px !important;
+    left: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 30px !important;
+    z-index: 200 !important;
+}
+
+.presentation-btn {
+    background: var(--gold) !important;
+    border: none !important;
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    color: var(--wood) !important;
+    font-size: 1.5em !important;
+    cursor: pointer !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    transition: all 0.3s !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.presentation-btn:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+.presentation-close {
+    position: absolute !important;
+    top: 30px !important;
+    right: 30px !important;
+    background: var(--coral) !important;
+    border: none !important;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    color: white !important;
+    font-size: 1.5em !important;
+    cursor: pointer !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 300 !important;
+    transition: all 0.3s !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.presentation-close:hover {
+    transform: scale(1.1) rotate(90deg) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+.presentation-progress {
+    position: absolute !important;
+    bottom: 20px !important;
+    left: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    z-index: 200 !important;
+}
+
+.progress-dot {
+    width: 15px !important;
+    height: 15px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+    border: 2px solid transparent !important;
+}
+
+.progress-dot:hover {
+    transform: scale(1.2) !important;
+    border-color: var(--gold) !important;
+}
+
+.progress-dot.active {
+    background: var(--gold) !important;
+    transform: scale(1.3) !important;
+    box-shadow: 0 0 15px var(--gold) !important;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) !important;
+    }
+    40% {
+        transform: translateY(-10px) !important;
+    }
+    60% {
+        transform: translateY(-5px) !important;
+    }
+}
+
+/* Forzar visibilidad para debugging */
+.presentation-mode.force-show {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+    background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.presentation-mode.force-show .presentation-slide {
+    opacity: 1 !important;
+    position: relative !important;
+}
+
+/* Prioridad máxima para evitar conflictos */
+* .presentation-mode {
+    all: unset !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    z-index: 100000 !important;
+    display: none !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.progress-dots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.progress-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+    background: var(--gold);
+    transform: scale(1.2);
 }
 
 .gallery-info-content {
@@ -997,6 +1291,56 @@ html.theme-transition {
     .info-icon {
         font-size: 1.5em;
     }
+}
+
+/* Estilos para forzar animaciones */
+.memory-card {
+    will-change: transform;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Debug para animaciones */
+.memory-card.animate-fadeInUp {
+    animation: fadeInUp 0.5s ease-out !important;
+    animation-fill-mode: both !important;
+}
+
+/* Clase temporal para testing */
+.memory-card.test-animation {
+    animation: fadeInUp 0.5s ease-out !important;
+    animation-delay: 0s !important;
+}
+
+/* Soporte táctil mejorado */
+.touch-device .memory-card {
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.touch-device .memory-card:active {
+    transform: translateY(-3px) rotate(-1deg) scale(1.03);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: all 0.15s ease;
+}
+
+/* Transiciones suaves para todos los elementos */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Botón de presentación más visible */
+.action-btn[onclick*="presentation"] {
+    background: linear-gradient(135deg, var(--coral) 0%, #dc2626 100%);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+    50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.6); }
+    100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
 }
 
 /* Responsive */
