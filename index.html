@@ -100,9 +100,7 @@
                 </span>
             </div>
             
-            <div class="gallery-actions">
-                <button class="action-btn" onclick="startPresentationMode()"><i class="fas fa-play"></i> Presentación</button>
-            </div>
+
             
             <!-- Modal informativo de galería -->
             <div id="galleryInfoModal" class="gallery-info-modal" style="display: none;">
@@ -115,15 +113,15 @@
                         <div class="info-section">
                             <div class="info-icon">▶️</div>
                             <div class="info-text">
-                                <h4>Modo Presentación</h4>
-                                <p>Reproduce todas las memorias automáticamente. Los videos se reproducen completos antes de pasar a la siguiente memoria, es por si anda cansada y no quiere ir imagen por imagen.</p>
+                                <h4>Exploración Manual</h4>
+                                <p>Toca cualquier imagen para verla en detalle, podes meterle filtros de One Piece, hay comentarios de personajes, reacciones, y algunos comentarios mios.</p>
                             </div>
                         </div>
                         <div class="info-section">
                             <div class="info-icon">👆</div>
                             <div class="info-text">
-                                <h4>Exploración Manual</h4>
-                                <p>Toca cualquier imagen para verla en detalle, podes meterle filtros de One Piece, hay comentarios de personajes, reacciones, y algunos comentarios mios.</p>
+                                <h4>A CONSIDERAR</h4>
+                                <p>Luego de entrar a una imagen tenes flechas para poder navegar por la galeria asi no tenes que salir y entrar a cada una de las fotos, tambien le recomiendo llegar al final, esta la ultima sorpresa que prepare.</p>
                             </div>
                         </div>
                     </div>
@@ -187,25 +185,7 @@
         </div>
     </div>
     
-    <!-- Modo Presentación -->
-    <div id="presentationMode" class="presentation-mode" style="display: none;">
-        <button class="presentation-close" onclick="closePresentationMode()"><i class="fas fa-times"></i></button>
-        
-        <div class="presentation-content">
-            <div id="presentationSlides">
-                <!-- Las diapositivas se cargarán dinámicamente -->
-            </div>
-        </div>
-        
-        <div class="presentation-controls">
-            <button class="presentation-btn" onclick="navigatePresentation('prev')"><i class="fas fa-chevron-left"></i></button>
-            <button class="presentation-btn" onclick="navigatePresentation('next')"><i class="fas fa-chevron-right"></i></button>
-        </div>
-        
-        <div class="presentation-progress" id="presentationProgress">
-            <!-- Los indicadores de progreso se cargarán dinámicamente -->
-        </div>
-    </div>
+
     
     </div><!-- /mainContent -->
 
