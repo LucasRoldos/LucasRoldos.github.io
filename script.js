@@ -610,9 +610,6 @@ function openDetailModal(id) {
             // Inicializar selector de filtros
             updateFilterUI(filterClass);
             
-            // Inicializar navegación táctil
-            initializeTouchNavigation();
-            
             setTimeout(() => {
                 detailContent.classList.remove('animate-fadeIn');
             }, 500);
@@ -627,233 +624,11 @@ function openDetailModal(id) {
         // Inicializar selector de filtros
         updateFilterUI(filterClass);
         
-        // Inicializar navegación táctil
-        initializeTouchNavigation();
-        
         setTimeout(() => {
             detailModal.classList.remove('animate-scaleIn');
         }, 500);
     }
 }
-// Función para inicializar navegación táctil en el modal
-function initializeTouchNavigation() {
-    const modal = document.getElementById('detailModal');
-    const content = document.getElementById('detailContent');
-    
-    if (!modal || !content) return;
-    
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let touchStartY = 0;
-    let touchEndY = 0;
-    let isSwiping = false;
-    
-    // Agregar indicadores de navegación
-    addSwipeIndicators();
-    
-    // Evento touch start
-    modal.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-        isSwiping = true;
-        
-        // Prevenir el scroll vertical durante el swipe
-        document.body.style.overflow = 'hidden';
-    }, { passive: true });
-    
-    // Evento touch move
-    modal.addEventListener('touchmove', function(e) {
-        if (!isSwiping) return;
-        
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-        
-        const deltaX = touchEndX - touchStartX;
-        const deltaY = touchEndY - touchStartY;
-        
-        // Si el movimiento es más horizontal que vertical
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            e.preventDefault();
-            
-            // Limitar el desplazamiento
-            const maxSwipe = 100;
-            const translateX = Math.max(-maxSwipe, Math.min(maxSwipe, deltaX));
-            content.style.transform = `translateX(${translateX}px)`;
-            content.style.transition = 'none';
-            
-            // Actualizar indicadores
-            updateSwipeIndicators(deltaX);
-        }
-    }, { passive: false });
-    
-    // Evento touch end
-    modal.addEventListener('touchend', function(e) {
-        if (!isSwiping) return;
-        
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-        
-        const deltaX = touchEndX - touchStartX;
-        const deltaY = touchEndY - touchStartY;
-        
-        // Restaurar el scroll
-        document.body.style.overflow = '';
-        
-        // Si el swipe es significativo y más horizontal que vertical
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-            if (deltaX > 0) {
-                // Swipe hacia la derecha = imagen anterior
-                navigateMemory('prev');
-            } else {
-                // Swipe hacia la izquierda = imagen siguiente
-                navigateMemory('next');
-            }
-        } else {
-            // Resetear la posición
-            content.style.transform = 'translateX(0)';
-            content.style.transition = 'transform 0.3s ease-out';
-            
-            // Resetear indicadores
-            resetSwipeIndicators();
-        }
-        
-        isSwiping = false;
-    }, { passive: true });
-    
-    // Evento para mouse (testing en desktop)
-    let mouseStartX = 0;
-    let isDragging = false;
-    
-    modal.addEventListener('mousedown', function(e) {
-        mouseStartX = e.clientX;
-        isDragging = true;
-        e.preventDefault();
-    });
-    
-    modal.addEventListener('mousemove', function(e) {
-        if (!isDragging) return;
-        
-        const deltaX = e.clientX - mouseStartX;
-        const maxSwipe = 100;
-        const translateX = Math.max(-maxSwipe, Math.min(maxSwipe, deltaX));
-        content.style.transform = `translateX(${translateX}px)`;
-        content.style.transition = 'none';
-    });
-    
-    modal.addEventListener('mouseup', function(e) {
-        if (!isDragging) return;
-        
-        const deltaX = e.clientX - mouseStartX;
-        
-        if (Math.abs(deltaX) > 50) {
-            if (deltaX > 0) {
-                navigateMemory('prev');
-            } else {
-                navigateMemory('next');
-            }
-        } else {
-            content.style.transform = 'translateX(0)';
-            content.style.transition = 'transform 0.3s ease-out';
-        }
-        
-        isDragging = false;
-    });
-    
-    // Limpiar eventos al cerrar el modal
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            removeSwipeIndicators();
-        }
-    });
-}
-
-// Función para agregar indicadores de navegación
-function addSwipeIndicators() {
-    const modal = document.getElementById('detailModal');
-    
-    // Crear contenedor de indicadores
-    const indicatorsContainer = document.createElement('div');
-    indicatorsContainer.className = 'swipe-indicators';
-    indicatorsContainer.innerHTML = `
-        <div class="swipe-indicator swipe-left">
-            <i class="fas fa-chevron-left"></i>
-            <span>Anterior</span>
-        </div>
-        <div class="swipe-indicator swipe-right">
-            <i class="fas fa-chevron-right"></i>
-            <span>Siguiente</span>
-        </div>
-    `;
-    
-    modal.appendChild(indicatorsContainer);
-    
-    // Mostrar/ocultar según disponibilidad
-    setTimeout(() => {
-        const currentId = modal.getAttribute('data-current-id');
-        const currentIndex = getMemoryIndexById(currentId);
-        
-        const leftIndicator = indicatorsContainer.querySelector('.swipe-left');
-        const rightIndicator = indicatorsContainer.querySelector('.swipe-right');
-        
-        if (currentIndex <= 0) {
-            leftIndicator.style.opacity = '0.3';
-            leftIndicator.style.pointerEvents = 'none';
-        }
-        
-        if (currentIndex >= memories.length - 1) {
-            rightIndicator.style.opacity = '0.3';
-            rightIndicator.style.pointerEvents = 'none';
-        }
-    }, 100);
-}
-
-// Función para actualizar indicadores durante el swipe
-function updateSwipeIndicators(deltaX) {
-    const indicators = document.querySelectorAll('.swipe-indicator');
-    indicators.forEach(indicator => {
-        if (deltaX > 20) {
-            // Swipe hacia derecha
-            if (indicator.classList.contains('swipe-left')) {
-                indicator.style.transform = 'scale(1.2)';
-                indicator.style.opacity = '1';
-            } else {
-                indicator.style.transform = 'scale(0.8)';
-                indicator.style.opacity = '0.3';
-            }
-        } else if (deltaX < -20) {
-            // Swipe hacia izquierda
-            if (indicator.classList.contains('swipe-right')) {
-                indicator.style.transform = 'scale(1.2)';
-                indicator.style.opacity = '1';
-            } else {
-                indicator.style.transform = 'scale(0.8)';
-                indicator.style.opacity = '0.3';
-            }
-        } else {
-            // Reset
-            indicator.style.transform = 'scale(1)';
-            indicator.style.opacity = '0.7';
-        }
-    });
-}
-
-// Función para resetear indicadores
-function resetSwipeIndicators() {
-    const indicators = document.querySelectorAll('.swipe-indicator');
-    indicators.forEach(indicator => {
-        indicator.style.transform = 'scale(1)';
-        indicator.style.opacity = '0.7';
-    });
-}
-
-// Función para remover indicadores
-function removeSwipeIndicators() {
-    const indicators = document.querySelector('.swipe-indicators');
-    if (indicators) {
-        indicators.remove();
-    }
-}
-
 // Función para obtener un emoji aleatorio de personaje
 function getCharacterEmoji(character) {
     const emojis = ['🏴‍☠️', '⚓', '⚔️', '👒', '🍖', '💰', '🏝️', '🌊', '🔥', '⚡', '🌟', '💎'];
@@ -1576,6 +1351,33 @@ function initializeTimelineGestures() {
         }
     });
     
+    // Indicador de posición para móviles
+    if (window.innerWidth <= 768) {
+        const indicator = document.createElement('div');
+        indicator.className = 'timeline-indicator';
+        indicator.innerHTML = '🧭 Desliza para explorar';
+        indicator.style.cssText = `
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 215, 0, 0.9);
+            color: var(--navy);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            pointer-events: none;
+            animation: float 2s ease-in-out infinite;
+        `;
+        container.appendChild(indicator);
+        
+        // Ocultar después de 3 segundos
+        setTimeout(() => {
+            indicator.style.opacity = '0';
+            setTimeout(() => indicator.remove(), 300);
+        }, 3000);
+    }
 }
 
 // Filtrar memorias por fecha
