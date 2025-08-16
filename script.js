@@ -443,8 +443,9 @@ function openDetailModal(id) {
         if (memory.type === 'video') {
             mediaHtml = `<iframe src="https://drive.google.com/file/d/${memory.fileId}/preview" width="100%" height="300" allow="autoplay" frameborder="0"></iframe>`;
         } else {
-            const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image ${filterClass}" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w800';">`;            
+            const imageUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=s0`;
+            const fallbackUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w1024`;
+            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image ${filterClass}" onerror="this.onerror=null; this.src='${fallbackUrl}'; console.log('Fallback to w1024');">`;            
         }
     } else if (memory.type === 'video') {
         mediaHtml = `<video src="${memory.file}" class="detail-image ${filterClass}" controls autoplay></video>`;
@@ -1031,12 +1032,12 @@ function loadPresentationSlides() {
                         mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
                     } else {
                         const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                    mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image">`;
+                        mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
                     }
                 } else if (memory.type === 'video') {
                     mediaHtml = `<video src="${memory.file}" class="presentation-video" controls autoplay></video>`;
                 } else {
-                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image">`;
+                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
                 }
                 
                 slide.innerHTML = `
@@ -1163,17 +1164,21 @@ function startPresentationMode() {
                     mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
                 } else {
                     // Intentar múltiples URLs para Google Drive
-                    const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                    const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-                    const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w1200`;
+                    // URL para imagen completa de Google Drive
+                        const imageUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=s0`;
+                        const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
+                        const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w2048`;
+                        const backupUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
                     
                     console.log(`Image URLs: ${imageUrl}, ${thumbnailUrl}, ${directUrl}`);
-                    mediaHtml = `<img src="${imageUrl}" 
+                    mediaHtml = `<img referrerpolicy="no-referrer" src="${imageUrl}" 
                         alt="${memory.title}" 
                         class="presentation-image ${memory.filter || ''}" 
-                        onerror="this.onerror=function(){this.onerror=null;this.src='${thumbnailUrl}';console.log('Fallback to thumbnail');}; this.src='${thumbnailUrl}'" 
+                        onerror="this.onerror=function(){this.onerror=null;this.src='${directUrl}';console.log('Fallback to direct URL');}; this.src='${directUrl}'" 
                         data-src="${imageUrl}" 
-                        data-fallback="${thumbnailUrl}">`;
+                        data-fallback="${directUrl}" 
+                        data-backup="${backupUrl}" 
+                        style="width: 100%; height: 100%; object-fit: cover; display: block;">`;
                 }
             } else if (memory.type === 'video') {
                 if (memory.isGoogleDrive && memory.fileId) {
@@ -1183,7 +1188,7 @@ function startPresentationMode() {
                     mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
                 }
             } else {
-                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}">`;
+                mediaHtml = `<img referrerpolicy="no-referrer" src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" style="width: 100%; height: 100%; object-fit: cover; display: block;">`;
             }
             
             // Añadir información de la memoria y comentario del personaje
@@ -1207,40 +1212,51 @@ function startPresentationMode() {
             `;
             
             // Añadir eventos de carga para debugging
-            const img = slide.querySelector('img');
-            if (img) {
-                img.style.display = 'block'; // Forzar visibilidad
-                img.style.visibility = 'visible';
-                img.onload = function() {
-                    console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
-                    this.style.display = 'block';
-                    this.style.visibility = 'visible';
-                };
-                img.onerror = function(e) {
-                    console.error(`✗ Error al cargar imagen: ${memory.title}`, e);
-                    // Fallback para hosted environment - mostrar thumbnail
-                    const fallbackUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-                    console.log(`Intentando fallback: ${fallbackUrl}`);
-                    this.src = fallbackUrl;
-                    
-                    // Si aún falla, mostrar mensaje visual
-                    this.onerror = function() {
-                        this.style.display = 'none';
-                        const errorDiv = document.createElement('div');
-                        errorDiv.innerHTML = `
-                            <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;">
-                                <h3>${memory.title}</h3>
-                                <p>Imagen no disponible en este entorno</p>
+                const img = slide.querySelector('img');
+                if (img) {
+                    img.style.display = 'block'; // Forzar visibilidad
+                    img.style.visibility = 'visible';
+                    img.onload = function() {
+                        console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
+                        this.style.display = 'block';
+                        this.style.visibility = 'visible';
+                    };
+                    img.onerror = function(e) {
+                        console.error(`✗ Error al cargar imagen: ${memory.title}`, e);
+                        console.log(`Intentando secuencia de fallbacks...`);
+                        
+                        // Secuencia de fallbacks mejorada
+                        const currentSrc = this.src;
+                        const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w2048`;
+                        const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
+                        
+                        if (currentSrc.includes('=s0')) {
+                            // Fallback 1: Intentar con tamaño específico
+                            console.log(`Fallback 1: Usando URL con tamaño específico`);
+                            this.src = directUrl;
+                        } else if (currentSrc.includes('=w2048')) {
+                            // Fallback 2: Intentar con thumbnail grande
+                            console.log(`Fallback 2: Usando thumbnail grande`);
+                            this.src = thumbnailUrl;
+                        } else {
+                            // Fallback 3: Mostrar mensaje visual
+                            console.log(`Fallback 3: Mostrando mensaje de error`);
+                            this.style.display = 'none';
+                            const errorDiv = document.createElement('div');
+                            errorDiv.innerHTML = `
+                            <div style="background: rgba(0,0,0,0.8); color: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 90%;">
+                                <h3 style="color: var(--gold); margin-bottom: 15px;">${memory.title}</h3>
+                                <p style="margin-bottom: 20px;">No se pudo cargar la imagen completa</p>
                                 <a href="https://drive.google.com/file/d/${memory.fileId}/view" 
                                    target="_blank" 
-                                   style="color: var(--coral); font-weight: bold;">
-                                   Ver en Google Drive
+                                   style="background: var(--coral); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold;">
+                                   Ver imagen original
                                 </a>
                             </div>
                         `;
-                        this.parentNode.appendChild(errorDiv);
+                            this.parentNode.appendChild(errorDiv);
+                        }
                     };
-                };
             }
             
             const iframe = slide.querySelector('iframe');
@@ -1298,116 +1314,58 @@ function startPresentationMode() {
     scheduleNextSlide();
 }
 
-// Función para programar el cambio automático de diapositivas
+// Función optimizada para programar el cambio automático de diapositivas
 function scheduleNextSlide() {
-    console.log('Programando siguiente diapositiva...');
-    
     // Limpiar cualquier intervalo existente
     if (window.presentationInterval) {
-        console.log('Limpiando intervalo anterior:', window.presentationInterval);
         clearTimeout(window.presentationInterval);
     }
     
     const currentSlide = document.querySelector('.presentation-slide.active');
-    if (!currentSlide) {
-        console.error('No se encontró diapositiva activa');
-        return;
-    }
+    if (!currentSlide) return;
     
     const slideType = currentSlide.getAttribute('data-type');
     const slideIndex = parseInt(currentSlide.getAttribute('data-index'));
     
-    console.log('Diapositiva actual:', { slideType, slideIndex });
-    
-    // Si es un video, esperar a que termine
+    // Si es un video, esperar a que termine o usar tiempo límite
     if (slideType === 'video') {
-        // Buscar video local
-        const video = document.getElementById(`video-${slideIndex}`);
+        const video = currentSlide.querySelector('video');
         if (video) {
-            console.log('Video local encontrado, configurando eventos...');
-            
-            // Si el video está reproduciéndose, esperar a que termine
+            // Si el video está disponible y reproduciéndose
             if (!video.ended && !video.paused) {
-                console.log('Video local reproduciéndose, esperando a que termine...');
                 video.onended = function() {
-                    console.log('Video local terminado, esperando 2 segundos...');
-                    window.presentationInterval = setTimeout(() => {
-                        console.log('Navegando a siguiente después de video local...');
-                        navigatePresentation('next');
-                    }, 2000);
+                    setTimeout(() => navigatePresentation('next'), 1000);
                 };
                 return;
-            } else {
-                console.log('Video local pausado o terminado, usando timer fijo');
             }
-        } else {
-            // Buscar iframe de Google Drive
-            const iframe = currentSlide.querySelector('iframe');
-            if (iframe) {
-                console.log('Iframe de Google Drive encontrado, esperando a que termine...');
-                
-                // Para videos de Google Drive, usar un tiempo extendido (45 segundos) para dar tiempo a reproducir
-                const duration = 45000; // 45 segundos para Google Drive videos
-                
-                window.presentationInterval = setTimeout(() => {
-                    console.log('Tiempo de Google Drive expirado, navegando a siguiente...');
-                    navigatePresentation('next');
-                }, duration);
-                
-                // Resetear cualquier animación previa
-                const nextButton = document.querySelector('.presentation-btn[onclick*="next"]');
-                if (nextButton) {
-                    nextButton.style.animation = 'none';
-                    setTimeout(() => {
-                        nextButton.style.animation = 'pulse 2s infinite';
-                    }, 100);
-                }
-                
-                return;
-            }
-            console.log('No se encontró elemento video ni iframe, usando timer fijo');
+        }
+        
+        // Para videos de Google Drive (iframe) o videos sin controles
+        const iframe = currentSlide.querySelector('iframe');
+        if (iframe) {
+            setTimeout(() => navigatePresentation('next'), 30000); // 30 segundos para videos de Drive
+            return;
         }
     }
     
-    // Para imágenes o si el video no está disponible, usar un tiempo fijo
-    console.log('Configurando timer de 7 segundos...');
+    // Para imágenes o por defecto: 5 segundos
     window.presentationInterval = setTimeout(() => {
-        console.log('Timer expirado, navegando a siguiente...');
         navigatePresentation('next');
-    }, 7000); // 7 segundos para imágenes (2 segundos más)
-    
-    // Resetear animación del botón siguiente para diapositivas no-video
-    const nextButton = document.querySelector('.presentation-btn[onclick*="next"]');
-    if (nextButton) {
-        nextButton.style.animation = 'none';
-    }
-    
-    console.log('Timer configurado:', window.presentationInterval);
+    }, 5000);
 }
 
 // Navegar en el modo presentación
 function navigatePresentation(direction, targetIndex) {
-    console.log('Navegando presentación:', { direction, targetIndex });
-    
     const slides = document.querySelectorAll('.presentation-slide');
     const dots = document.querySelectorAll('.progress-dot');
     
-    console.log('Total diapositivas:', slides.length);
-    
-    if (slides.length === 0) {
-        console.error('No hay diapositivas para navegar');
-        return;
-    }
+    if (slides.length === 0) return;
     
     // Encontrar la diapositiva activa actual
     const currentSlide = document.querySelector('.presentation-slide.active');
-    if (!currentSlide) {
-        console.error('No se encontró diapositiva activa');
-        return;
-    }
+    if (!currentSlide) return;
     
     const currentIndex = parseInt(currentSlide.getAttribute('data-index'));
-    console.log('Índice actual:', currentIndex);
     
     // Calcular el nuevo índice
     let newIndex;
@@ -1419,9 +1377,7 @@ function navigatePresentation(direction, targetIndex) {
         newIndex = (currentIndex + 1) % slides.length;
     }
     
-    console.log('Nuevo índice:', newIndex);
-    
-    // Actualizar diapositivas
+    // Actualizar diapositivas con transición suave
     currentSlide.classList.remove('active');
     slides[newIndex].classList.add('active');
     
@@ -1429,8 +1385,6 @@ function navigatePresentation(direction, targetIndex) {
     const currentDot = document.querySelector('.progress-dot.active');
     if (currentDot) currentDot.classList.remove('active');
     dots[newIndex].classList.add('active');
-    
-    console.log('Navegación completada, programando siguiente...');
     
     // Programar el siguiente cambio automático
     scheduleNextSlide();
@@ -1446,7 +1400,7 @@ function closePresentationMode() {
     
     // Detener presentación automática
     if (window.presentationInterval) {
-        clearInterval(window.presentationInterval);
+        clearTimeout(window.presentationInterval);
         window.presentationInterval = null;
     }
     
@@ -1455,6 +1409,7 @@ function closePresentationMode() {
     videos.forEach(video => {
         if (video.tagName === 'VIDEO') {
             video.pause();
+            video.currentTime = 0;
         }
     });
 }
@@ -1475,9 +1430,15 @@ window.addEventListener('error', function(e) {
     console.error('Línea:', e.lineno);
 });
 
+// Variables para navegación táctil
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+let isAutoPlaying = true;
+
 // Listener para cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
-    // Agregar eventos táctiles para cerrar en móvil
     const presentationMode = document.getElementById('presentationMode');
     if (presentationMode) {
         // Cerrar al tocar fuera del contenido
@@ -1487,23 +1448,155 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Soporte para swipe down en móvil
-        let touchStartY = 0;
-        presentationMode.addEventListener('touchstart', function(e) {
-            touchStartY = e.touches[0].clientY;
+        // Eventos táctiles mejorados para navegación
+        presentationMode.addEventListener('touchstart', handleTouchStart, { passive: true });
+        presentationMode.addEventListener('touchmove', handleTouchMove, { passive: false });
+        presentationMode.addEventListener('touchend', handleTouchEnd, { passive: true });
+        
+        // Eventos de teclado
+        document.addEventListener('keydown', handleKeyboard);
+        
+        // Doble tap para pausar/reanudar
+        let lastTap = 0;
+        presentationMode.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                e.preventDefault();
+                toggleAutoPlay();
+            }
+            lastTap = currentTime;
         });
         
-        presentationMode.addEventListener('touchend', function(e) {
-            const touchEndY = e.changedTouches[0].clientY;
-            const swipeDistance = touchStartY - touchEndY;
-            
-            // Si el swipe es hacia abajo y es significativo
-            if (swipeDistance < -50) {
-                closePresentationMode();
-            }
+        // Prevenir comportamientos por defecto
+        presentationMode.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
         });
     }
 });
+
+function handleTouchStart(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}
+
+function handleTouchMove(e) {
+    // Prevenir scroll mientras está en presentación
+    if (document.getElementById('presentationMode').classList.contains('active')) {
+        e.preventDefault();
+    }
+}
+
+function handleTouchEnd(e) {
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
+    handleSwipeGesture();
+}
+
+function handleSwipeGesture() {
+    const swipeThreshold = 50;
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    
+    // Determinar dirección principal del swipe
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Swipe horizontal
+        if (Math.abs(diffX) > swipeThreshold) {
+            if (diffX > 0) {
+                navigatePresentation('next'); // Swipe izquierda
+            } else {
+                navigatePresentation('prev'); // Swipe derecha
+            }
+        }
+    } else {
+        // Swipe vertical
+        if (Math.abs(diffY) > swipeThreshold) {
+            if (diffY < -100) {
+                closePresentationMode(); // Swipe hacia abajo
+            }
+        }
+    }
+}
+
+function handleKeyboard(e) {
+    if (!document.getElementById('presentationMode').classList.contains('active')) return;
+    
+    switch(e.key) {
+        case 'ArrowLeft':
+            e.preventDefault();
+            navigatePresentation('prev');
+            break;
+        case 'ArrowRight':
+            e.preventDefault();
+            navigatePresentation('next');
+            break;
+        case 'Escape':
+            e.preventDefault();
+            closePresentationMode();
+            break;
+        case ' ':
+            e.preventDefault();
+            toggleAutoPlay();
+            break;
+        case 'p':
+        case 'P':
+            e.preventDefault();
+            toggleAutoPlay();
+            break;
+    }
+}
+
+function toggleAutoPlay() {
+    const presentationMode = document.getElementById('presentationMode');
+    if (!presentationMode.classList.contains('active')) return;
+    
+    isAutoPlaying = !isAutoPlaying;
+    
+    if (presentationInterval) {
+        clearTimeout(presentationInterval);
+        presentationInterval = null;
+    }
+    
+    if (isAutoPlaying) {
+        scheduleNextSlide();
+    }
+    
+    // Mostrar indicador visual
+    showAutoPlayIndicator();
+}
+
+function showAutoPlayIndicator() {
+    const indicator = document.createElement('div');
+    indicator.className = 'autoplay-indicator';
+    indicator.innerHTML = isAutoPlaying ? '▶️ Auto' : '⏸️ Pausa';
+    indicator.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        z-index: 1001;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    
+    document.body.appendChild(indicator);
+    
+    setTimeout(() => {
+        indicator.style.opacity = '1';
+    }, 10);
+    
+    setTimeout(() => {
+        indicator.style.opacity = '0';
+        setTimeout(() => {
+            document.body.removeChild(indicator);
+        }, 300);
+    }, 1500);
+}
 
 // Inicializar línea de tiempo
 function initTimeline() {
