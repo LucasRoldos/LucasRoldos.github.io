@@ -498,235 +498,8 @@ function handleFileSelect(event) {
 
 
 
-// Variables globales para la galería móvil
-let touchStartX = 0;
-let touchEndX = 0;
-let currentGalleryIndex = 0;
-let galleryImages = [];
-
-// Abrir modal de detalle con galería móvil
+// Abrir modal de detalle con animaciones mejoradas
 function openDetailModal(id) {
-    const memoryIndex = getMemoryIndexById(id);
-    const memory = memories[memoryIndex];
-    if (!memory) return;
-    
-    currentGalleryIndex = memoryIndex;
-    galleryImages = memories.filter(m => m.type === 'image' || (m.type === 'video' && !m.isGoogleDrive));
-    
-    // Configurar modo móvil si es necesario
-    const isMobile = window.innerWidth <= 768;
-    
-    if (isMobile) {
-        openMobileGallery(id);
-    } else {
-        openDesktopModal(id);
-    }
-}
-
-// Abrir galería móvil con swipe
-function openMobileGallery(id) {
-    const memoryIndex = getMemoryIndexById(id);
-    const memory = memories[memoryIndex];
-    
-    // Crear overlay de galería móvil
-    const mobileGallery = document.createElement('div');
-    mobileGallery.id = 'mobileGallery';
-    mobileGallery.className = 'mobile-gallery';
-    mobileGallery.innerHTML = `
-        <div class="mobile-gallery-container">
-            <div class="mobile-gallery-header">
-                <button class="mobile-gallery-close" onclick="closeMobileGallery()">✕</button>
-                <div class="mobile-gallery-info">
-                    <span class="mobile-gallery-counter">${memoryIndex + 1} / ${memories.length}</span>
-                    <span class="mobile-gallery-title">${memory.title}</span>
-                </div>
-                <button class="mobile-gallery-share" onclick="shareMemory(${memory.id})">📤</button>
-            </div>
-            
-            <div class="mobile-gallery-content" id="mobileGalleryContent">
-                <div class="mobile-gallery-track" id="mobileGalleryTrack">
-                    ${memories.map((mem, idx) => {
-                        const filterClass = mem.filter || '';
-                        let mediaHtml = '';
-                        
-                        if (mem.isGoogleDrive) {
-                            if (mem.type === 'video') {
-                                mediaHtml = `<iframe src="https://drive.google.com/file/d/${mem.fileId}/preview" width="100%" height="100%" allow="autoplay" frameborder="0"></iframe>`;
-                            } else {
-                                const imageUrl = `https://lh3.googleusercontent.com/d/${mem.fileId}=s0`;
-                                mediaHtml = `<img src="${imageUrl}" alt="${mem.title}" class="mobile-gallery-image ${filterClass}">`;
-                            }
-                        } else if (mem.type === 'video') {
-                            mediaHtml = `<video src="${mem.file}" class="mobile-gallery-image" controls></video>`;
-                        } else {
-                            mediaHtml = `<img src="${mem.file}" alt="${mem.title}" class="mobile-gallery-image ${filterClass}">`;
-                        }
-                        
-                        return `
-                            <div class="mobile-gallery-slide ${idx === memoryIndex ? 'active' : ''}" data-index="${idx}">
-                                ${mediaHtml}
-                                <div class="mobile-gallery-overlay">
-                                    <div class="mobile-gallery-description">${mem.description || 'Sin descripción'}</div>
-                                    <div class="mobile-gallery-date">Día ${mem.dayNumber} - ${new Date(mem.date).toLocaleDateString()}</div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-            
-            <div class="mobile-gallery-footer">
-                <button class="mobile-gallery-btn" onclick="navigateMobileGallery('prev')" id="mobilePrevBtn">‹</button>
-                <div class="mobile-gallery-dots">
-                    ${memories.map((_, idx) => `
-                        <span class="mobile-gallery-dot ${idx === memoryIndex ? 'active' : ''}" onclick="goToMobileSlide(${idx})"></span>
-                    `).join('')}
-                </div>
-                <button class="mobile-gallery-btn" onclick="navigateMobileGallery('next')" id="mobileNextBtn">›</button>
-            </div>
-            
-            <div class="mobile-gallery-character-comment">
-                <div class="character-comment-bubble">
-                    <img src="${getRandomCharacterComment().avatar}" alt="Character" class="character-avatar-small">
-                    <div class="character-text">
-                        <strong>${getRandomCharacterComment().character}</strong>
-                        <p>${getRandomCharacterComment().comment}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(mobileGallery);
-    
-    // Configurar swipe gestures
-    setupMobileGalleryGestures();
-    
-    // Animar entrada
-    setTimeout(() => {
-        mobileGallery.classList.add('active');
-    }, 10);
-}
-
-// Configurar gestos táctiles para la galería móvil
-function setupMobileGalleryGestures() {
-    const container = document.getElementById('mobileGalleryContent');
-    const track = document.getElementById('mobileGalleryTrack');
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
-    let currentTranslate = 0;
-    let prevTranslate = 0;
-    
-    function setSliderPosition() {
-        track.style.transform = `translateX(${currentTranslate}px)`;
-    }
-    
-    function getPositionX(event) {
-        return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-    }
-    
-    function touchStart(event) {
-        startX = getPositionX(event);
-        isDragging = true;
-        container.style.cursor = 'grabbing';
-    }
-    
-    function touchMove(event) {
-        if (!isDragging) return;
-        
-        currentX = getPositionX(event);
-        const diff = currentX - startX;
-        currentTranslate = prevTranslate + diff;
-        
-        setSliderPosition();
-    }
-    
-    function touchEnd() {
-        isDragging = false;
-        container.style.cursor = 'grab';
-        
-        const movedBy = currentX - startX;
-        const slideWidth = window.innerWidth;
-        
-        if (Math.abs(movedBy) > slideWidth / 4) {
-            if (movedBy < 0 && currentGalleryIndex < memories.length - 1) {
-                currentGalleryIndex++;
-            } else if (movedBy > 0 && currentGalleryIndex > 0) {
-                currentGalleryIndex--;
-            }
-        }
-        
-        updateMobileGalleryPosition();
-        prevTranslate = currentTranslate;
-    }
-    
-    // Eventos táctiles
-    container.addEventListener('touchstart', touchStart);
-    container.addEventListener('touchmove', touchMove);
-    container.addEventListener('touchend', touchEnd);
-    
-    // Eventos de mouse para desktop
-    container.addEventListener('mousedown', touchStart);
-    container.addEventListener('mousemove', touchMove);
-    container.addEventListener('mouseup', touchEnd);
-    container.addEventListener('mouseleave', touchEnd);
-    
-    // Prevenir scroll durante swipe
-    container.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
-}
-
-// Actualizar posición de la galería móvil
-function updateMobileGalleryPosition() {
-    const track = document.getElementById('mobileGalleryTrack');
-    const slideWidth = window.innerWidth;
-    currentTranslate = -currentGalleryIndex * slideWidth;
-    track.style.transform = `translateX(${currentTranslate}px)`;
-    
-    // Actualizar UI
-    document.querySelector('.mobile-gallery-counter').textContent = `${currentGalleryIndex + 1} / ${memories.length}`;
-    document.querySelectorAll('.mobile-gallery-dot').forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentGalleryIndex);
-    });
-    document.querySelectorAll('.mobile-gallery-slide').forEach((slide, idx) => {
-        slide.classList.toggle('active', idx === currentGalleryIndex);
-    });
-    
-    // Actualizar botones de navegación
-    document.getElementById('mobilePrevBtn').disabled = currentGalleryIndex === 0;
-    document.getElementById('mobileNextBtn').disabled = currentGalleryIndex === memories.length - 1;
-}
-
-// Navegar en la galería móvil
-function navigateMobileGallery(direction) {
-    if (direction === 'prev' && currentGalleryIndex > 0) {
-        currentGalleryIndex--;
-    } else if (direction === 'next' && currentGalleryIndex < memories.length - 1) {
-        currentGalleryIndex++;
-    }
-    
-    updateMobileGalleryPosition();
-}
-
-// Ir a slide específico
-function goToMobileSlide(index) {
-    currentGalleryIndex = index;
-    updateMobileGalleryPosition();
-}
-
-// Cerrar galería móvil
-function closeMobileGallery() {
-    const mobileGallery = document.getElementById('mobileGallery');
-    if (mobileGallery) {
-        mobileGallery.classList.remove('active');
-        setTimeout(() => {
-            mobileGallery.remove();
-        }, 300);
-    }
-}
-
-// Abrir modal desktop (versión original)
-function openDesktopModal(id) {
     const memoryIndex = getMemoryIndexById(id);
     const memory = memories[memoryIndex];
     if (!memory) return;
@@ -837,6 +610,9 @@ function openDesktopModal(id) {
             // Inicializar selector de filtros
             updateFilterUI(filterClass);
             
+            // Inicializar navegación táctil
+            initializeTouchNavigation();
+            
             setTimeout(() => {
                 detailContent.classList.remove('animate-fadeIn');
             }, 500);
@@ -851,11 +627,233 @@ function openDesktopModal(id) {
         // Inicializar selector de filtros
         updateFilterUI(filterClass);
         
+        // Inicializar navegación táctil
+        initializeTouchNavigation();
+        
         setTimeout(() => {
             detailModal.classList.remove('animate-scaleIn');
         }, 500);
     }
 }
+// Función para inicializar navegación táctil en el modal
+function initializeTouchNavigation() {
+    const modal = document.getElementById('detailModal');
+    const content = document.getElementById('detailContent');
+    
+    if (!modal || !content) return;
+    
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+    let isSwiping = false;
+    
+    // Agregar indicadores de navegación
+    addSwipeIndicators();
+    
+    // Evento touch start
+    modal.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        isSwiping = true;
+        
+        // Prevenir el scroll vertical durante el swipe
+        document.body.style.overflow = 'hidden';
+    }, { passive: true });
+    
+    // Evento touch move
+    modal.addEventListener('touchmove', function(e) {
+        if (!isSwiping) return;
+        
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        
+        // Si el movimiento es más horizontal que vertical
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            e.preventDefault();
+            
+            // Limitar el desplazamiento
+            const maxSwipe = 100;
+            const translateX = Math.max(-maxSwipe, Math.min(maxSwipe, deltaX));
+            content.style.transform = `translateX(${translateX}px)`;
+            content.style.transition = 'none';
+            
+            // Actualizar indicadores
+            updateSwipeIndicators(deltaX);
+        }
+    }, { passive: false });
+    
+    // Evento touch end
+    modal.addEventListener('touchend', function(e) {
+        if (!isSwiping) return;
+        
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        
+        // Restaurar el scroll
+        document.body.style.overflow = '';
+        
+        // Si el swipe es significativo y más horizontal que vertical
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            if (deltaX > 0) {
+                // Swipe hacia la derecha = imagen anterior
+                navigateMemory('prev');
+            } else {
+                // Swipe hacia la izquierda = imagen siguiente
+                navigateMemory('next');
+            }
+        } else {
+            // Resetear la posición
+            content.style.transform = 'translateX(0)';
+            content.style.transition = 'transform 0.3s ease-out';
+            
+            // Resetear indicadores
+            resetSwipeIndicators();
+        }
+        
+        isSwiping = false;
+    }, { passive: true });
+    
+    // Evento para mouse (testing en desktop)
+    let mouseStartX = 0;
+    let isDragging = false;
+    
+    modal.addEventListener('mousedown', function(e) {
+        mouseStartX = e.clientX;
+        isDragging = true;
+        e.preventDefault();
+    });
+    
+    modal.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        
+        const deltaX = e.clientX - mouseStartX;
+        const maxSwipe = 100;
+        const translateX = Math.max(-maxSwipe, Math.min(maxSwipe, deltaX));
+        content.style.transform = `translateX(${translateX}px)`;
+        content.style.transition = 'none';
+    });
+    
+    modal.addEventListener('mouseup', function(e) {
+        if (!isDragging) return;
+        
+        const deltaX = e.clientX - mouseStartX;
+        
+        if (Math.abs(deltaX) > 50) {
+            if (deltaX > 0) {
+                navigateMemory('prev');
+            } else {
+                navigateMemory('next');
+            }
+        } else {
+            content.style.transform = 'translateX(0)';
+            content.style.transition = 'transform 0.3s ease-out';
+        }
+        
+        isDragging = false;
+    });
+    
+    // Limpiar eventos al cerrar el modal
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            removeSwipeIndicators();
+        }
+    });
+}
+
+// Función para agregar indicadores de navegación
+function addSwipeIndicators() {
+    const modal = document.getElementById('detailModal');
+    
+    // Crear contenedor de indicadores
+    const indicatorsContainer = document.createElement('div');
+    indicatorsContainer.className = 'swipe-indicators';
+    indicatorsContainer.innerHTML = `
+        <div class="swipe-indicator swipe-left">
+            <i class="fas fa-chevron-left"></i>
+            <span>Anterior</span>
+        </div>
+        <div class="swipe-indicator swipe-right">
+            <i class="fas fa-chevron-right"></i>
+            <span>Siguiente</span>
+        </div>
+    `;
+    
+    modal.appendChild(indicatorsContainer);
+    
+    // Mostrar/ocultar según disponibilidad
+    setTimeout(() => {
+        const currentId = modal.getAttribute('data-current-id');
+        const currentIndex = getMemoryIndexById(currentId);
+        
+        const leftIndicator = indicatorsContainer.querySelector('.swipe-left');
+        const rightIndicator = indicatorsContainer.querySelector('.swipe-right');
+        
+        if (currentIndex <= 0) {
+            leftIndicator.style.opacity = '0.3';
+            leftIndicator.style.pointerEvents = 'none';
+        }
+        
+        if (currentIndex >= memories.length - 1) {
+            rightIndicator.style.opacity = '0.3';
+            rightIndicator.style.pointerEvents = 'none';
+        }
+    }, 100);
+}
+
+// Función para actualizar indicadores durante el swipe
+function updateSwipeIndicators(deltaX) {
+    const indicators = document.querySelectorAll('.swipe-indicator');
+    indicators.forEach(indicator => {
+        if (deltaX > 20) {
+            // Swipe hacia derecha
+            if (indicator.classList.contains('swipe-left')) {
+                indicator.style.transform = 'scale(1.2)';
+                indicator.style.opacity = '1';
+            } else {
+                indicator.style.transform = 'scale(0.8)';
+                indicator.style.opacity = '0.3';
+            }
+        } else if (deltaX < -20) {
+            // Swipe hacia izquierda
+            if (indicator.classList.contains('swipe-right')) {
+                indicator.style.transform = 'scale(1.2)';
+                indicator.style.opacity = '1';
+            } else {
+                indicator.style.transform = 'scale(0.8)';
+                indicator.style.opacity = '0.3';
+            }
+        } else {
+            // Reset
+            indicator.style.transform = 'scale(1)';
+            indicator.style.opacity = '0.7';
+        }
+    });
+}
+
+// Función para resetear indicadores
+function resetSwipeIndicators() {
+    const indicators = document.querySelectorAll('.swipe-indicator');
+    indicators.forEach(indicator => {
+        indicator.style.transform = 'scale(1)';
+        indicator.style.opacity = '0.7';
+    });
+}
+
+// Función para remover indicadores
+function removeSwipeIndicators() {
+    const indicators = document.querySelector('.swipe-indicators');
+    if (indicators) {
+        indicators.remove();
+    }
+}
+
 // Función para obtener un emoji aleatorio de personaje
 function getCharacterEmoji(character) {
     const emojis = ['🏴‍☠️', '⚓', '⚔️', '👒', '🍖', '💰', '🏝️', '🌊', '🔥', '⚡', '🌟', '💎'];
@@ -1578,33 +1576,6 @@ function initializeTimelineGestures() {
         }
     });
     
-    // Indicador de posición para móviles
-    if (window.innerWidth <= 768) {
-        const indicator = document.createElement('div');
-        indicator.className = 'timeline-indicator';
-        indicator.innerHTML = '🧭 Desliza para explorar';
-        indicator.style.cssText = `
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 215, 0, 0.9);
-            color: var(--navy);
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
-            pointer-events: none;
-            animation: float 2s ease-in-out infinite;
-        `;
-        container.appendChild(indicator);
-        
-        // Ocultar después de 3 segundos
-        setTimeout(() => {
-            indicator.style.opacity = '0';
-            setTimeout(() => indicator.remove(), 300);
-        }, 3000);
-    }
 }
 
 // Filtrar memorias por fecha
