@@ -899,10 +899,9 @@ html.theme-transition {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: rgba(0, 0, 0, 0.95) !important;
-    backdrop-filter: blur(10px) !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: #000 !important;
     z-index: 10000 !important;
     display: none !important;
     flex-direction: column !important;
@@ -918,36 +917,33 @@ html.theme-transition {
 }
 
 .presentation-content {
-    width: 85% !important;
-    max-width: 700px !important;
-    height: 85% !important;
-    max-height: 850px !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    max-height: none !important;
     position: relative !important;
     overflow: hidden !important;
-    border-radius: 20px !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
-    backdrop-filter: blur(10px) !important;
+    border-radius: 0 !important;
+    background: #000 !important;
 }
 
 .presentation-slide {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        opacity: 0 !important;
-        transition: opacity 0.8s ease-in-out !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        padding: 15px !important;
-        gap: 10px !important;
-        background: var(--card-bg) !important;
-        box-sizing: border-box !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-    }
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    transition: opacity 0.8s ease-in-out !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #000 !important;
+    overflow: hidden !important;
+}
 
 .presentation-slide.active {
     opacity: 1 !important;
@@ -955,83 +951,73 @@ html.theme-transition {
 }
 
 .presentation-media-container {
-        display: flex !important;
-        justify-content: stretch !important;
-        align-items: stretch !important;
-        height: 70vh !important;
-        max-height: 70vh !important;
-        width: 100% !important;
-        overflow: hidden !important;
-        border-radius: 10px !important;
-        background: rgba(0, 0, 0, 0.1) !important;
-        margin: 5px 0 !important;
-        padding: 3px !important;
-    }
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
 
-.presentation-image {
-        width: 100% !important;
-        height: 100% !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
-        object-fit: cover !important;
-        border-radius: 8px !important;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
-    }
-    
-    .presentation-video {
-        width: 100% !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
-        object-fit: contain !important;
-        border-radius: 8px !important;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
-    }
-
-.presentation-video[frameborder] {
-        width: 100% !important;
-        height: 100% !important;
-        min-height: 450px !important;
-        border: none !important;
-        aspect-ratio: 16/9 !important;
-    }
+.presentation-image,
+.presentation-video {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
 
 .presentation-info {
-    display: grid !important;
-    grid-template-rows: auto auto auto !important;
-    gap: 8px !important;
-    text-align: center !important;
-    max-width: 100% !important;
-    background: rgba(0, 0, 0, 0.3) !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)) !important;
+    color: white !important;
     padding: 20px !important;
-    border-radius: 15px !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    text-align: left !important;
+    transform: translateY(100%) !important;
+    transition: transform 0.3s ease !important;
+    z-index: 10 !important;
+}
+
+.presentation-slide:hover .presentation-info,
+.presentation-slide.active .presentation-info {
+    transform: translateY(0) !important;
 }
 
 .presentation-title {
     font-family: 'Pirata One', cursive !important;
     font-size: 1.5em !important;
     font-weight: bold !important;
-    color: var(--gold) !important;
+    color: white !important;
+    margin-bottom: 5px !important;
     line-height: 1.2 !important;
-    text-align: center !important;
-    margin: 0 !important;
 }
 
 .presentation-description {
     font-size: 1em !important;
-    color: var(--text-secondary) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    margin-bottom: 5px !important;
     line-height: 1.3 !important;
-    text-align: center !important;
-    margin: 0 !important;
 }
 
 .presentation-date {
     font-size: 0.9em !important;
     color: var(--coral) !important;
     font-weight: bold !important;
-    text-align: center !important;
-    margin: 0 !important;
 }
 
 .character-comment {
@@ -1354,18 +1340,13 @@ html.theme-transition {
         font-size: 0.9em !important;
     }
     
-    .presentation-image {
-        max-height: 100% !important;
-        height: 100% !important;
-        width: 100% !important;
+    .presentation-image,
+    .presentation-video {
+        height: 400px !important;
+        width: auto !important;
         max-width: 100% !important;
         border-radius: 10px !important;
-        object-fit: cover !important;
-    }
-    
-    .presentation-video {
-        max-height: 50% !important;
-        border-radius: 10px !important;
+        object-fit: contain !important;
     }
     
     .presentation-close {
@@ -1626,54 +1607,77 @@ html.theme-transition {
     }
 }
 
-/* Responsive para modo presentación */
+/* Responsive para modo presentación - Optimización móvil */
 @media (max-width: 768px) {
+    .presentation-mode {
+        background: #000 !important;
+    }
+    
     .presentation-content {
-        width: 98% !important;
-        max-width: 98% !important;
-        height: 95% !important;
-        max-height: 95% !important;
-        border-radius: 10px !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: none !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        background: #000 !important;
     }
     
     .presentation-slide {
-        padding: 8px !important;
-        gap: 4px !important;
-        grid-template-rows: auto auto 1fr auto auto !important;
-    }
-    
-    .presentation-title {
-        font-size: 1.3em !important;
-        margin-bottom: 5px !important;
-    }
-    
-    .presentation-description {
-        font-size: 0.9em !important;
-        margin-bottom: 8px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        gap: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: #000 !important;
     }
     
     .presentation-media-container {
-        max-height: 80vh !important;
-        height: 80vh !important;
-        width: 100% !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+    }
+    
+    .presentation-image,
+    .presentation-video {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: none !important;
+        max-height: none !important;
+        object-fit: cover !important;
+        border-radius: 0 !important;
         margin: 0 !important;
         padding: 0 !important;
     }
     
-    .presentation-image {
-        width: 100% !important;
-        height: 100% !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
-        object-fit: cover !important;
+    .presentation-info {
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.9)) !important;
+        padding: 15px !important;
+        border-radius: 0 !important;
+        transform: translateY(100%) !important;
     }
     
-    .presentation-video {
-        width: 100% !important;
-        max-width: 100% !important;
-        max-height: 80vh !important;
-        height: auto !important;
-        object-fit: contain !important;
+    .presentation-slide:hover .presentation-info,
+    .presentation-slide.active .presentation-info {
+        transform: translateY(0) !important;
+    }
+    
+    .presentation-title {
+        font-size: 1.2em !important;
+        margin-bottom: 3px !important;
+    }
+    
+    .presentation-description {
+        font-size: 0.9em !important;
+        margin-bottom: 3px !important;
     }
     
     .presentation-date {
@@ -1681,40 +1685,85 @@ html.theme-transition {
     }
     
     .character-comment {
-        padding: 8px 10px !important;
-        gap: 6px !important;
-    }
-    
-    .character-avatar {
-        font-size: 1.2em !important;
-    }
-    
-    .comment-text {
-        font-size: 0.8em !important;
+        position: absolute !important;
+        top: 15px !important;
+        left: 15px !important;
+        right: 15px !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        backdrop-filter: blur(10px) !important;
+        color: white !important;
+        padding: 10px !important;
+        border-radius: 10px !important;
+        font-size: 0.85em !important;
+        z-index: 15 !important;
     }
     
     .presentation-close {
-        top: 5px !important;
-        right: 5px !important;
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 0.9em !important;
+        position: absolute !important;
+        top: 15px !important;
+        right: 15px !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(10px) !important;
+        color: white !important;
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 1em !important;
+        z-index: 20 !important;
     }
     
     .presentation-controls {
-        bottom: 5px !important;
-        gap: 10px !important;
+        position: absolute !important;
+        bottom: 20px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        display: flex !important;
+        gap: 15px !important;
+        z-index: 15 !important;
     }
     
     .presentation-btn {
-        width: 40px !important;
-        height: 40px !important;
+        width: 45px !important;
+        height: 45px !important;
         font-size: 1em !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
     }
     
     .presentation-progress {
-        bottom: 50px !important;
-        gap: 4px !important;
+        position: absolute !important;
+        bottom: 70px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        gap: 6px !important;
+    }
+    
+    .progress-dot {
+        width: 6px !important;
+        height: 6px !important;
+    }
+    
+    .progress-dot.active {
+        width: 8px !important;
+        height: 8px !important;
+    }
+    
+    /* Ocultar barras de navegación del navegador */
+    .presentation-mode {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        overscroll-behavior: none !important;
+    }
+    
+    /* Soporte táctil */
+    .presentation-content {
+        touch-action: pan-y !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
     }
 }
 
@@ -1877,9 +1926,8 @@ html.theme-transition {
 }
 
 .presentation-media {
-    width: 100%;
-    max-width: 100%;
-    max-height: 70vh;
+    max-width: 90%;
+    max-height: 60vh;
     object-fit: contain;
     border-radius: 10px;
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
@@ -1978,8 +2026,6 @@ html.theme-transition {
 .empty-state-submessage {
     opacity: 0.8;
 }
-
-
 /* Estilos del Login */
 .login-modal {
     position: fixed;
