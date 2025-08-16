@@ -61,118 +61,206 @@ function getRandomCharacterComment() {
 // Comentarios personalizados para cada personaje
 const characterComments = {
     'Luffy': [
-        '¡Esta aventura fue tan épica como encontrar el One Piece!',
-        '¡Shishishi! Qué día tan divertido tuvimos!',
-        '¡Esta memoria me hace querer gritar "¡Soy yo, Luffy!"!',
-        '¡Wooo! ¡Qué aventura tan increíble!',
-        '¡Esta foto captura la esencia de nuestra tripulación!'
+        '¡SHISHISHI! ¡Esta aventura fue tan épica como encontrar el One Piece!',
+        '¡WOW! ¡Qué día tan divertido! ¡Quiero repetirlo mil veces más!',
+        '¡Esta memoria me hace querer gritar "¡YO SOY LUFFY! ¡EL HOMBRE QUE SE CONVERTIRÁ EN REY DE LOS PIRATAS!"',
+        '¡WOOOOSH! ¡Qué aventura tan increíble! ¡Mi nakama es lo mejor del mundo!',
+        '¡Esta foto tiene la esencia de la libertad! ¡Somos los mejores nakama del mundo!',
+        '¡JA JA JA! ¡Recuerdo cuando casi nos comemos todo el banquete! ¡Qué hambre teníamos!',
+        '¡Esta aventura fue tan épica que hasta Shanks estaría orgulloso!',
+        '¡Qué día tan épico! ¡Quiero más carne y más aventuras!'
     ],
     'Zoro': [
-        'Un momento digno de recordar, como mi sueño de ser el mejor espadachín.',
-        'Esta memoria tiene el filo de una buena espada.',
-        'Un día que vale la pena proteger con mi vida.',
-        'Incluso yo podría perderme en este recuerdo.',
-        'Un momento que honra nuestra promesa como nakama.'
+        'Tch... Un momento digno de mi katana Wado Ichimonji. Mi camino hacia ser el mejor espadachín continúa.',
+        'Esta memoria tiene el filo afilado de una promesa cumplida. Nunca olvidaré este día.',
+        'Un recuerdo que honra mi juramento a Kuina. Cada día es un paso más cerca de mi sueño.',
+        'Incluso yo, el cazador de piratas, podría perderme en la profundidad de este momento.',
+        'Un instante que refleja la fuerza de nuestra tripulación. Los Mugiwara no retroceden.',
+        'Esta memoria es tan valiosa como mi honor. Los verdaderos guerreros protegen sus recuerdos.',
+        'Un día que demuestra que los sueños valen la pena. Mi camino es recto como mi espada.',
+        'Cada recuerdo fortalece mi determinación. El camino del samurái es eterno.'
     ],
     'Nami': [
-        '¡Este recuerdo vale más que cualquier mapa del tesoro!',
-        '¡Qué día perfecto para navegar juntos!',
-        'Esta memoria brilla más que mis Belly.',
-        'Un momento que navegaría mil veces en mi mente.',
-        '¡Qué clima perfecto para esta aventura!'
+        '¡Este recuerdo vale más que cualquier mapa del tesoro! ¡Es priceless, beli-chan!',
+        '¡Qué día perfecto para navegar juntos! ¡Mi clima-tact sintió la felicidad!',
+        '¡Esta memoria brilla más que todos mis Belly juntos! ¡Es más valiosa que oro!',
+        'Un momento que navegaría mil veces en mi mente... ¡y cobraría por cada recuerdo! JA JA!',
+        '¡Qué clima perfecto para esta aventura! ¡Hasta mi clima-tact bailaba de alegría!',
+        '¡Este recuerdo es más preciado que mi tangerine grove! ¡Mi kokoro está lleno!',
+        '¡Qué día tan perfecto! ¡Incluso los vientos del Grand Line estarían celosos!',
+        'Esta memoria es más valiosa que cualquier tesoro que Arlong haya soñado.'
     ],
     'Usopp': [
-        '¡Esta historia es tan épica como mis 8000 seguidores!',
-        '¡El gran Usopp aprueba esta memoria épica!',
-        '¡Incluso mis ballestas no podrían disparar un momento más perfecto!',
-        '¡Esta aventura es más emocionante que cualquiera de mis historias!',
-        '¡Mis nakama serían tan orgullosos de este momento!'
+        '¡Esta historia es tan épica que incluso mis 8000 seguidores en el mar del East Blue estarían impresionados!',
+        '¡El gran capitán Usopp, héroe de los mares, aprueba esta memoria épica! ¡PUM!',
+        '¡Incluso mi Kuro Kabuto no podría disparar un momento más perfecto que este! ¡Directo al kokoro!',
+        '¡Esta aventura es más emocionante que cuando enfrenté a Arlong! ¡Sin mentir!',
+        '¡Mis nakama serían tan orgullosos de este momento! ¡Somos los mejores! ¡PUM PUM!',
+        '¡Recuerdo cuando casi me desmayo de la emoción! ¡Pero el gran Usopp nunca retrocede!',
+        '¡Esta memoria es más épica que mis historias de los 8000 seguidores! ¡Y es real!',
+        '¡Qué día tan heroico! ¡Incluso el Going Merry estaría orgulloso de nosotros!'
     ],
     'Sanji': [
-        '¡Esta memoria está más dulce que cualquier postre!',
-        '¡Mellorine! ¡Qué momento tan hermoso!',
-        'Un día que merece un banquete de celebración.',
-        'Esta memoria tiene el sabor perfecto de la aventura.',
-        '¡Un momento que calienta el corazón más que mis patadas!'
+        '¡Esta memoria está más dulce que cualquier postre que haya cocinado! ¡Mellorine!',
+        '¡Mellorine! ¡Qué momento tan hermoso! ¡Incluso mis ojos de corazón están llorando de alegría!',
+        'Un día que merece un banquete de celebración... ¡con mi mejor receta de carne para Luffy!',
+        'Esta memoria tiene el sabor perfecto de la aventura... ¡con un toque de amor! ¡Mellorine!',
+        '¡Un momento que calienta el corazón más que mis Black Leg kicks! ¡Para mis queridas Nami-swan y Robin-chan!',
+        '¡Qué recuerdo tan apasionado! ¡Incluso mis cigarrillos están bailando de felicidad!',
+        '¡Esta memoria es más deliciosa que un plato de oden en el North Blue!',
+        '¡Un día tan perfecto que merece ser celebrado con champagne para todas las chicas lindas!'
     ],
     'Chopper': [
-        '¡Wooo! ¡Qué recuerdo tan lindo y emocionante!',
-        '¡Este momento me hace tan feliz que podría saltar!',
-        '¡Una aventura digna de ser celebrada con chocolate!',
-        '¡Qué día tan mágico para mis nakama!',
-        '¡Esta memoria es tan dulce como las golosinas!'
+        '¡Wooo! ¡Qué recuerdo tan lindo y emocionante! ¡Doctora! ¡Digo... qué momento tan genial!',
+        '¡Este momento me hace tan feliz que podría saltar como un reno! ¡Wooo!',
+        '¡Una aventura digna de ser celebrada con chocolate y caramelos de colores! ¡YAY!',
+        '¡Qué día tan mágico para mis nakama! ¡Mi kokoro está lleno de alegría!',
+        '¡Esta memoria es tan dulce como las golosinas que amo! ¡Y tan emocionante como una batalla!',
+        '¡Wooo! ¡Recuerdo cuando mi corazón latía tan fuerte! ¡Como un reno corriendo!',
+        '¡Qué momento tan perfecto! ¡Incluso mi narvejita está feliz! ¡YAY!',
+        '¡Esta aventura fue tan épica que hasta mi Monster Point estaría orgulloso!'
     ],
     'Robin': [
-        'Un momento precioso que merece ser preservado para siempre.',
-        'La historia de nuestra aventura se vuelve más rica con este recuerdo.',
-        'Un instante que trasciende el tiempo y el espacio.',
-        'Esta memoria florece como las flores que tanto amo.',
-        'Un momento que ilumina nuestra jornada como nakama.'
+        'Un momento precioso que merece ser preservado para siempre en los anales de nuestra historia.',
+        'La historia de nuestra aventura se vuelve más rica y compleja con este recuerdo invaluable.',
+        'Un instante que trasciende el tiempo y el espacio, como los secretos del Void Century.',
+        'Esta memoria florece como las flores que tanto amo, cada pétalo es un momento de felicidad.',
+        'Un momento que ilumina nuestra jornada como nakama, más brillante que cualquier poneglyph.',
+        'Fufufu... qué recuerdo tan hermoso. Incluso los secretos del mundo parecen menos importantes.',
+        'Un día que se grabará en la historia como uno de los más significativos de nuestra travesía.',
+        'Esta memoria es más valiosa que cualquier conocimiento antiguo, porque es nuestro tesoro compartido.'
     ],
     'Franky': [
-        '¡SÚPER! ¡Esta memoria es tan épica como mi cyborg!',
-        '¡Esta aventura está más construida que mis mejores creaciones!',
-        '¡OW! ¡Qué momento tan SÚPER!',
-        '¡Esta memoria tiene más estilo que mis gafas!',
-        '¡Un día que merece ser grabado en acero!'
+        '¡SÚPER! ¡Esta memoria es tan épica como mi cyborg! ¡OW! ¡Qué momento tan SÚPER!',
+        '¡Esta aventura está más construida que mis mejores creaciones en Water 7! ¡SÚPER!',
+        '¡OW! ¡Qué momento tan SÚPER! ¡Incluso mi Franky Rocket estaría orgulloso!',
+        '¡Esta memoria tiene más estilo que mis gafas más cool! ¡SÚPER COOL!',
+        '¡Un día que merece ser grabado en acero de la mejor calidad! ¡SÚPER!',
+        '¡Qué recuerdo tan épico! ¡Incluso mi General Franky estaría impresionado!',
+        '¡Esta aventura fue tan SÚPER que merece ser celebrada con cola! ¡OW!',
+        '¡Un momento tan épico que hasta el Thousand Sunny estaría orgulloso de nosotros!'
     ],
     'Brook': [
-        'Yohohoho, qué momento tan emotivo para mi alma.',
-        '¡Aunque no tengo ojos, puedo ver lo hermoso de este recuerdo!',
-        'Un instante que toca las cuerdas de mi corazón... ¡Ah, pero no tengo!',
-        'Esta memoria es más dulce que cualquier canción.',
-        '¡Un momento digno de ser cantado por toda la eternidad!'
+        'Yohohoho... qué momento tan emotivo para mi alma, aunque ya no tenga cuerpo.',
+        '¡Aunque no tengo ojos, puedo ver lo hermoso de este recuerdo! ¡Yohohoho!',
+        'Un instante que toca las cuerdas de mi corazón... ¡Ah, pero si no tengo! ¡Yohohoho!',
+        'Esta memoria es más dulce que cualquier canción que haya tocado con mi violin.',
+        '¡Un momento digno de ser cantado por toda la eternidad! ¡Binks no Sake para celebrar!',
+        '¡Qué recuerdo tan hermoso! ¡Incluso mis huesos están bailando de alegría! ¡Yohohoho!',
+        'Un día que merece ser celebrado con una canción épica, como las que tocaba con mi antigua tripulación.',
+        '¡Esta memoria es más preciosa que cualquier tesoro que haya visto en mis 50 años navegando! ¡Yohohoho!'
     ]
 };
 
 // Characters y sus frases
 const characters = [
     { name: 'Luffy', avatar: 'luffy.png', phrases: [
-        '¡Esta memoria me da ganas de más aventuras!',
-        '¡Qué recuerdo tan genial! ¡Vamos por más!',
-        '¡Ja ja ja! ¡Esto es lo mejor!'
+        '¡Oí! ¡Esta aventura fue tan épica como cuando encontramos el One Piece!',
+        '¡Nakama! ¡Este momento es tan importante como la carne de All Blue!',
+        '¡Yosh! ¡Guardar esto es como tener un tesoro en el Merry!',
+        '¡Shanks estaría orgulloso de este recuerdo nakama!',
+        '¡Esto es tan emocionante como cuando conquistamos Grand Line!',
+        '¡Ja ja ja! ¡Este recuerdo me da hambre de carne!',
+        '¡Nami! ¡Este momento vale más que cualquier mapa del cielo!',
+        '¡Zoro! ¡Guarda esto como si fuera tu katana más preciada!',
+        '¡Sanji! ¡Este recuerdo sabe mejor que tu cocina especial!'
     ]},
     { name: 'Zoro', avatar: 'zoro.png', phrases: [
-        'Un buen recuerdo para afilar la memoria',
-        'No me perderé este momento',
-        '¡Qué corte tan perfecto de aventura!'
+        'Un recuerdo digno de afilar mi memoria como mi Wado Ichimonji',
+        'Este momento es tan valioso como encontrar la forma de vencer a Mihawk',
+        'Guardar esto es más importante que cualquier rumbo hacia el Santoryu',
+        'Este recuerdo tiene el filo de una promesa de nakama',
+        'Como mi sueño de ser el mejor espadachín, este momento es inolvidable',
+        'Este recuerdo es tan fuerte como el acero de mis katanas',
+        'Un momento que honraría el nombre de Kuina',
+        'Guardar esto es como proteger el sueño de todos mis nakamas',
+        'Este recuerdo tiene la fuerza de mis 3000 mundos',
+        'Como mi promesa a Luffy, este momento jamás se olvidará'
     ]},
     { name: 'Nami', avatar: 'nami.png', phrases: [
-        '¡Este recuerdo vale su peso en Berries!',
-        'Navegando por memorias felices',
-        '¡Qué clima perfecto para recordar!'
+        '¡Este recuerdo vale más que cualquier tesoro de Arlong Park!',
+        'Navegando por memorias felices como cuando trazamos el mapa de Grand Line',
+        '¡Qué clima perfecto para recordar nuestros viajes en el Going Merry!',
+        'Este momento es más precioso que cualquier Log Pose',
+        'Guardar esto es como tener mi hogar en Cocoyasi Village',
+        '¡Este recuerdo vale su peso en Berries de Cocoyasi!',
+        'Como cuando salvamos a mi pueblo, este momento es invaluable',
+        'Este recuerdo tiene más valor que cualquier Clima-Tact',
+        '¡Nakama! ¡Este momento es más importante que cualquier travesía hacia All Blue!',
+        'Guardar esto es como tener un pedazo de mi hogar siempre'
     ]},
     { name: 'Usopp', avatar: 'usopp.png', phrases: [
-        '¡El gran capitán Usopp aprueba esta memoria!',
-        '¡Qué historia tan épica!',
-        '¡Mis 8000 seguidores estarían de acuerdo!'
+        '¡El gran capitán Usopp aprueba esta memoria épica!',
+        '¡Qué historia tan valiente como cuando enfrenté a los piratas de Kuro!',
+        '¡Mis 8000 seguidores de Syrup Village estarían de acuerdo!',
+        '¡Este recuerdo es más épico que mi batalla contra el capitán Kuro!',
+        '¡Guardar esto es como tener a los Usopp Pirates siempre conmigo!',
+        '¡Este momento es más valiente que cualquier aventura en Little Garden!',
+        '¡Nakama! ¡Este recuerdo es más fuerte que mis balas de pega!',
+        '¡Yassop estaría orgulloso de guardar este momento!',
+        '¡Este recuerdo tiene más impacto que mi Kabuto!',
+        '¡Guardar esto es como ser el valiente guerrero del mar que siempre soñé ser!'
     ]},
     { name: 'Sanji', avatar: 'sanji.png', phrases: [
-        '¡Un recuerdo con sabor a aventura!',
-        '¡Mellorine! ¡Qué memoria tan hermosa!',
-        '¡Esto merece un banquete de celebración!'
+        '¡Un recuerdo con sabor a aventura digno de All Blue!',
+        '¡Mellorine! ¡Qué memoria tan hermosa como Nami-swan!',
+        '¡Esto merece un banquete de celebración en el Baratie!',
+        'Este recuerdo tiene el sabor perfecto de un día en Grand Line',
+        'Guardar esto es como tener un pedazo de la cocina de Zeff',
+        '¡Nakama! ¡Este momento es más dulce que cualquier postre!',
+        'Este recuerdo tiene más sabor que mis mejores recetas',
+        '¡Robin-chan! ¡Este momento es tan elegante como un té de té!',
+        'Guardar esto es como tener a los chicos del Baratie siempre',
+        '¡Este recuerdo tiene más calor que mis patadas Diable Jambe!'
     ]},
     { name: 'Chopper', avatar: 'chopper.png', phrases: [
-        '¡Woooow! ¡Qué recuerdo tan lindo!',
-        '¡Doctora! ¡Digo... qué memoria tan genial!',
-        '¡Esto me hace muy feliz!'
+        '¡Woooow! ¡Qué recuerdo tan lindo como los regalos de Hiluluk!',
+        '¡Doctora Kureha! ¡Digo... qué memoria tan genial de nuestra aventura!',
+        '¡Esto me hace tan feliz como cuando los habitantes de Drum me aceptaron!',
+        '¡Este recuerdo es más precioso que cualquier medicina de Drum!',
+        '¡Nakama! ¡Guardar esto es como tener a Luffy siempre cuidándome!',
+        '¡Este momento es tan especial como cuando me uní a los Piratas de Paja!',
+        '¡Qué recuerdo tan curativo como mis dulces Rumble Balls!',
+        '¡Guardar esto es como tener un pedazo de hogar en el Thousand Sunny!',
+        '¡Este recuerdo tiene más valor que cualquier libro médico!',
+        '¡Nami! ¡Este momento es más importante que cualquier mapa del cielo!'
     ]},
     { name: 'Robin', avatar: 'robin.png', phrases: [
-        'Qué memoria tan preciosa para preservar',
-        'La historia de esta aventura es fascinante',
-        'Un momento que trasciende el tiempo'
+        'Qué memoria tan preciosa para preservar, como los Poneglyphs de Ohara',
+        'La historia de esta aventura es fascinante como los secretos del Void Century',
+        'Un momento que trasciende el tiempo como los antiguos textos',
+        'Guardar esto es como proteger el conocimiento de mi pueblo natal',
+        'Este recuerdo tiene el peso de siglos de historia nakama',
+        'Como los Poneglyphs, este momento cuenta una historia invaluable',
+        'Este recuerdo es tan importante como encontrar la verdadera historia',
+        'Guardar esto es como preservar el legado de los Ohara Scholars',
+        'Un momento que merece ser leído por las generaciones futuras',
+        'Este recuerdo tiene la sabiduría de todos nuestros viajes'
     ]},
     { name: 'Franky', avatar: 'franky.png', phrases: [
-        '¡SÚPER recuerdo!',
-        '¡Esta memoria es SÚPER genial!',
-        '¡OW! ¡Qué momento tan SÚPER!'
+        '¡SÚPER recuerdo digno de un cyborg de Water 7!',
+        '¡Esta memoria es SÚPER genial como mi Franky Shogun!',
+        '¡OW! ¡Qué momento tan SÚPER en nuestro Thousand Sunny!',
+        '¡Guardar esto es como tener mi taller en el Sunny siempre!',
+        '¡Este recuerdo tiene más fuerza que mis brazos de acero!',
+        '¡Nakama! ¡Este momento es más épico que construir el Going Merry!',
+        '¡Este recuerdo es tan COOL como mi música de fondo!',
+        '¡Guardar esto es como tener a Iceburg orgulloso de mí!',
+        '¡Qué momento tan SÚPER como cuando construí el Thousand Sunny!',
+        '¡Este recuerdo tiene más potencia que mis Coup de Vent!'
     ]},
     { name: 'Brook', avatar: 'brook.png', phrases: [
-        'Yohohoho, qué momento tan emotivo',
-        '¡Aunque no tengo ojos, puedo ver lo hermoso de este recuerdo!',
-        '¡Esta memoria toca mi alma! ¡Ah, pero si no tengo! Yohohoho!'
-    ]}
-];
+        'Yohohoho, qué momento tan emotivo como cuando toqué Binks\' Sake',
+        '¡Aunque no tengo ojos, puedo ver lo hermoso de este recuerdo, Laboon!',
+        '¡Esta memoria toca mi alma! ¡Ah, pero si no tengo! Yohohoho!',
+        '¡Guardar esto es como tener a Laboon esperándome siempre!',
+        '¡Este recuerdo tiene más melodía que cualquier canción de Rumbar!',
+        '¡Nakama! ¡Este momento es más dulce que el té de té!',
+        '¡Qué momento tan conmovedor como cuando volví a ver a Laboon!',
+        '¡Este recuerdo tiene más alma que mi música de fondo!',
+        '¡Guardar esto es como tener a los Rumbar Pirates siempre conmigo!',
+        '¡Yohohoho! ¡Este recuerdo es tan hermoso que hasta los muertos llorarían!'
+    ]}];
 
 // Estado de la aplicación
 let memories = [];
@@ -199,17 +287,7 @@ function initApp() {
     setRandomWelcomeMessage();
     initTheme();
     
-    // Verificar y configurar el botón de presentación
-     setTimeout(() => {
-         const presentBtn = document.querySelector('.action-btn');
-         if (presentBtn && presentBtn.textContent.includes('Presentación')) {
-             presentBtn.addEventListener('click', function(e) {
-                 e.preventDefault();
-                 e.stopPropagation();
-                 startPresentationMode();
-             });
-         }
-     }, 1000);
+    
     initFilters();
     initTimeline();
     updateTimeline();
@@ -221,22 +299,15 @@ function initApp() {
     }
 }
 
-// Agregar función de logout (opcional)
-function logout() {
-    localStorage.removeItem('nakamaLoggedIn');
-    location.reload(); // Recargar para mostrar login
-}
+
 
 
 // Cargar memorias del localStorage o del archivo JSON
 function loadMemories() {
-    console.log('Cargando memorias...');
     // Primero intentar cargar del archivo JSON
     fetch('./memories.json')
         .then(response => response.json())
         .then(data => {
-            console.log('Memorias cargadas:', data.length, 'memorias');
-            console.log('Memorias de Google Drive:', data.filter(m => m.isGoogleDrive).length);
             memories = data;
             updateGallery();
             updateStats();
@@ -247,10 +318,8 @@ function loadMemories() {
             const stored = localStorage.getItem('nakamaMemories');
             if (stored) {
                 memories = JSON.parse(stored);
-                console.log('Memorias cargadas desde localStorage:', memories.length);
             } else {
                 memories = [];
-                console.log('No hay memorias disponibles');
             }
             updateGallery();
             updateStats();
@@ -429,8 +498,235 @@ function handleFileSelect(event) {
 
 
 
-// Abrir modal de detalle con animaciones mejoradas
+// Variables globales para la galería móvil
+let touchStartX = 0;
+let touchEndX = 0;
+let currentGalleryIndex = 0;
+let galleryImages = [];
+
+// Abrir modal de detalle con galería móvil
 function openDetailModal(id) {
+    const memoryIndex = getMemoryIndexById(id);
+    const memory = memories[memoryIndex];
+    if (!memory) return;
+    
+    currentGalleryIndex = memoryIndex;
+    galleryImages = memories.filter(m => m.type === 'image' || (m.type === 'video' && !m.isGoogleDrive));
+    
+    // Configurar modo móvil si es necesario
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        openMobileGallery(id);
+    } else {
+        openDesktopModal(id);
+    }
+}
+
+// Abrir galería móvil con swipe
+function openMobileGallery(id) {
+    const memoryIndex = getMemoryIndexById(id);
+    const memory = memories[memoryIndex];
+    
+    // Crear overlay de galería móvil
+    const mobileGallery = document.createElement('div');
+    mobileGallery.id = 'mobileGallery';
+    mobileGallery.className = 'mobile-gallery';
+    mobileGallery.innerHTML = `
+        <div class="mobile-gallery-container">
+            <div class="mobile-gallery-header">
+                <button class="mobile-gallery-close" onclick="closeMobileGallery()">✕</button>
+                <div class="mobile-gallery-info">
+                    <span class="mobile-gallery-counter">${memoryIndex + 1} / ${memories.length}</span>
+                    <span class="mobile-gallery-title">${memory.title}</span>
+                </div>
+                <button class="mobile-gallery-share" onclick="shareMemory(${memory.id})">📤</button>
+            </div>
+            
+            <div class="mobile-gallery-content" id="mobileGalleryContent">
+                <div class="mobile-gallery-track" id="mobileGalleryTrack">
+                    ${memories.map((mem, idx) => {
+                        const filterClass = mem.filter || '';
+                        let mediaHtml = '';
+                        
+                        if (mem.isGoogleDrive) {
+                            if (mem.type === 'video') {
+                                mediaHtml = `<iframe src="https://drive.google.com/file/d/${mem.fileId}/preview" width="100%" height="100%" allow="autoplay" frameborder="0"></iframe>`;
+                            } else {
+                                const imageUrl = `https://lh3.googleusercontent.com/d/${mem.fileId}=s0`;
+                                mediaHtml = `<img src="${imageUrl}" alt="${mem.title}" class="mobile-gallery-image ${filterClass}">`;
+                            }
+                        } else if (mem.type === 'video') {
+                            mediaHtml = `<video src="${mem.file}" class="mobile-gallery-image" controls></video>`;
+                        } else {
+                            mediaHtml = `<img src="${mem.file}" alt="${mem.title}" class="mobile-gallery-image ${filterClass}">`;
+                        }
+                        
+                        return `
+                            <div class="mobile-gallery-slide ${idx === memoryIndex ? 'active' : ''}" data-index="${idx}">
+                                ${mediaHtml}
+                                <div class="mobile-gallery-overlay">
+                                    <div class="mobile-gallery-description">${mem.description || 'Sin descripción'}</div>
+                                    <div class="mobile-gallery-date">Día ${mem.dayNumber} - ${new Date(mem.date).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            
+            <div class="mobile-gallery-footer">
+                <button class="mobile-gallery-btn" onclick="navigateMobileGallery('prev')" id="mobilePrevBtn">‹</button>
+                <div class="mobile-gallery-dots">
+                    ${memories.map((_, idx) => `
+                        <span class="mobile-gallery-dot ${idx === memoryIndex ? 'active' : ''}" onclick="goToMobileSlide(${idx})"></span>
+                    `).join('')}
+                </div>
+                <button class="mobile-gallery-btn" onclick="navigateMobileGallery('next')" id="mobileNextBtn">›</button>
+            </div>
+            
+            <div class="mobile-gallery-character-comment">
+                <div class="character-comment-bubble">
+                    <img src="${getRandomCharacterComment().avatar}" alt="Character" class="character-avatar-small">
+                    <div class="character-text">
+                        <strong>${getRandomCharacterComment().character}</strong>
+                        <p>${getRandomCharacterComment().comment}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(mobileGallery);
+    
+    // Configurar swipe gestures
+    setupMobileGalleryGestures();
+    
+    // Animar entrada
+    setTimeout(() => {
+        mobileGallery.classList.add('active');
+    }, 10);
+}
+
+// Configurar gestos táctiles para la galería móvil
+function setupMobileGalleryGestures() {
+    const container = document.getElementById('mobileGalleryContent');
+    const track = document.getElementById('mobileGalleryTrack');
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    
+    function setSliderPosition() {
+        track.style.transform = `translateX(${currentTranslate}px)`;
+    }
+    
+    function getPositionX(event) {
+        return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+    }
+    
+    function touchStart(event) {
+        startX = getPositionX(event);
+        isDragging = true;
+        container.style.cursor = 'grabbing';
+    }
+    
+    function touchMove(event) {
+        if (!isDragging) return;
+        
+        currentX = getPositionX(event);
+        const diff = currentX - startX;
+        currentTranslate = prevTranslate + diff;
+        
+        setSliderPosition();
+    }
+    
+    function touchEnd() {
+        isDragging = false;
+        container.style.cursor = 'grab';
+        
+        const movedBy = currentX - startX;
+        const slideWidth = window.innerWidth;
+        
+        if (Math.abs(movedBy) > slideWidth / 4) {
+            if (movedBy < 0 && currentGalleryIndex < memories.length - 1) {
+                currentGalleryIndex++;
+            } else if (movedBy > 0 && currentGalleryIndex > 0) {
+                currentGalleryIndex--;
+            }
+        }
+        
+        updateMobileGalleryPosition();
+        prevTranslate = currentTranslate;
+    }
+    
+    // Eventos táctiles
+    container.addEventListener('touchstart', touchStart);
+    container.addEventListener('touchmove', touchMove);
+    container.addEventListener('touchend', touchEnd);
+    
+    // Eventos de mouse para desktop
+    container.addEventListener('mousedown', touchStart);
+    container.addEventListener('mousemove', touchMove);
+    container.addEventListener('mouseup', touchEnd);
+    container.addEventListener('mouseleave', touchEnd);
+    
+    // Prevenir scroll durante swipe
+    container.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+}
+
+// Actualizar posición de la galería móvil
+function updateMobileGalleryPosition() {
+    const track = document.getElementById('mobileGalleryTrack');
+    const slideWidth = window.innerWidth;
+    currentTranslate = -currentGalleryIndex * slideWidth;
+    track.style.transform = `translateX(${currentTranslate}px)`;
+    
+    // Actualizar UI
+    document.querySelector('.mobile-gallery-counter').textContent = `${currentGalleryIndex + 1} / ${memories.length}`;
+    document.querySelectorAll('.mobile-gallery-dot').forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentGalleryIndex);
+    });
+    document.querySelectorAll('.mobile-gallery-slide').forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === currentGalleryIndex);
+    });
+    
+    // Actualizar botones de navegación
+    document.getElementById('mobilePrevBtn').disabled = currentGalleryIndex === 0;
+    document.getElementById('mobileNextBtn').disabled = currentGalleryIndex === memories.length - 1;
+}
+
+// Navegar en la galería móvil
+function navigateMobileGallery(direction) {
+    if (direction === 'prev' && currentGalleryIndex > 0) {
+        currentGalleryIndex--;
+    } else if (direction === 'next' && currentGalleryIndex < memories.length - 1) {
+        currentGalleryIndex++;
+    }
+    
+    updateMobileGalleryPosition();
+}
+
+// Ir a slide específico
+function goToMobileSlide(index) {
+    currentGalleryIndex = index;
+    updateMobileGalleryPosition();
+}
+
+// Cerrar galería móvil
+function closeMobileGallery() {
+    const mobileGallery = document.getElementById('mobileGallery');
+    if (mobileGallery) {
+        mobileGallery.classList.remove('active');
+        setTimeout(() => {
+            mobileGallery.remove();
+        }, 300);
+    }
+}
+
+// Abrir modal desktop (versión original)
+function openDesktopModal(id) {
     const memoryIndex = getMemoryIndexById(id);
     const memory = memories[memoryIndex];
     if (!memory) return;
@@ -445,7 +741,7 @@ function openDetailModal(id) {
         } else {
             const imageUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=s0`;
             const fallbackUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w1024`;
-            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image ${filterClass}" onerror="this.onerror=null; this.src='${fallbackUrl}'; console.log('Fallback to w1024');">`;            
+            mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="detail-image ${filterClass}" onerror="this.onerror=null; this.src='${fallbackUrl}';">`;            
         }
     } else if (memory.type === 'video') {
         mediaHtml = `<video src="${memory.file}" class="detail-image ${filterClass}" controls autoplay></video>`;
@@ -824,15 +1120,15 @@ window.addEventListener('click', function(e) {
 });
 
 // Registrar el Service Worker (ya se maneja en el DOMContentLoaded modificado)
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
         .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
+            // Service Worker registrado con éxito
         })
         .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
+            console.error('Error al registrar el Service Worker:', error);
         });
-}
+    }
 
 // Prevenir zoom en iOS
 document.addEventListener('gesturestart', function (e) {
@@ -1003,418 +1299,6 @@ function updateFilterUI(activeFilterClass) {
 
 
 
-// Función para cargar las diapositivas en el modo presentación
-function loadPresentationSlides() {
-    try {
-        const presentationSlides = document.getElementById('presentationSlides');
-        const presentationProgress = document.getElementById('presentationProgress');
-        
-        if (!presentationSlides || !presentationProgress) {
-            return;
-        }
-        
-        // Limpiar contenedores
-        presentationSlides.innerHTML = '';
-        presentationProgress.innerHTML = '';
-        
-        // Crear diapositivas para cada memoria
-        memories.forEach((memory, index) => {
-            try {
-                const slide = document.createElement('div');
-                slide.className = `presentation-slide ${index === 0 ? 'active' : ''}`;
-                slide.setAttribute('data-index', index);
-                
-                let mediaHtml = '';
-                
-                if (memory.isGoogleDrive) {
-                    if (memory.type === 'video') {
-                        const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
-                        mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
-                    } else {
-                        const imageUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                        mediaHtml = `<img src="${imageUrl}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
-                    }
-                } else if (memory.type === 'video') {
-                    mediaHtml = `<video src="${memory.file}" class="presentation-video" controls autoplay></video>`;
-                } else {
-                    mediaHtml = `<img src="${memory.file}" alt="${memory.title}" class="presentation-image" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
-                }
-                
-                slide.innerHTML = `
-                    ${mediaHtml}
-                    <div class="presentation-info">
-                        <div class="presentation-title">${memory.title}</div>
-                        <div class="presentation-description">${memory.description || 'Sin descripción'}</div>
-                        <div class="presentation-date">Día ${memory.dayNumber}</div>
-                    </div>
-                `;
-                
-                presentationSlides.appendChild(slide);
-                
-                // Añadir indicador de progreso
-                const progressDot = document.createElement('div');
-                progressDot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
-                progressDot.setAttribute('data-index', index);
-                presentationProgress.appendChild(progressDot);
-                
-            } catch (error) {
-                // Silencioso
-            }
-        });
-        
-    } catch (error) {
-        // Silencioso
-    }
-}
-
-// Iniciar modo presentación
-function startPresentationMode() {
-    try {
-            const presentationMode = document.getElementById('presentationMode');
-            
-            if (!presentationMode) {
-                return;
-            }
-            
-            // Mostrar inmediatamente sin procesar memorias
-            presentationMode.style.display = 'flex';
-            presentationMode.classList.add('active');
-            
-            // Procesar memorias después
-            if (memories.length > 0) {
-                loadPresentationSlides();
-            }
-            
-        } catch (error) {
-            console.error('Error en startPresentationMode:', error);
-        }
-    
-    if (memories.length === 0) {
-        alert('No hay memorias para mostrar en modo presentación. Cargando...');
-        // Intentar recargar memorias si están vacías
-        loadMemories();
-        setTimeout(() => {
-            if (memories.length === 0) {
-                alert('Aún no hay memorias cargadas. Por favor, recarga la página.');
-            } else {
-                alert('Memorias cargadas. Intenta nuevamente.');
-            }
-        }, 1000);
-        return;
-    }
-    
-    // Verificar si hay memorias de Google Drive y advertir sobre posibles problemas de CORS
-    const googleDriveMemories = memories.filter(m => m.isGoogleDrive);
-    if (googleDriveMemories.length > 0) {
-        console.warn(`⚠️ ${googleDriveMemories.length} memorias de Google Drive detectadas. Algunas pueden tener problemas de CORS.`);
-        
-        // Verificar entorno de hosting
-        const isHosted = !window.location.hostname.includes('localhost') && 
-                         !window.location.hostname.includes('127.0.0.1') &&
-                         window.location.protocol !== 'file:';
-        
-        if (isHosted) {
-            console.warn('🏠 Estás en un entorno hosteado. Los archivos de Google Drive pueden no cargarse.');
-            console.warn('🔗 Solución: Asegúrate de que los archivos de Google Drive sean públicos');
-            console.warn('🔗 Usa el enlace "Compartir" -> "Cualquier persona con el enlace puede ver"');
-        } else {
-            console.log('💻 Entorno local detectado - Google Drive debería funcionar');
-        }
-    }
-    
-    const presentationMode = document.getElementById('presentationMode');
-    const presentationSlides = document.getElementById('presentationSlides');
-    const presentationProgress = document.getElementById('presentationProgress');
-    
-    console.log('Elementos encontrados:', {
-        presentationMode: !!presentationMode,
-        presentationSlides: !!presentationSlides,
-        presentationProgress: !!presentationProgress
-    });
-    
-    if (!presentationMode || !presentationSlides || !presentationProgress) {
-        console.error('Faltan elementos del DOM para el modo presentación');
-        return;
-    }
-    
-    // Limpiar contenedores
-    presentationSlides.innerHTML = '';
-    presentationProgress.innerHTML = '';
-    
-    console.log('Creando diapositivas...');
-    
-    // Crear diapositivas para cada memoria
-    memories.forEach((memory, index) => {
-        try {
-            // Crear diapositiva
-            const slide = document.createElement('div');
-            slide.className = `presentation-slide ${index === 0 ? 'active' : ''}`;
-            slide.setAttribute('data-index', index);
-            slide.setAttribute('data-type', memory.type || 'image');
-            
-            // Preparar el contenido multimedia
-            let mediaHtml = '';
-            console.log(`Procesando memoria ${index}:`, memory);
-            
-            if (memory.isGoogleDrive) {
-                console.log(`Google Drive memory: ${memory.title}, type: ${memory.type}, fileId: ${memory.fileId}`);
-                if (memory.type === 'video') {
-                    const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
-                    console.log(`Video iframe URL: ${driveUrl}`);
-                    mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
-                } else {
-                    // Intentar múltiples URLs para Google Drive
-                    // URL para imagen completa de Google Drive
-                        const imageUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=s0`;
-                        const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-                        const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w2048`;
-                        const backupUrl = `https://drive.google.com/uc?export=view&id=${memory.fileId}`;
-                    
-                    console.log(`Image URLs: ${imageUrl}, ${thumbnailUrl}, ${directUrl}`);
-                    mediaHtml = `<img referrerpolicy="no-referrer" src="${imageUrl}" 
-                        alt="${memory.title}" 
-                        class="presentation-image ${memory.filter || ''}" 
-                        onerror="this.onerror=function(){this.onerror=null;this.src='${directUrl}';console.log('Fallback to direct URL');}; this.src='${directUrl}'" 
-                        data-src="${imageUrl}" 
-                        data-fallback="${directUrl}" 
-                        data-backup="${backupUrl}" 
-                        style="width: 100%; height: 100%; object-fit: cover; display: block;">`;
-                }
-            } else if (memory.type === 'video') {
-                if (memory.isGoogleDrive && memory.fileId) {
-                    const driveUrl = `https://drive.google.com/file/d/${memory.fileId}/preview`;
-                    mediaHtml = `<iframe src="${driveUrl}" class="presentation-video" allow="autoplay" frameborder="0"></iframe>`;
-                } else {
-                    mediaHtml = `<video src="${memory.file}" class="presentation-video ${memory.filter || ''}" controls autoplay id="video-${index}"></video>`;
-                }
-            } else {
-                mediaHtml = `<img referrerpolicy="no-referrer" src="${memory.file}" alt="${memory.title}" class="presentation-image ${memory.filter || ''}" style="width: 100%; height: 100%; object-fit: cover; display: block;">`;
-            }
-            
-            // Añadir información de la memoria y comentario del personaje
-            const characterComment = getRandomCharacterComment(memory.character || 'Luffy');
-            
-            // Añadir enlace directo para hosted environment
-            const driveLink = memory.isGoogleDrive ? 
-                `<a href="https://drive.google.com/file/d/${memory.fileId}/view" target="_blank" style="color: var(--gold); text-decoration: underline;">Ver en Google Drive</a>` : '';
-            
-            slide.innerHTML = `
-                <div class="presentation-title">${memory.title}</div>
-                <div class="presentation-description">${memory.description || 'Sin descripción disponible'}</div>
-                <div class="presentation-media-container">
-                    ${mediaHtml}
-                </div>
-                <div class="presentation-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</div>
-                <div class="character-comment">
-                    <span class="character-avatar">${getCharacterEmoji(memory.character || 'Luffy')}</span>
-                    <span class="comment-text">${characterComment.comment}</span>
-                </div>
-            `;
-            
-            // Añadir eventos de carga para debugging
-                const img = slide.querySelector('img');
-                if (img) {
-                    img.style.display = 'block'; // Forzar visibilidad
-                    img.style.visibility = 'visible';
-                    img.onload = function() {
-                        console.log(`✓ Imagen cargada exitosamente: ${memory.title}`);
-                        this.style.display = 'block';
-                        this.style.visibility = 'visible';
-                    };
-                    img.onerror = function(e) {
-                        console.error(`✗ Error al cargar imagen: ${memory.title}`, e);
-                        console.log(`Intentando secuencia de fallbacks...`);
-                        
-                        // Secuencia de fallbacks mejorada
-                        const currentSrc = this.src;
-                        const directUrl = `https://lh3.googleusercontent.com/d/${memory.fileId}=w2048`;
-                        const thumbnailUrl = `https://drive.google.com/thumbnail?id=${memory.fileId}&sz=w1200`;
-                        
-                        if (currentSrc.includes('=s0')) {
-                            // Fallback 1: Intentar con tamaño específico
-                            console.log(`Fallback 1: Usando URL con tamaño específico`);
-                            this.src = directUrl;
-                        } else if (currentSrc.includes('=w2048')) {
-                            // Fallback 2: Intentar con thumbnail grande
-                            console.log(`Fallback 2: Usando thumbnail grande`);
-                            this.src = thumbnailUrl;
-                        } else {
-                            // Fallback 3: Mostrar mensaje visual
-                            console.log(`Fallback 3: Mostrando mensaje de error`);
-                            this.style.display = 'none';
-                            const errorDiv = document.createElement('div');
-                            errorDiv.innerHTML = `
-                            <div style="background: rgba(0,0,0,0.8); color: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 90%;">
-                                <h3 style="color: var(--gold); margin-bottom: 15px;">${memory.title}</h3>
-                                <p style="margin-bottom: 20px;">No se pudo cargar la imagen completa</p>
-                                <a href="https://drive.google.com/file/d/${memory.fileId}/view" 
-                                   target="_blank" 
-                                   style="background: var(--coral); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold;">
-                                   Ver imagen original
-                                </a>
-                            </div>
-                        `;
-                            this.parentNode.appendChild(errorDiv);
-                        }
-                    };
-            }
-            
-            const iframe = slide.querySelector('iframe');
-            if (iframe) {
-                iframe.onload = function() {
-                    console.log(`✓ Video iframe cargado: ${memory.title}`);
-                };
-                iframe.onerror = function(e) {
-                    console.error(`✗ Error al cargar iframe: ${memory.title}`, e);
-                    // Reemplazar con enlace directo
-                    const fallbackLink = document.createElement('div');
-                    fallbackLink.innerHTML = `
-                        <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; text-align: center;">
-                            <h3>${memory.title}</h3>
-                            <a href="https://drive.google.com/file/d/${memory.fileId}/view" 
-                               target="_blank" 
-                               style="color: var(--coral); font-weight: bold; font-size: 1.2em;">
-                               Ver Video en Google Drive
-                            </a>
-                        </div>
-                    `;
-                    this.parentNode.appendChild(fallbackLink);
-                    this.style.display = 'none';
-                };
-            }
-            
-            // Añadir diapositiva al contenedor
-            presentationSlides.appendChild(slide);
-            
-            // Añadir indicador de progreso
-            const progressDot = document.createElement('div');
-            progressDot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
-            progressDot.setAttribute('data-index', index);
-            progressDot.onclick = () => navigatePresentation('goto', index);
-            presentationProgress.appendChild(progressDot);
-            
-            console.log(`Diapositiva ${index} creada correctamente`);
-        } catch (error) {
-            console.error(`Error creando diapositiva ${index}:`, error);
-        }
-    });
-    
-    // Mostrar el modo presentación
-    presentationMode.style.display = 'flex';
-    presentationMode.style.opacity = '0';
-    
-    // Forzar reflow para asegurar que el display se aplique antes de la transición
-    presentationMode.offsetHeight;
-    
-    presentationMode.style.opacity = '1';
-    
-    console.log('Modo presentación mostrado, iniciando timer...');
-    
-    // Configurar la presentación automática
-    scheduleNextSlide();
-}
-
-// Función optimizada para programar el cambio automático de diapositivas
-function scheduleNextSlide() {
-    // Limpiar cualquier intervalo existente
-    if (window.presentationInterval) {
-        clearTimeout(window.presentationInterval);
-    }
-    
-    const currentSlide = document.querySelector('.presentation-slide.active');
-    if (!currentSlide) return;
-    
-    const slideType = currentSlide.getAttribute('data-type');
-    const slideIndex = parseInt(currentSlide.getAttribute('data-index'));
-    
-    // Si es un video, esperar a que termine o usar tiempo límite
-    if (slideType === 'video') {
-        const video = currentSlide.querySelector('video');
-        if (video) {
-            // Si el video está disponible y reproduciéndose
-            if (!video.ended && !video.paused) {
-                video.onended = function() {
-                    setTimeout(() => navigatePresentation('next'), 1000);
-                };
-                return;
-            }
-        }
-        
-        // Para videos de Google Drive (iframe) o videos sin controles
-        const iframe = currentSlide.querySelector('iframe');
-        if (iframe) {
-            setTimeout(() => navigatePresentation('next'), 30000); // 30 segundos para videos de Drive
-            return;
-        }
-    }
-    
-    // Para imágenes o por defecto: 5 segundos
-    window.presentationInterval = setTimeout(() => {
-        navigatePresentation('next');
-    }, 5000);
-}
-
-// Navegar en el modo presentación
-function navigatePresentation(direction, targetIndex) {
-    const slides = document.querySelectorAll('.presentation-slide');
-    const dots = document.querySelectorAll('.progress-dot');
-    
-    if (slides.length === 0) return;
-    
-    // Encontrar la diapositiva activa actual
-    const currentSlide = document.querySelector('.presentation-slide.active');
-    if (!currentSlide) return;
-    
-    const currentIndex = parseInt(currentSlide.getAttribute('data-index'));
-    
-    // Calcular el nuevo índice
-    let newIndex;
-    if (direction === 'goto' && targetIndex !== undefined) {
-        newIndex = targetIndex;
-    } else if (direction === 'prev') {
-        newIndex = (currentIndex - 1 + slides.length) % slides.length;
-    } else { // 'next'
-        newIndex = (currentIndex + 1) % slides.length;
-    }
-    
-    // Actualizar diapositivas con transición suave
-    currentSlide.classList.remove('active');
-    slides[newIndex].classList.add('active');
-    
-    // Actualizar indicadores de progreso
-    const currentDot = document.querySelector('.progress-dot.active');
-    if (currentDot) currentDot.classList.remove('active');
-    dots[newIndex].classList.add('active');
-    
-    // Programar el siguiente cambio automático
-    scheduleNextSlide();
-}
-
-// Cerrar modo presentación
-function closePresentationMode() {
-    const presentationMode = document.getElementById('presentationMode');
-    if (presentationMode) {
-        presentationMode.classList.remove('active');
-        presentationMode.style.display = 'none';
-    }
-    
-    // Detener presentación automática
-    if (window.presentationInterval) {
-        clearTimeout(window.presentationInterval);
-        window.presentationInterval = null;
-    }
-    
-    // Detener videos si están reproduciendo
-    const videos = document.querySelectorAll('.presentation-video');
-    videos.forEach(video => {
-        if (video.tagName === 'VIDEO') {
-            video.pause();
-            video.currentTime = 0;
-        }
-    });
-}
-
-
 
 
 
@@ -1424,179 +1308,14 @@ function closePresentationMode() {
 
 // Listener global para errores
 window.addEventListener('error', function(e) {
-    console.error('Error global capturado:', e.error);
-    console.error('Mensaje:', e.message);
-    console.error('Archivo:', e.filename);
-    console.error('Línea:', e.lineno);
+    console.error('Error:', e.message);
 });
 
-// Variables para navegación táctil
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
-let isAutoPlaying = true;
 
-// Listener para cuando el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
-    const presentationMode = document.getElementById('presentationMode');
-    if (presentationMode) {
-        // Cerrar al tocar fuera del contenido
-        presentationMode.addEventListener('click', function(e) {
-            if (e.target === presentationMode) {
-                closePresentationMode();
-            }
-        });
-        
-        // Eventos táctiles mejorados para navegación
-        presentationMode.addEventListener('touchstart', handleTouchStart, { passive: true });
-        presentationMode.addEventListener('touchmove', handleTouchMove, { passive: false });
-        presentationMode.addEventListener('touchend', handleTouchEnd, { passive: true });
-        
-        // Eventos de teclado
-        document.addEventListener('keydown', handleKeyboard);
-        
-        // Doble tap para pausar/reanudar
-        let lastTap = 0;
-        presentationMode.addEventListener('touchend', function(e) {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            if (tapLength < 300 && tapLength > 0) {
-                e.preventDefault();
-                toggleAutoPlay();
-            }
-            lastTap = currentTime;
-        });
-        
-        // Prevenir comportamientos por defecto
-        presentationMode.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-    }
-});
 
-function handleTouchStart(e) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-}
 
-function handleTouchMove(e) {
-    // Prevenir scroll mientras está en presentación
-    if (document.getElementById('presentationMode').classList.contains('active')) {
-        e.preventDefault();
-    }
-}
 
-function handleTouchEnd(e) {
-    touchEndX = e.changedTouches[0].clientX;
-    touchEndY = e.changedTouches[0].clientY;
-    handleSwipeGesture();
-}
 
-function handleSwipeGesture() {
-    const swipeThreshold = 50;
-    const diffX = touchStartX - touchEndX;
-    const diffY = touchStartY - touchEndY;
-    
-    // Determinar dirección principal del swipe
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-        // Swipe horizontal
-        if (Math.abs(diffX) > swipeThreshold) {
-            if (diffX > 0) {
-                navigatePresentation('next'); // Swipe izquierda
-            } else {
-                navigatePresentation('prev'); // Swipe derecha
-            }
-        }
-    } else {
-        // Swipe vertical
-        if (Math.abs(diffY) > swipeThreshold) {
-            if (diffY < -100) {
-                closePresentationMode(); // Swipe hacia abajo
-            }
-        }
-    }
-}
-
-function handleKeyboard(e) {
-    if (!document.getElementById('presentationMode').classList.contains('active')) return;
-    
-    switch(e.key) {
-        case 'ArrowLeft':
-            e.preventDefault();
-            navigatePresentation('prev');
-            break;
-        case 'ArrowRight':
-            e.preventDefault();
-            navigatePresentation('next');
-            break;
-        case 'Escape':
-            e.preventDefault();
-            closePresentationMode();
-            break;
-        case ' ':
-            e.preventDefault();
-            toggleAutoPlay();
-            break;
-        case 'p':
-        case 'P':
-            e.preventDefault();
-            toggleAutoPlay();
-            break;
-    }
-}
-
-function toggleAutoPlay() {
-    const presentationMode = document.getElementById('presentationMode');
-    if (!presentationMode.classList.contains('active')) return;
-    
-    isAutoPlaying = !isAutoPlaying;
-    
-    if (presentationInterval) {
-        clearTimeout(presentationInterval);
-        presentationInterval = null;
-    }
-    
-    if (isAutoPlaying) {
-        scheduleNextSlide();
-    }
-    
-    // Mostrar indicador visual
-    showAutoPlayIndicator();
-}
-
-function showAutoPlayIndicator() {
-    const indicator = document.createElement('div');
-    indicator.className = 'autoplay-indicator';
-    indicator.innerHTML = isAutoPlaying ? '▶️ Auto' : '⏸️ Pausa';
-    indicator.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
-        font-size: 14px;
-        z-index: 1001;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    `;
-    
-    document.body.appendChild(indicator);
-    
-    setTimeout(() => {
-        indicator.style.opacity = '1';
-    }, 10);
-    
-    setTimeout(() => {
-        indicator.style.opacity = '0';
-        setTimeout(() => {
-            document.body.removeChild(indicator);
-        }, 300);
-    }, 1500);
-}
 
 // Inicializar línea de tiempo
 function initTimeline() {
@@ -1619,7 +1338,7 @@ function initTimeline() {
     });
 }
 
-// Actualizar línea de tiempo
+// Actualizar línea de tiempo - Optimizada para móviles con temática One Piece
 function updateTimeline() {
     const timelineEvents = document.getElementById('timelineEvents');
     if (!timelineEvents) return;
@@ -1640,7 +1359,7 @@ function updateTimeline() {
     uniqueDates.sort();
     
     // Crear eventos para cada fecha
-    uniqueDates.forEach(date => {
+    uniqueDates.forEach((date, index) => {
         // Encontrar la primera memoria de esta fecha para usar como miniatura
         const firstMemory = memories.find(memory => memory.date.startsWith(date));
         if (!firstMemory) return;
@@ -1649,8 +1368,9 @@ function updateTimeline() {
         const eventElement = document.createElement('div');
         eventElement.className = 'timeline-event';
         eventElement.setAttribute('data-date', date);
+        eventElement.setAttribute('data-index', index);
         
-        // Crear miniatura
+        // Crear miniatura con lazy loading
         let thumbnailSrc = '';
         if (firstMemory.isGoogleDrive) {
             thumbnailSrc = firstMemory.thumbnail || `https://drive.google.com/thumbnail?id=${firstMemory.fileId}&sz=w80`;
@@ -1664,16 +1384,227 @@ function updateTimeline() {
             month: 'short'
         });
         
-        // Añadir contenido al evento
+        // Añadir contenido al evento con temática One Piece
         eventElement.innerHTML = `
-            <div class="timeline-dot"></div>
-            <img src="${thumbnailSrc}" alt="${displayDate}" class="timeline-thumbnail">
+            <div class="timeline-dot" aria-label="Punto de navegación"></div>
+            <img src="${thumbnailSrc}" alt="${displayDate} - ${firstMemory.title}" class="timeline-thumbnail" loading="lazy">
             <div class="timeline-date">${displayDate}</div>
+            <div class="timeline-bounty" style="display: none;">💰 ${(index + 1) * 1000000}</div>
         `;
         
-        // Añadir evento a la línea de tiempo
+        // Función de manejo de eventos con efectos One Piece
+        const handleTimelineEvent = (event) => {
+            event.preventDefault();
+            
+            // Remover clase activa de otros eventos
+            document.querySelectorAll('.timeline-event').forEach(e => {
+                e.classList.remove('active');
+                e.querySelector('.timeline-bounty').style.display = 'none';
+            });
+            
+            // Agregar clase activa y mostrar "recompensa"
+            eventElement.classList.add('active');
+            const bounty = eventElement.querySelector('.timeline-bounty');
+            bounty.style.display = 'block';
+            
+            // Efecto de descubrimiento de tesoro
+            setTimeout(() => {
+                createTreasureEffect(eventElement);
+            }, 100);
+            
+            // Actualizar fecha actual y galería
+            currentDate = date;
+            updateGallery();
+            updateFilterUI();
+            
+            // Centrar el evento activo en móviles
+            if (window.innerWidth <= 768) {
+                const container = document.querySelector('.timeline-container');
+                const eventRect = eventElement.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                const scrollLeft = eventRect.left - containerRect.left - (containerRect.width / 2) + (eventRect.width / 2);
+                container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            }
+            
+            // Vibración en dispositivos móviles
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+        };
+        
+        // Eventos de interacción
+        eventElement.addEventListener('click', handleTimelineEvent);
+        eventElement.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                handleTimelineEvent(e);
+            }
+        });
+        
+        // Eventos táctiles mejorados
+        let touchStartTime = 0;
+        eventElement.addEventListener('touchstart', (e) => {
+            touchStartTime = Date.now();
+            eventElement.style.transform = 'translateY(-3px) scale(1.02)';
+        });
+        
+        eventElement.addEventListener('touchend', (e) => {
+            const touchDuration = Date.now() - touchStartTime;
+            if (touchDuration < 500) {
+                handleTimelineEvent(e);
+            }
+            eventElement.style.transform = '';
+        });
+        
+        // Añadir indicador de progreso
+        if (index === 0) {
+            eventElement.setAttribute('aria-label', `Comienzo del viaje - ${displayDate}`);
+        } else if (index === uniqueDates.length - 1) {
+            eventElement.setAttribute('aria-label', `Última aventura - ${displayDate}`);
+        }
+        
         timelineEvents.appendChild(eventElement);
     });
+    
+    // Inicializar gestos táctiles
+    initializeTimelineGestures();
+}
+
+// Crear efecto de tesoro One Piece
+function createTreasureEffect(element) {
+    const effects = ['💎', '⚓', '🏴‍☠️', '💰', '⭐', '🌊'];
+    
+    for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+            const sparkle = document.createElement('div');
+            sparkle.innerHTML = effects[i % effects.length];
+            sparkle.style.position = 'absolute';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.fontSize = '18px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '1000';
+            sparkle.style.animation = 'treasureSparkle 1.5s ease-out forwards';
+            element.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 1500);
+        }, i * 100);
+    }
+}
+
+// Inicializar gestos mejorados para móviles
+function initializeTimelineGestures() {
+    const container = document.querySelector('.timeline-container');
+    if (!container) return;
+    
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let velocity = 0;
+    let timestamp = 0;
+    let lastX = 0;
+    
+    // Configurar cursor
+    container.style.cursor = 'grab';
+    container.style.userSelect = 'none';
+    
+    // Gestos de ratón
+    container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        container.style.cursor = 'grabbing';
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        timestamp = Date.now();
+        lastX = startX;
+        velocity = 0;
+    });
+    
+    container.addEventListener('mouseleave', () => {
+        isDown = false;
+        container.style.cursor = 'grab';
+    });
+    
+    container.addEventListener('mouseup', () => {
+        isDown = false;
+        container.style.cursor = 'grab';
+        
+        // Inercia suave
+        if (Math.abs(velocity) > 2) {
+            container.scrollLeft += velocity * 10;
+        }
+    });
+    
+    container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        
+        // Calcular velocidad para inercia
+        const now = Date.now();
+        const dt = now - timestamp;
+        const dx = x - lastX;
+        velocity = dx / dt * 100;
+        
+        container.scrollLeft = scrollLeft - walk;
+        
+        timestamp = now;
+        lastX = x;
+    });
+    
+    // Gestos táctiles mejorados
+    container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        timestamp = Date.now();
+        lastX = startX;
+    });
+    
+    container.addEventListener('touchmove', (e) => {
+        const x = e.touches[0].pageX - container.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        container.scrollLeft = scrollLeft - walk;
+    });
+    
+    // Detección de swipe rápido
+    container.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        const dt = now - timestamp;
+        const dx = (e.changedTouches[0].pageX - container.offsetLeft) - lastX;
+        velocity = dx / dt * 100;
+        
+        if (Math.abs(velocity) > 5) {
+            container.scrollLeft += velocity * 5;
+        }
+    });
+    
+    // Indicador de posición para móviles
+    if (window.innerWidth <= 768) {
+        const indicator = document.createElement('div');
+        indicator.className = 'timeline-indicator';
+        indicator.innerHTML = '🧭 Desliza para explorar';
+        indicator.style.cssText = `
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 215, 0, 0.9);
+            color: var(--navy);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            pointer-events: none;
+            animation: float 2s ease-in-out infinite;
+        `;
+        container.appendChild(indicator);
+        
+        // Ocultar después de 3 segundos
+        setTimeout(() => {
+            indicator.style.opacity = '0';
+            setTimeout(() => indicator.remove(), 300);
+        }, 3000);
+    }
 }
 
 // Filtrar memorias por fecha
