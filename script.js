@@ -628,6 +628,22 @@ function openDetailModal(id) {
             detailModal.classList.remove('animate-scaleIn');
         }, 500);
     }
+    
+    if (document.body.classList.contains('touch-device')) {
+        const modalContent = document.querySelector('.modal-content');
+        const navArrows = document.querySelector('.nav-arrows');
+        if (navArrows && modalContent) {
+            const updateArrowPosition = () => {
+                const scrollTop = modalContent.scrollTop;
+                const viewportHeight = modalContent.clientHeight;
+                navArrows.style.top = `${scrollTop + (viewportHeight / 2)}px`;
+                navArrows.style.transform = 'translateY(-50%)';
+            };
+            modalContent.addEventListener('scroll', updateArrowPosition);
+            updateArrowPosition();
+            modalContent._updateArrowPosition = updateArrowPosition;
+        }
+    }
 }
 // Función para obtener un emoji aleatorio de personaje
 function getCharacterEmoji(character) {
@@ -732,6 +748,11 @@ function navigateMemory(direction) {
 
 // Cerrar modal de detalle
 function closeDetailModal() {
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent && modalContent._updateArrowPosition) {
+        modalContent.removeEventListener('scroll', modalContent._updateArrowPosition);
+        delete modalContent._updateArrowPosition;
+    }
     document.getElementById('detailModal').classList.remove('active');
 }
 
@@ -1350,34 +1371,6 @@ function initializeTimelineGestures() {
             container.scrollLeft += velocity * 5;
         }
     });
-    
-    // Indicador de posición para móviles
-    if (window.innerWidth <= 768) {
-        const indicator = document.createElement('div');
-        indicator.className = 'timeline-indicator';
-        indicator.innerHTML = '🧭 Desliza para explorar';
-        indicator.style.cssText = `
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 215, 0, 0.9);
-            color: var(--navy);
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
-            pointer-events: none;
-            animation: float 2s ease-in-out infinite;
-        `;
-        container.appendChild(indicator);
-        
-        // Ocultar después de 3 segundos
-        setTimeout(() => {
-            indicator.style.opacity = '0';
-            setTimeout(() => indicator.remove(), 300);
-        }, 3000);
-    }
 }
 
 // Filtrar memorias por fecha
