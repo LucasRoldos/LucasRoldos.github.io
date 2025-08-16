@@ -492,9 +492,11 @@ html.theme-transition {
 
 /* Estilos para las flechas de navegación */
 .nav-arrows {
-    position: absolute;
+    position: sticky;
+    top: 50%;
     left: 0;
     right: 0;
+    transform: translateY(-50%);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -956,7 +958,8 @@ html.theme-transition {
 /* Mobile Optimizations */
 @media (max-width: 768px) {
     .timeline-container {
-        margin: 10px 0;
+        width: 95%;
+        margin: 10px auto;
         padding: 15px 0;
         border-radius: 15px;
     }
@@ -966,8 +969,8 @@ html.theme-transition {
     }
     
     .timeline-line {
-        left: 10px;
-        right: 10px;
+        left: 20px;
+        right: 20px;
         height: 4px;
     }
     
@@ -978,7 +981,7 @@ html.theme-transition {
     
     .timeline-events {
         gap: 20px;
-        padding: 0 5px;
+        padding: 0 10px;
     }
     
     .timeline-event {
