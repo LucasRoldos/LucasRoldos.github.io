@@ -499,7 +499,12 @@ function handleFileSelect(event) {
 
 
 // Abrir modal de detalle con animaciones mejoradas
+let timelineScrollPosition = 0;
 function openDetailModal(id) {
+    const timelineContainer = document.querySelector('.timeline-container');
+    if (timelineContainer && document.getElementById('timeline').classList.contains('active')) {
+        timelineScrollPosition = timelineContainer.scrollLeft;
+    }
     const memoryIndex = getMemoryIndexById(id);
     const memory = memories[memoryIndex];
     if (!memory) return;
@@ -736,6 +741,10 @@ function navigateMemory(direction) {
 // Cerrar modal de detalle
 function closeDetailModal() {
     document.getElementById('detailModal').classList.remove('active');
+    const timelineContainer = document.querySelector('.timeline-container');
+    if (timelineContainer && document.getElementById('timeline').classList.contains('active')) {
+        timelineContainer.scrollLeft = timelineScrollPosition;
+    }
 }
 
 
@@ -1375,15 +1384,14 @@ function initializeTimelineGestures() {
         scrollLeft = container.scrollLeft;
         timestamp = Date.now();
         lastX = startX;
-    });
+    }, { passive: true });
     
     container.addEventListener('touchmove', (e) => {
         const x = e.touches[0].pageX - container.offsetLeft;
         const walk = (x - startX) * 1.5;
         container.scrollLeft = scrollLeft - walk;
-    });
+    }, { passive: true });
     
-    // Detección de swipe rápido
     container.addEventListener('touchend', (e) => {
         const now = Date.now();
         const dt = now - timestamp;
@@ -1393,7 +1401,7 @@ function initializeTimelineGestures() {
         if (Math.abs(velocity) > 5) {
             container.scrollLeft += velocity * 5;
         }
-    });
+    }, { passive: true });
 }
 
 // Filtrar memorias por fecha
@@ -1503,4 +1511,3 @@ function closeGalleryInfo() {
   
   localStorage.setItem('galleryInfoShown', 'true');
 }
-
