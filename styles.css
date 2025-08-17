@@ -6,6 +6,18 @@
     box-sizing: border-box;
 }
 
+/* Estilos globales para prevenir desbordamiento horizontal */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Clase para pantalla completa en móviles */
+.mobile-fullscreen {
+    overflow: hidden !important;
+}
+
 :root {
     --ocean-blue: #1e40af;
     --ocean-light: #3b82f6;
@@ -1347,88 +1359,46 @@ html.theme-transition {
 
 /* Responsive para el modal informativo */
 @media (max-width: 768px) {
+    .gallery-info-modal {
+        padding: 0 !important;
+    }
+    
     .gallery-info-content {
-        width: 95%;
-        max-height: 90vh;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
     }
     
     .gallery-info-body {
-        padding: 20px;
-    }
-}
-
-/* Responsive para modo presentación */
-@media (max-width: 768px) {
-    .presentation-content {
-        width: 95% !important;
-        max-width: 95% !important;
-        height: 85% !important;
-        border-radius: 15px !important;
+        padding: 15px !important;
+        flex: 1 !important;
+        overflow-y: auto !important;
     }
     
-    .presentation-slide {
-        padding: 20px !important;
+    .gallery-info-header {
+        padding: 15px !important;
     }
     
-    .presentation-title {
-        font-size: 1.8em !important;
-        margin-bottom: 10px !important;
-    }
-    
-    .presentation-description {
-        font-size: 1em !important;
-        margin-bottom: 15px !important;
-    }
-    
-    .presentation-date {
-        font-size: 0.9em !important;
-    }
-    
-    .presentation-image,
-    .presentation-video {
-        height: 400px !important;
-        width: auto !important;
-        max-width: 100% !important;
-        border-radius: 10px !important;
-        object-fit: contain !important;
-    }
-    
-    .presentation-close {
-        top: 15px !important;
-        right: 15px !important;
+    .gallery-info-close {
         width: 40px !important;
         height: 40px !important;
         font-size: 1.2em !important;
-        touch-action: manipulation !important;
-        -webkit-tap-highlight-color: transparent !important;
-        user-select: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
-    .presentation-controls {
-        bottom: 20px !important;
-        gap: 20px !important;
-    }
-    
-    .presentation-btn {
-        width: 50px !important;
-        height: 50px !important;
-        font-size: 1.2em !important;
-    }
-    
-    .character-comment {
-        margin-top: 15px !important;
-        padding: 15px !important;
-        max-width: 90% !important;
-    }
-    
-    .character-avatar {
-        font-size: 1.5em !important;
-    }
-    
-    .comment-text {
-        font-size: 0.9em !important;
+    .info-section {
+        margin-bottom: 20px !important;
     }
 }
+
+
     
     
     .info-section {
