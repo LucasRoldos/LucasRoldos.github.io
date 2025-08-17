@@ -1431,6 +1431,7 @@ function filterMemoriesByDate(date) {
     }
 }
 
+
 function showGalleryInfo() {
   if (localStorage.getItem('galleryInfoShown')) {
     return;
@@ -1439,9 +1440,24 @@ function showGalleryInfo() {
   modal.style.display = 'flex';
   modal.style.alignItems = 'center';
   modal.style.justifyContent = 'center';
+  
+  // Añadir clase para pantalla completa en móviles
+  document.body.classList.add('mobile-fullscreen');
+  
+  // Asegurar que el modal esté visible
+  setTimeout(() => {
+    modal.classList.add('active');
+  }, 10);
 }
 
+
 function closeGalleryInfo() {
-  document.getElementById('galleryInfoModal').style.display = 'none';
+  const modal = document.getElementById('galleryInfoModal');
+  modal.style.display = 'none';
+  modal.classList.remove('active');
+  
+  // Quitar clase para pantalla completa en móviles
+  document.body.classList.remove('mobile-fullscreen');
+  
   localStorage.setItem('galleryInfoShown', 'true');
 }
