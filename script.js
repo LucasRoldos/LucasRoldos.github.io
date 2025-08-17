@@ -507,6 +507,9 @@ function openDetailModal(id) {
     // Aplicar filtro si existe
     const filterClass = memory.filter || '';
     
+    // Calcular número de día automáticamente
+    const dayNumber = calculateDayNumber(memory.date);
+    
     let mediaHtml = '';
     if (memory.isGoogleDrive) {
         if (memory.type === 'video') {
@@ -564,7 +567,7 @@ function openDetailModal(id) {
         </div>
         
         <h2 class="detail-title">${memory.title}</h2>
-        <p class="detail-date">Día ${memory.dayNumber} - ${new Date(memory.date).toLocaleDateString()}</p>
+        <p class="detail-date">Día ${dayNumber} - ${new Date(memory.date).toLocaleDateString()}</p>
         
         <div class="image-container">
             ${mediaHtml}
@@ -627,22 +630,6 @@ function openDetailModal(id) {
         setTimeout(() => {
             detailModal.classList.remove('animate-scaleIn');
         }, 500);
-    }
-    
-    if (document.body.classList.contains('touch-device')) {
-        const modalContent = document.querySelector('.modal-content');
-        const navArrows = document.querySelector('.nav-arrows');
-        if (navArrows && modalContent) {
-            const updateArrowPosition = () => {
-                const scrollTop = modalContent.scrollTop;
-                const viewportHeight = modalContent.clientHeight;
-                navArrows.style.top = `${scrollTop + (viewportHeight / 2)}px`;
-                navArrows.style.transform = 'translateY(-50%)';
-            };
-            modalContent.addEventListener('scroll', updateArrowPosition);
-            updateArrowPosition();
-            modalContent._updateArrowPosition = updateArrowPosition;
-        }
     }
 }
 // Función para obtener un emoji aleatorio de personaje
@@ -748,11 +735,6 @@ function navigateMemory(direction) {
 
 // Cerrar modal de detalle
 function closeDetailModal() {
-    const modalContent = document.querySelector('.modal-content');
-    if (modalContent && modalContent._updateArrowPosition) {
-        modalContent.removeEventListener('scroll', modalContent._updateArrowPosition);
-        delete modalContent._updateArrowPosition;
-    }
     document.getElementById('detailModal').classList.remove('active');
 }
 
@@ -799,6 +781,9 @@ function updateGallery() {
         // Aplicar filtro si existe
         const filterClass = memory.filter || '';
         
+        // Calcular número de día automáticamente
+        const dayNumber = calculateDayNumber(memory.date);
+        
         let thumbnailHtml = '';
         if (memory.isGoogleDrive) {
             thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail ${filterClass}" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
@@ -825,7 +810,7 @@ function updateGallery() {
         card.innerHTML = `
             ${thumbnailHtml}
             <div class="memory-title">${memory.title}</div>
-            <div class="memory-date">Día ${memory.dayNumber}</div>
+            <div class="memory-date">Día ${dayNumber}</div>
             ${reactionsHtml}
         `;
         container.appendChild(card);
@@ -833,6 +818,15 @@ function updateGallery() {
     
 }
 
+
+// Función para calcular el día automáticamente basado en la fecha
+function calculateDayNumber(date) {
+    const initialDate = new Date('2023-07-17');
+    const memoryDate = new Date(date);
+    const timeDiff = memoryDate - initialDate;
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return Math.max(1, daysDiff + 1);
+}
 
 // Actualizar función updateStats para calcular desde el 17 de julio de 2023
 function updateStats() {
@@ -868,15 +862,14 @@ if (memoryForm) {
     const date = document.getElementById('dateInput').value;
     const description = document.getElementById('descriptionInput').value;
     
-    // Calcular número de día
-    const dayNumber = memories.length + 1;
+    // El número de día se calculará automáticamente basado en la fecha
     
     // Crear nueva memoria
     const newMemory = {
         id: Date.now().toString(),
         title: title,
         date: date,
-        dayNumber: dayNumber,
+        // dayNumber se calcula dinámicamente
         description: description,
         file: currentMemory.file,
         type: currentMemory.type,
@@ -1392,6 +1385,9 @@ function filterMemoriesByDate(date) {
         // Agregar retraso en la animación basado en el índice
         card.style.animationDelay = `${index * 0.1}s`;
         
+        // Calcular número de día automáticamente
+        const dayNumber = calculateDayNumber(memory.date);
+        
         let thumbnailHtml = '';
         if (memory.isGoogleDrive) {
             thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail ${memory.filter || ''}" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
@@ -1418,7 +1414,7 @@ function filterMemoriesByDate(date) {
         card.innerHTML = `
             ${thumbnailHtml}
             <div class="memory-title">${memory.title}</div>
-            <div class="memory-date">Día ${memory.dayNumber}</div>
+            <div class="memory-date">Día ${dayNumber}</div>
             ${reactionsHtml}
         `;
         container.appendChild(card);
