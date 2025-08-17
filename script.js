@@ -539,7 +539,13 @@ function openDetailModal(id) {
         memory.reactions = {};
     }
     
-    // El selector de filtros ya existe en el HTML estático del modal
+    // Añadir selector de filtros
+    const filterSelectorHtml = `
+        <div class="filter-selector-container">
+            <h3>Filtros de imagen</h3>
+            <div id="filterSelector" class="filter-selector"></div>
+        </div>
+    `;
     
     let reactionsHtml = '<div class="emoji-reactions">';
     onepiece_emojis.forEach(emoji => {
@@ -568,6 +574,9 @@ function openDetailModal(id) {
         </div>
         
         ${sourceIndicator}
+        
+        <!-- Selector de filtros -->
+        ${filterSelectorHtml}
         
         <p class="detail-description">${memory.description || 'Sin descripción disponible'}</p>
         
