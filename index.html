@@ -41,6 +41,37 @@
     </div>
     
     <!-- Contenedor principal (oculto hasta autenticación) -->
+    <div id="galleryInfoModal" class="gallery-info-modal" style="display: none;">
+                 <div class="gallery-info-content">
+                     <div class="gallery-info-header">
+                         <h3>🎬 ¡Bienvenida a la Galería!</h3>
+                         <button class="gallery-info-close" onclick="closeGalleryInfo()">✕</button>
+                     </div>
+                     <div class="gallery-info-body">
+                         <div class="info-section">
+                             <div class="info-icon">▶️</div>
+                             <div class="info-text">
+                                 <h4>Exploración Manual</h4>
+                                 <p>Toca cualquier imagen para verla en detalle, podes meterle filtros de One Piece, hay comentarios de personajes, reacciones, y algunos comentarios mios.</p>
+                             </div>
+                         </div>
+                         <div class="info-section">
+                             <div class="info-icon">👆</div>
+                             <div class="info-text">
+                                 <h4>A CONSIDERAR</h4>
+                                 <p>Luego de entrar a una imagen tenes flechas para poder navegar por la galeria asi no tenes que salir y entrar a cada una de las fotos, tambien le recomiendo llegar al final, esta la ultima sorpresa que prepare.</p>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="gallery-info-footer">
+                         <button class="gallery-info-btn" onclick="closeGalleryInfo()">¡Entendido!</button>
+                         <label class="dont-show-again">
+                             <input type="checkbox" id="dontShowAgain"> No mostrar de nuevo
+                         </label>
+                     </div>
+                 </div>
+             </div>
+
     <div id="mainContent" style="display: none;">
         <div class="ocean-bg"></div>
     
@@ -103,36 +134,7 @@
 
             
             <!-- Modal informativo de galería -->
-            <div id="galleryInfoModal" class="gallery-info-modal" style="display: none;">
-                <div class="gallery-info-content">
-                    <div class="gallery-info-header">
-                        <h3>🎬 ¡Bienvenida a la Galería!</h3>
-                        <button class="gallery-info-close" onclick="closeGalleryInfo()">✕</button>
-                    </div>
-                    <div class="gallery-info-body">
-                        <div class="info-section">
-                            <div class="info-icon">▶️</div>
-                            <div class="info-text">
-                                <h4>Exploración Manual</h4>
-                                <p>Toca cualquier imagen para verla en detalle, podes meterle filtros de One Piece, hay comentarios de personajes, reacciones, y algunos comentarios mios.</p>
-                            </div>
-                        </div>
-                        <div class="info-section">
-                            <div class="info-icon">👆</div>
-                            <div class="info-text">
-                                <h4>A CONSIDERAR</h4>
-                                <p>Luego de entrar a una imagen tenes flechas para poder navegar por la galeria asi no tenes que salir y entrar a cada una de las fotos, tambien le recomiendo llegar al final, esta la ultima sorpresa que prepare.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-info-footer">
-                        <button class="gallery-info-btn" onclick="closeGalleryInfo()">¡Entendido!</button>
-                        <label class="dont-show-again">
-                            <input type="checkbox" id="dontShowAgain"> No mostrar de nuevo
-                        </label>
-                    </div>
-                </div>
-            </div>
+            
             
             <div id="memoriesContainer" class="memories-grid">
                 <!-- Las memorias se cargarán aquí -->
@@ -170,6 +172,8 @@
         
 
     </div>
+    
+
     
 
     <!-- Modal de detalle -->
