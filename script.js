@@ -1401,6 +1401,9 @@ function filterMemoriesByDate(date) {
     const container = document.getElementById('timelineMemoriesContainer');
     if (!container) return;
     
+    // Guardar la posición de desplazamiento actual antes de modificar el contenido
+    const scrollPosition = window.scrollY;
+    
     // Limpiar contenedor
     container.innerHTML = '';
     
@@ -1458,6 +1461,15 @@ function filterMemoriesByDate(date) {
                 <div class="empty-state-message">No hay memorias para esta fecha</div>
             </div>
         `;
+    }
+    
+    // Restaurar la posición de desplazamiento después de actualizar el contenido
+    // Solo en dispositivos móviles para mantener la vista en la misma posición
+    if (window.innerWidth <= 768) {
+        window.scrollTo({
+            top: scrollPosition,
+            behavior: 'instant' // Usar 'instant' para evitar animación de desplazamiento
+        });
     }
 }
 
