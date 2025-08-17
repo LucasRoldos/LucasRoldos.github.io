@@ -1388,10 +1388,10 @@ html.theme-transition {
         max-height: 100vh !important;
         border-radius: 0 !important;
         margin: 0 !important;
-        padding: 40px 20px !important;
+        padding: 0 !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important;
+        justify-content: space-between !important;
         align-items: center !important;
         overflow: hidden !important;
     }
