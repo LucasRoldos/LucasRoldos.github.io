@@ -567,7 +567,7 @@ function openDetailModal(id) {
         </div>
         
         <h2 class="detail-title">${memory.title}</h2>
-        <p class="detail-date">Día ${dayNumber} - ${new Date(memory.date).toLocaleDateString()}</p>
+        <p class="detail-date" id="detail-date">Día ${dayNumber} - ${formatDateDirect(memory.date)}</p>
         
         <div class="image-container">
             ${mediaHtml}
@@ -781,9 +781,6 @@ function updateGallery() {
         // Aplicar filtro si existe
         const filterClass = memory.filter || '';
         
-        // Calcular número de día automáticamente
-        const dayNumber = calculateDayNumber(memory.date);
-        
         let thumbnailHtml = '';
         if (memory.isGoogleDrive) {
             thumbnailHtml = `<img src="${memory.thumbnail}" class="memory-thumbnail ${filterClass}" alt="Thumbnail" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KYPC90ZXh0Pjwvc3ZnPg==';">`;
@@ -807,10 +804,13 @@ function updateGallery() {
             }
         }
         
+        // Usar formateo directo para la fecha
+        const formattedDate = formatDateDirect(memory.date);
+        
         card.innerHTML = `
             ${thumbnailHtml}
             <div class="memory-title">${memory.title}</div>
-            <div class="memory-date">Día ${dayNumber}</div>
+            <div class="memory-date">${formattedDate}</div>
             ${reactionsHtml}
         `;
         container.appendChild(card);
@@ -818,6 +818,46 @@ function updateGallery() {
     
 }
 
+
+// Nueva función para formatear fechas directamente desde el campo 'date'
+// Transforma de "YYYY-MM-DD" a "DD/MM/YYYY" sin usar objetos Date
+function formatDateDirect(dateString) {
+    if (!dateString || typeof dateString !== 'string') {
+        return 'Fecha no válida';
+    }
+    
+    const parts = dateString.split('-');
+    if (parts.length !== 3) {
+        return 'Fecha no válida';
+    }
+    
+    const [year, month, day] = parts;
+    return `${day}/${month}/${year}`;
+}
+
+// Nueva función para formatear fecha para mostrar en timeline (día y mes)
+function formatDateForTimeline(dateString) {
+    if (!dateString || typeof dateString !== 'string') {
+        return 'Fecha no válida';
+    }
+    
+    const parts = dateString.split('-');
+    if (parts.length !== 3) {
+        return 'Fecha no válida';
+    }
+    
+    const [year, month, day] = parts;
+    
+    // Nombres de meses en español
+    const monthNames = {
+        '01': 'ene', '02': 'feb', '03': 'mar', '04': 'abr',
+        '05': 'may', '06': 'jun', '07': 'jul', '08': 'ago',
+        '09': 'sep', '10': 'oct', '11': 'nov', '12': 'dic'
+    };
+    
+    const monthName = monthNames[month] || month;
+    return `${parseInt(day)} ${monthName}`;
+}
 
 // Función para calcular el día automáticamente basado en la fecha
 function calculateDayNumber(date) {
@@ -1133,17 +1173,10 @@ function updateTimeline() {
     // Limpiar eventos existentes
     timelineEvents.innerHTML = '';
     
-    // Obtener fechas únicas de las memorias
-    const uniqueDates = [];
-    memories.forEach(memory => {
-        const date = memory.date.split('T')[0]; // Obtener solo la parte de la fecha
-        if (!uniqueDates.includes(date)) {
-            uniqueDates.push(date);
-        }
-    });
-    
-    // Ordenar fechas
-    uniqueDates.sort();
+    // Extraer fechas únicas directamente del campo 'date'
+    const uniqueDates = [...new Set(memories.map(memory => memory.date))]
+        .filter(date => date) // Filtrar fechas válidas
+        .sort(); // Ordenar cronológicamente
     
     // Crear eventos para cada fecha
     uniqueDates.forEach((date, index) => {
@@ -1165,11 +1198,8 @@ function updateTimeline() {
             thumbnailSrc = firstMemory.thumbnail || firstMemory.file;
         }
         
-        // Formatear fecha para mostrar
-        const displayDate = new Date(date).toLocaleDateString('es-ES', {
-            day: 'numeric',
-            month: 'short'
-        });
+        // Usar formateo directo para la fecha de visualización
+        const displayDate = formatDateForTimeline(date);
         
         // Añadir contenido al evento con temática One Piece
         eventElement.innerHTML = `
@@ -1374,19 +1404,19 @@ function filterMemoriesByDate(date) {
     // Limpiar contenedor
     container.innerHTML = '';
     
-    // Filtrar memorias por fecha
-    const filteredMemories = memories.filter(memory => memory.date.startsWith(date));
+    // Filtrar memorias por fecha exacta (sin usar startsWith para mayor precisión)
+    const filteredMemories = memories.filter(memory => memory.date === date);
     
     // Mostrar memorias filtradas
     filteredMemories.forEach((memory, index) => {
         const card = document.createElement('div');
         card.className = 'memory-card animate-slideInUp';
         card.onclick = () => openDetailModal(memory.id);
-        // Agregar retraso en la animación basado en el índice
         card.style.animationDelay = `${index * 0.1}s`;
         
-        // Calcular número de día automáticamente
+        // Usar el número de día calculado pero mostrar fecha formateada
         const dayNumber = calculateDayNumber(memory.date);
+        const formattedDate = formatDateDirect(memory.date);
         
         let thumbnailHtml = '';
         if (memory.isGoogleDrive) {
@@ -1414,7 +1444,7 @@ function filterMemoriesByDate(date) {
         card.innerHTML = `
             ${thumbnailHtml}
             <div class="memory-title">${memory.title}</div>
-            <div class="memory-date">Día ${dayNumber}</div>
+            <div class="memory-date">Día ${dayNumber} - ${formattedDate}</div>
             ${reactionsHtml}
         `;
         container.appendChild(card);
@@ -1461,3 +1491,4 @@ function closeGalleryInfo() {
   
   localStorage.setItem('galleryInfoShown', 'true');
 }
+
