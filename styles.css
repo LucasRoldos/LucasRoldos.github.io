@@ -1143,28 +1143,29 @@ html.theme-transition {
 
 
 
-/* Modal informativo de galería */
+/* Modal informativo de galería - CORREGIDO */
 .gallery-info-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 1001;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    z-index: 9999 !important;
     display: flex !important;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
 }
 
+.gallery-info-modal.active,
 .gallery-info-modal[style*="display: block"],
 .gallery-info-modal[style*="display: flex"] {
-    opacity: 1;
-    pointer-events: auto;
+    opacity: 1 !important;
+    pointer-events: auto !important;
 }
 
 .gallery-info-modal[style*="display: block"],
