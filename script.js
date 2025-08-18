@@ -738,11 +738,19 @@ function navigateMemory(direction) {
 
 // Cerrar modal de detalle
 function closeDetailModal() {
-    document.getElementById('detailModal').classList.remove('active');
+    const detailModal = document.getElementById('detailModal');
+    detailModal.classList.remove('active');
     
     const timelineContainer = document.querySelector('.timeline-container');
     if (timelineContainer && window.savedTimelineScroll !== undefined) {
-        timelineContainer.scrollLeft = window.savedTimelineScroll;
+        const restoreScroll = () => {
+            timelineContainer.scrollLeft = window.savedTimelineScroll;
+            detailModal.removeEventListener('transitionend', restoreScroll);
+            if (currentDate) {
+                filterMemoriesByDate(currentDate);
+            }
+        };
+        detailModal.addEventListener('transitionend', restoreScroll);
     }
 }
 
@@ -1155,22 +1163,7 @@ window.addEventListener('error', function(e) {
 // Inicializar línea de tiempo
 function initTimeline() {
     // La línea de tiempo se actualizará cuando se carguen las memorias
-    document.getElementById('timeline').addEventListener('click', function(e) {
-        // Si se hace clic en un evento de la línea de tiempo, mostrar las memorias de esa fecha
-        if (e.target.closest('.timeline-event')) {
-            const eventElement = e.target.closest('.timeline-event');
-            const date = eventElement.getAttribute('data-date');
-            
-            // Marcar el evento como activo
-            document.querySelectorAll('.timeline-event').forEach(event => {
-                event.classList.remove('active');
-            });
-            eventElement.classList.add('active');
-            
-            // Filtrar memorias por fecha
-            filterMemoriesByDate(date);
-        }
-    });
+    // Removed global click listener to avoid conflicts with per-event listeners
 }
 
 // Actualizar línea de tiempo - Optimizada para móviles con temática One Piece
@@ -1239,17 +1232,10 @@ function updateTimeline() {
             
             // Actualizar fecha actual y galería
             currentDate = date;
-            updateGallery();
+            filterMemoriesByDate(date);
             updateFilterUI();
             
-            // Centrar el evento activo en móviles
-            if (window.innerWidth <= 768) {
-                const container = document.querySelector('.timeline-container');
-                const eventRect = eventElement.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                const scrollLeft = eventRect.left - containerRect.left - (containerRect.width / 2) + (eventRect.width / 2);
-                container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-            }
+            // Removed auto-centering on mobile to prevent unwanted scrolling
             
             // Vibración en dispositivos móviles
             if ('vibrate' in navigator) {
@@ -1265,19 +1251,21 @@ function updateTimeline() {
             }
         });
         
-        // Eventos táctiles mejorados
-        let touchStartTime = 0;
+        // Tap detection for reliable handling on mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
         eventElement.addEventListener('touchstart', (e) => {
-            touchStartTime = Date.now();
-            eventElement.style.transform = 'translateY(-3px) scale(1.02)';
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
         });
-        
         eventElement.addEventListener('touchend', (e) => {
-            const touchDuration = Date.now() - touchStartTime;
-            if (touchDuration < 500) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const dx = Math.abs(touchEndX - touchStartX);
+            const dy = Math.abs(touchEndY - touchStartY);
+            if (dx < 10 && dy < 10) {
                 handleTimelineEvent(e);
             }
-            eventElement.style.transform = '';
         });
         
         // Añadir indicador de progreso
