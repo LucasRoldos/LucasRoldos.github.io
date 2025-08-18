@@ -499,15 +499,13 @@ function handleFileSelect(event) {
 
 
 // Abrir modal de detalle con animaciones mejoradas
-let timelineScrollPosition = 0;
 function openDetailModal(id) {
-    const timelineContainer = document.querySelector('.timeline-container');
-    if (timelineContainer && document.getElementById('timeline').classList.contains('active')) {
-        timelineScrollPosition = timelineContainer.scrollLeft;
-    }
     const memoryIndex = getMemoryIndexById(id);
     const memory = memories[memoryIndex];
     if (!memory) return;
+    
+    const timelineContainer = document.querySelector('.timeline-container');
+    window.savedTimelineScroll = timelineContainer ? timelineContainer.scrollLeft : 0;
     
     // Aplicar filtro si existe
     const filterClass = memory.filter || '';
@@ -741,9 +739,10 @@ function navigateMemory(direction) {
 // Cerrar modal de detalle
 function closeDetailModal() {
     document.getElementById('detailModal').classList.remove('active');
+    
     const timelineContainer = document.querySelector('.timeline-container');
-    if (timelineContainer && document.getElementById('timeline').classList.contains('active')) {
-        timelineContainer.scrollLeft = timelineScrollPosition;
+    if (timelineContainer && window.savedTimelineScroll !== undefined) {
+        timelineContainer.scrollLeft = window.savedTimelineScroll;
     }
 }
 
@@ -1322,6 +1321,8 @@ function initializeTimelineGestures() {
     const container = document.querySelector('.timeline-container');
     if (!container) return;
     
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
     let isDown = false;
     let startX;
     let scrollLeft;
@@ -1329,79 +1330,53 @@ function initializeTimelineGestures() {
     let timestamp = 0;
     let lastX = 0;
     
-    // Configurar cursor
-    container.style.cursor = 'grab';
     container.style.userSelect = 'none';
     
-    // Gestos de ratón
-    container.addEventListener('mousedown', (e) => {
-        isDown = true;
-        container.style.cursor = 'grabbing';
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        timestamp = Date.now();
-        lastX = startX;
-        velocity = 0;
-    });
-    
-    container.addEventListener('mouseleave', () => {
-        isDown = false;
-        container.style.cursor = 'grab';
-    });
-    
-    container.addEventListener('mouseup', () => {
-        isDown = false;
+    if (!isTouchDevice) {
         container.style.cursor = 'grab';
         
-        // Inercia suave
-        if (Math.abs(velocity) > 2) {
-            container.scrollLeft += velocity * 10;
-        }
-    });
-    
-    container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.style.cursor = 'grabbing';
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+            timestamp = Date.now();
+            lastX = startX;
+            velocity = 0;
+        });
         
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 1.5;
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+        });
         
-        // Calcular velocidad para inercia
-        const now = Date.now();
-        const dt = now - timestamp;
-        const dx = x - lastX;
-        velocity = dx / dt * 100;
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+            
+            if (Math.abs(velocity) > 2) {
+                container.scrollLeft += velocity * 10;
+            }
+        });
         
-        container.scrollLeft = scrollLeft - walk;
-        
-        timestamp = now;
-        lastX = x;
-    });
-    
-    // Gestos táctiles mejorados
-    container.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        timestamp = Date.now();
-        lastX = startX;
-    }, { passive: true });
-    
-    container.addEventListener('touchmove', (e) => {
-        const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        container.scrollLeft = scrollLeft - walk;
-    }, { passive: true });
-    
-    container.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        const dt = now - timestamp;
-        const dx = (e.changedTouches[0].pageX - container.offsetLeft) - lastX;
-        velocity = dx / dt * 100;
-        
-        if (Math.abs(velocity) > 5) {
-            container.scrollLeft += velocity * 5;
-        }
-    }, { passive: true });
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 1;
+            
+            const now = Date.now();
+            const dt = now - timestamp;
+            const dx = x - lastX;
+            velocity = dx / dt * 100;
+            
+            container.scrollLeft = scrollLeft - walk;
+            
+            timestamp = now;
+            lastX = x;
+        });
+    }
 }
 
 // Filtrar memorias por fecha
@@ -1511,3 +1486,4 @@ function closeGalleryInfo() {
   
   localStorage.setItem('galleryInfoShown', 'true');
 }
+
