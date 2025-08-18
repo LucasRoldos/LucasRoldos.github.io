@@ -807,7 +807,7 @@ html.theme-transition {
     border-radius: 20px;
     position: relative;
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+    scroll-snap-type: none;
 }
 
 .timeline-container::before {
